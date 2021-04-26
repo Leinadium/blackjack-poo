@@ -50,12 +50,6 @@
 
 * Ele nao pode fazer hit.
 
-### Seguro
-
-* Precisa estar na primeira rodada.
-
-* A carta virada para cima do dealer precisa ser um as.
-
 ## Verifica ganhador.
 
 ### Jogador ganhou
