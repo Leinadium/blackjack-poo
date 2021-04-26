@@ -1,6 +1,6 @@
 package model.baralho;
 
-public class Carta {
+private class Carta {
     Cor cor;
     Nome nome;
     Naipe naipe;
@@ -23,7 +23,7 @@ public class Carta {
             case SETE -> ret = 7;
             case OITO -> ret = 8;
             case NOVE -> ret = 9;
-            case VALETE, REI, DAMA -> ret = 10;
+            case VALETE, REI, DAMA, DEZ -> ret = 10;
             default -> ret = 0;
         }
         return ret;

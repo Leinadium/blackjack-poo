@@ -1,5 +1,5 @@
 package model;
 
-public class Dealer {
+private class Dealer {
 
 }

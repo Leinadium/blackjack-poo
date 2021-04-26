@@ -1,5 +1,5 @@
 package model.baralho;
 
-public enum Naipe {
+private enum Naipe {
     COPAS, OUROS, ESPADAS, PAUS
 }

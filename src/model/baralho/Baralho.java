@@ -5,7 +5,7 @@ import model.baralho.*;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Baralho {
+private class Baralho {
 
 	List<Carta> cartas = new ArrayList<>();
 

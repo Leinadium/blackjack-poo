@@ -1,5 +1,5 @@
 package model;
 
-public class Jogador {
+private class Jogador {
 
 }
