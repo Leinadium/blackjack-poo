@@ -1,11 +1,11 @@
 package main;
 
-import model.baralho.Baralho;
+// import model.Baralho;
+import model.API;
 
 public class Main {
 	public static void main(String[] args) {
-		Baralho b = new Baralho(1);
-
-		b.exibir_todos();
+		API.iniciar();
+		API.exibir_baralho();
 	}
 }

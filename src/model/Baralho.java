@@ -1,15 +1,13 @@
-package model.baralho;
-
-import model.baralho.*;
+package model;
 
 import java.util.List;
 import java.util.ArrayList;
 
-private class Baralho {
+class Baralho {
 
 	List<Carta> cartas = new ArrayList<>();
 
-	public Baralho(int quantidade) {
+	Baralho(int quantidade) {
 		Cor cor;
 		Carta carta;
 		for (int i = 0; i < quantidade; i ++) {

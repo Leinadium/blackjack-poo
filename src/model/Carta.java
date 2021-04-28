@@ -1,11 +1,11 @@
-package model.baralho;
+package model;
 
-private class Carta {
+class Carta {
     Cor cor;
     Nome nome;
     Naipe naipe;
 
-    public Carta (Cor c, Nome no, Naipe na) {
+    Carta (Cor c, Nome no, Naipe na) {
         cor = c;
         nome = no;
         naipe = na;

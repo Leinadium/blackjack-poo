@@ -1,6 +1,6 @@
-package model.baralho;
+package model;
 
-private enum Cor {
+enum Cor {
     VERMELHO, PRETO
 }
 

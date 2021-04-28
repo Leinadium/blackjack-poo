@@ -1,5 +1,5 @@
-package model.baralho;
+package model;
 
-private enum Nome {
+enum Nome {
     AS, DOIS, TRES, QUATRO, CINCO, SEIS, SETE, OITO, NOVE, DEZ, VALETE, DAMA, REI
 }
