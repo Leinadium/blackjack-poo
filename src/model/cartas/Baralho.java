@@ -1,13 +1,14 @@
-package model;
+package model.cartas;
 
 import java.util.List;
 import java.util.ArrayList;
 
-class Baralho {
+// disclaimer: era para ser não-publica, mas aí não seria acessivel para classes fora de model.cartas
+public class Baralho {
 
 	List<Carta> cartas = new ArrayList<>();
 
-	Baralho(int quantidade) {
+	public Baralho(int quantidade) {
 		Cor cor;
 		Carta carta;
 		for (int i = 0; i < quantidade; i ++) {
@@ -28,8 +29,8 @@ class Baralho {
 	}
 
 	public void exibir_todos() {
-		for (int i = 0; i < cartas.size(); i ++) {
-			cartas.get(i).print();
+		for (Carta carta : cartas) {
+			carta.print();
 		}
 	}
 

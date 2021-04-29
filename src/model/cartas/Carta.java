@@ -1,11 +1,12 @@
-package model;
+package model.cartas;
 
-class Carta {
+// disclaimer: era para ser não-publica, mas aí não seria acessivel para classes fora de model.cartas
+public class Carta {
     Cor cor;
     Nome nome;
     Naipe naipe;
 
-    Carta (Cor c, Nome no, Naipe na) {
+    public Carta (Cor c, Nome no, Naipe na) {
         cor = c;
         nome = no;
         naipe = na;

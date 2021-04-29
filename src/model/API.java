@@ -1,5 +1,11 @@
 package model;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import model.cartas.*;
+import model.*;
+
 public class API {
     public static Baralho baralho;
     public static Dealer dealer;
