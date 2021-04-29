@@ -2,6 +2,7 @@ package model.cartas;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 // disclaimer: era para ser não-publica, mas aí não seria acessivel para classes fora de model.cartas
 public class Baralho {
@@ -26,6 +27,9 @@ public class Baralho {
 				}
 			}
 		}
+		// embaralhando
+		Collections.shuffle(cartas);
+		
 	}
 
 	public void exibir_todos() {
@@ -39,5 +43,4 @@ public class Baralho {
 		cartas.remove(0);
 		return c;
 	}
-
 }
