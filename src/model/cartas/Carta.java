@@ -33,4 +33,11 @@ public class Carta {
     public void print() {
         System.out.println("Carta " + this.nome + " de " + this.naipe);
     }
+    
+    @Override
+    public boolean equals(Object o) {
+    	// if (o == null || this.getClass() != o.getClass()) { return false;}
+    	Carta c = (Carta) o;
+    	return (this.nome == c.nome);
+    }
 }

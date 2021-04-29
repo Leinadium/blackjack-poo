@@ -33,5 +33,11 @@ public class Baralho {
 			carta.print();
 		}
 	}
+	
+	public Carta pop() {
+		Carta c = cartas.get(0);
+		cartas.remove(0);
+		return c;
+	}
 
 }
