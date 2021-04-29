@@ -11,7 +11,7 @@ import model.cartas.Carta;
  * A mao possui as cartas que o jogador/dealer possui para jogar.
  * Metodos e atributos:
  *     List cartas -> possui uma lista de Carta
- *     int valor -> possui a soma dos valores das cartas
+ *     int soma -> possui a soma dos valores das cartas
  *     void ganhar_carta(Carta c) -> adiciona uma carta na mao
  *     Mao dividir_mao() -> divide a mao, retornando a nova mao.
  * @author Daniel
@@ -20,11 +20,11 @@ import model.cartas.Carta;
 
 class Mao {
 	public List<Carta> cartas;
-	int valor;
+	int soma;
 	
 	Mao() {
 		this.cartas = new ArrayList<>();
-		this.valor = 0;
+		this.soma = 0;
 	}
 	
 	/**
@@ -48,7 +48,7 @@ class Mao {
 			else { soma += 11 + 1 * (quantidadeAs - 1); }
 		}
 		
-		this.valor = soma;
+		this.soma = soma;
 		return;
 	}
 	/**
@@ -70,7 +70,6 @@ class Mao {
 		if (!this.cartas.get(0).equals(this.cartas.get(1))) {
 			throw new IllegalStateException("As duas cartas sao diferentes"); 
 		}
-		
 		Mao m = new Mao();
 		m.ganhar_carta(this.cartas.get(1));
 		this.cartas.remove(1);
