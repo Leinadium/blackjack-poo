@@ -1,5 +1,7 @@
 # Regras - Blackjack
 
+https://ead.puc-rio.br/pluginfile.php/1052318/mod_resource/content/4/RegrasBlackjack.pdf
+
 ## O jogador pode apostar
 
 * Precisa ter dinheiro
