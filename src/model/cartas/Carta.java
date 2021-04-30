@@ -36,7 +36,7 @@ public class Carta {
     
     @Override
     public boolean equals(Object o) {
-    	// if (o == null || this.getClass() != o.getClass()) { return false;}
+    	if (o == null || this.getClass() != o.getClass()) { return false;}
     	Carta c = (Carta) o;
     	return (this.nome == c.nome);
     }

@@ -14,13 +14,18 @@ import model.cartas.Carta;
  *     int soma -> possui a soma dos valores das cartas
  *     void ganhar_carta(Carta c) -> adiciona uma carta na mao
  *     Mao dividir_mao() -> divide a mao, retornando a nova mao.
- * @author Daniel
  *
  */
 
 class Mao {
 	public List<Carta> cartas;
-	int soma;
+	public int soma;
+	public boolean quebrado = false;
+	public boolean finalizado = false;
+
+	/* o blackjack sera falsificado se a mao nova for splitada, ou
+	* ao ter duas cartas e a soma nao for 21. */
+	public boolean blackjack = true;
 	
 	Mao() {
 		this.cartas = new ArrayList<>();
@@ -29,9 +34,8 @@ class Mao {
 	
 	/**
 	 * Faz o calculo da soma dos valores das cartas, e salva no atributo .valor
-	 * @return null
 	 */
-	private void calcular_valor() {
+	private void calcularValor() {
 		int soma = 0;
 		int valor;
 		int quantidadeAs = 0;
@@ -44,36 +48,48 @@ class Mao {
 			}
 		}
 		if (quantidadeAs > 0) {
-			if (soma > 10) { soma += 1 * quantidadeAs; }
-			else { soma += 11 + 1 * (quantidadeAs - 1); }
+			if (soma > 10) { soma += quantidadeAs; }
+			else { soma += 11 +  (quantidadeAs - 1); }
 		}
-		
 		this.soma = soma;
-		return;
 	}
 	/**
-	 * Adiciona uma nova carta na mao, recalculando o valor total
+	 * Adiciona uma nova carta na mao, recalculando o valor total e definindo blackjack/quebrado
 	 * @param c Carta uma nova carta a ser adicionada
 	 */
-	public void ganhar_carta(Carta c) {
+	public void ganharCarta(Carta c) {
 		cartas.add(c);
-		this.calcular_valor();
-		return;
+		this.calcularValor();
+
+		if (this.cartas.size() == 2 && this.soma != 21) {
+			this.blackjack = false;
+		}
+
+		else if (this.soma > 21) {
+			this.quebrado = true;
+		}
+
 	}
 	/**
 	 * Faz o split da mao.
 	 * @return Mao a nova mao
 	 * @throws IllegalStateException Se nao houver duas cartas, ou elas forem diferentes.
 	 */
-	public Mao fazer_split() throws IllegalStateException{
+	public Mao fazerSplit() throws IllegalStateException{
 		if (this.cartas.size() != 2) {throw new IllegalStateException("Nao possui duas cartas."); }
 		if (!this.cartas.get(0).equals(this.cartas.get(1))) {
 			throw new IllegalStateException("As duas cartas sao diferentes"); 
 		}
 		Mao m = new Mao();
-		m.ganhar_carta(this.cartas.get(1));
+		m.ganharCarta(this.cartas.get(1));
+		m.blackjack = false;  // proibi a mao split de ter um blackjack
+
 		this.cartas.remove(1);
 		
 		return m;
+	}
+
+	public boolean podeSplit() {
+		return !(this.cartas.size() != 2 || this.cartas.get(0).equals(this.cartas.get(1)));
 	}
 }

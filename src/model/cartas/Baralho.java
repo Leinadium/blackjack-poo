@@ -32,7 +32,7 @@ public class Baralho {
 		
 	}
 
-	public void exibir_todos() {
+	public void exibirTodos() {
 		for (Carta carta : cartas) {
 			carta.print();
 		}
