@@ -54,6 +54,14 @@ class Mao {
 		this.soma = soma;
 	}
 	/**
+	 * Verifica se a mao quebrou
+	 */
+	public void verificaQuebrado(){
+		if (this.soma > 21){
+			this.finalizado = true;
+		}
+	}
+	/**
 	 * Adiciona uma nova carta na mao, recalculando o valor total e definindo blackjack/quebrado
 	 * @param c Carta uma nova carta a ser adicionada
 	 */
@@ -64,10 +72,7 @@ class Mao {
 		if (this.cartas.size() == 2 && this.soma != 21) {
 			this.blackjack = false;
 		}
-
-		else if (this.soma > 21) {
-			this.quebrado = true;
-		}
+		verificaQuebrado();
 
 	}
 	/**
