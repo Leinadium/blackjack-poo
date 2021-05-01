@@ -96,6 +96,6 @@ class Mao {
 	}
 
 	public boolean podeSplit() {
-		return !(this.cartas.size() != 2 || this.cartas.get(0).equals(this.cartas.get(1)));
+		return (this.cartas.size() == 2 && this.cartas.get(0).equals(this.cartas.get(1)));
 	}
 }
