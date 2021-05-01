@@ -59,17 +59,19 @@ public class Ficha {
         for (i = 0; i < lista.size(); i ++) {
             escolhas = new ArrayList<>();
             soma = 0;
-            for (j=i; i < lista.size(); i ++) {
+            for (j=i; j < lista.size(); j ++) {
                 if (soma < dinheiro) {
                     soma += lista.get(j).valor;
                     escolhas.add(lista.get(j));
                 }
             }
             diff = soma - dinheiro;
-            if (diff < menorDiferenca) {
+            if (diff >= 0 && diff < menorDiferenca) {
                 melhorEscolha = escolhas;
+                menorDiferenca = diff;
             } else if ((diff == menorDiferenca) && (escolhas.size() < melhorEscolha.size())) {
                 melhorEscolha = escolhas;
+                menorDiferenca = diff;
             }
         }
 
