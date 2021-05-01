@@ -14,10 +14,24 @@ public class JogadorTest {
 	}
 
 	@Test
+	public void testNaoTemDinheiro() {
+		Jogador actual = new Jogador("Joao");
+		actual.dinheiro = 0;
+		assertTrue("O jogador nao tem dinheiro", actual.temDinheiro());
+	}
+	
+		
+	@Test
 	public void testTerApostado() {
 		Jogador actual = new Jogador("Joao");
 		actual.aposta = 50;
 		assertTrue("O jogador fez sua aposta", actual.terApostado());
+	}
+	
+	@Test
+	public void testNaoTerApostado() {
+		Jogador actual = new Jogador("Joao");
+		assertTrue("O jogador nao fez sua aposta", actual.terApostado());
 	}
 
 	@Test
@@ -25,6 +39,12 @@ public class JogadorTest {
 		Jogador actual = new Jogador("Joao");
 		actual.dinheiro = 0;
 		assertTrue("O jogador esta falido", actual.checaFalencia());
+	}
+	
+	@Test
+	public void testChecaNaoFalencia() {
+		Jogador actual = new Jogador("Joao");
+		assertFalse("O jogador nao esta falido", actual.checaFalencia());
 	}
 
 	@Test
@@ -68,13 +88,23 @@ public class JogadorTest {
 	}
 
 	@Test
-	public void testPodeHitMao() {
+	public void testNaoPodeHitBlackjackMao() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
 		assertFalse("O jogador nao pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
+	}
+	
+	@Test
+	public void testPodeHitMao() {
+		Jogador actual = new Jogador("Joao");
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		assertTrue("O jogador pode fazer Hit", actual.podeHit(actual.mao));
 	}
 
 	@Test
@@ -83,7 +113,7 @@ public class JogadorTest {
 	}
 
 	@Test
-	public void testPodeStandMao() {
+	public void testNaoPodeStandBlackjackMao() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
@@ -91,6 +121,16 @@ public class JogadorTest {
 		actual.mao.ganharCarta(c2);
 		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand(actual.mao));
 	}
+	
+	@Test
+	public void testPodeStandMao() {
+		Jogador actual = new Jogador("Joao");
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		assertTrue("O jogador pode fazer Stand", actual.podeStand(actual.mao));
+	}	
 
 	@Test
 	public void testPodeStand() {
@@ -98,7 +138,7 @@ public class JogadorTest {
 	}
 
 	@Test
-	public void testPodeDoubleMao() {
+	public void testNaoPodeDoubleMao() {
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(52*4);
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
@@ -107,6 +147,15 @@ public class JogadorTest {
 		actual.mao.ganharCarta(c2);
 		actual.fazerHit(baralho, m);
 		assertFalse("O jogador nao pode fazer Double pois nao é sua primeira jogada", actual.podeDouble(m));
+	}
+	
+	@Test
+	public void testPodeDoubleMao() {
+		Jogador actual = new Jogador("Joao");
+		Baralho baralho = new Baralho(52*4);
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		actual.mao.ganharCarta(c1);
+		assertTrue("O jogador pode fazer Double", actual.podeDouble(actual.mao));
 	}
 
 	@Test
@@ -122,6 +171,16 @@ public class JogadorTest {
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
 		assertTrue("O jogador pode fazer split", actual.podeSplit(actual.mao));
+	}
+	
+	@Test
+	public void testNaoPodeSplitMao() {
+		Jogador actual = new Jogador("Joao");
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		assertFalse("O jogador pode fazer split", actual.podeSplit(actual.mao));
 	}
 
 	@Test
@@ -149,6 +208,18 @@ public class JogadorTest {
 		actual.finalizarAposta();
 		actual.fazerStand(actual.mao);
 		assertTrue("O jogador fez um stand", actual.mao.finalizado);
+	}
+	
+	@Test
+	public void testFazerStandMao() {
+		Jogador actual = new Jogador("Joao");
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		actual.finalizarAposta();
+		actual.fazerStand(actual.mao);
+		assertEquals("O jogador fez um stand", actual.mao.finalizado); //queria tentar por ultima jogada, mas ai é privada
 	}
 
 	@Test
