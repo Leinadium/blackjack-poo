@@ -87,7 +87,8 @@ class Mao {
 		}
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
-		m.blackjack = false;  // proibi a mao split de ter um blackjack
+		m.blackjack = false;   // proibi a mao split de ter um blackjack
+		this.blackjack = false;
 
 		this.cartas.remove(1);
 		

@@ -21,10 +21,6 @@ import java.lang.IllegalStateException;
  *     void retirar_ficua(Ficha) -> remove aquela ficha do jogador, atualizando o dinheiro.
  */
 
-enum Jogada {
-    HIT, STAND, DOUBLE, SPLIT
-}
-
 
 class Jogador {
     public String nome;
@@ -64,6 +60,9 @@ class Jogador {
         for (i = 0; i < 8; i ++) {
             this.fichas.add(new Ficha(5));
         }
+
+        // criando as maos split nulas
+        for (i = 0; i < 2; i ++) {maosSplit.add(null);}
     }
 
 
@@ -88,7 +87,7 @@ class Jogador {
      * @return true se o jogador tiver falido
      */
     public boolean checaFalencia() {
-        return (this.finalizado && this.dinheiro == 0);
+        return (this.finalizado && this.dinheiro < 0);
     }
 
     /**
@@ -98,6 +97,15 @@ class Jogador {
         this.rendido = false;
         this.ultimaJogada = null;
         this.finalizado = false;
+    }
+
+    /**
+     * Aumenta a aposta pelo valor da ficha
+     * @param f Ficha para aumentar a aposta
+     */
+    public void aumentarAposta(Ficha f) {
+        this.retirarFicha(f);
+        this.aposta += f.valor;
     }
 
     /**
@@ -127,25 +135,39 @@ class Jogador {
     }
 
     /**
-     * Verifica se o jogador pode fazer um HIT
-     * @return true se o jogador pode fazer HIT
+     * Retira uma quantidade de fichas do jogador equivalente aquele dinheiro
+     * @param dinheiro Dinheiro a ser retirado
+     * @throws Exception Erro caso nao tenha esse dinheiro.
      */
-    public boolean podeHit() {
-        // nao finalizado, e nao jogou um double na ultima jogada
-        return (!this.finalizado && this.ultimaJogada != Jogada.DOUBLE);
+    public void retirarDinheiro(int dinheiro) throws Exception {
+        // coletando as fichas a serem retiradas
+        List<Ficha> fichasParaRetirar = Ficha.calculaFicha(dinheiro, this.fichas);
+
+        // retirando as fichas
+        for (Ficha f: fichasParaRetirar) {
+            fichas.remove(f);
+        }
+
+        // removendo o dinheiro
+        this.dinheiro -= dinheiro;
     }
+
+    public boolean podeHit(Mao m) {
+        return (!m.finalizado && this.ultimaJogada != Jogada.DOUBLE);
+    }
+    public boolean podeHit() { return podeHit(this.mao); }
 
     public boolean podeStand(Mao m) {
         return (!m.finalizado);
     }
     public boolean podeStand() { return podeStand(this.mao);}
 
-
     public boolean podeDouble(Mao m) {
-        return(!m.finalizado && this.quantidadeJogadas == 0 && this.dinheiro > this.aposta);
+        return(!m.finalizado &&
+                (this.quantidadeJogadas == 0 || this.ultimaJogada == Jogada.SPLIT) &&
+                this.dinheiro > this.aposta);
     }
     public boolean podeDouble() { return podeDouble(this.mao);}
-
 
     public boolean podeSplit(Mao m) {
         return (this.quantidadeSplits < 2 && m.podeSplit());
@@ -174,6 +196,8 @@ class Jogador {
     public void fazerStand(Mao m) {
         m.finalizado = true;
         this.ultimaJogada = Jogada.STAND;
+        // verifica se esse stand foi o ultimo de todas as maos
+        this.finalizado = this.verificaFinalizadoGeral();
     }
     public void fazerStand() { fazerStand(this.mao); }
 
@@ -188,4 +212,47 @@ class Jogador {
         }
         return ret;
     }
+
+    /**
+     * Faz a jogada de DOUBLE para aquela mao
+     * @param m Mao da jogada DOUBLE
+     * @param b Baralho para retirar uma nova carta
+     * @throws Exception Erro caso nao tenha dinheiro o suficiente
+     */
+    public void fazerDouble(Mao m, Baralho b) throws Exception {
+        aposta += aposta;
+        this.retirarDinheiro(this.aposta);
+        this.fazerHit(b, m);
+        this.fazerStand(m);
+        this.quantidadeJogadas -= 1;  // Hit e Stand adicionaram +2. Retirando 1 para ficar com +1 jogada
+        this.ultimaJogada = Jogada.DOUBLE;
+    }
+    public void fazerDouble(Baralho b) throws Exception { this.fazerDouble(this.mao, b); }
+
+    /**
+     * Faz a jogada de SPLIT para aquela mao
+     * @param m Mao a ser dividida
+     * @param b Baralho para pegar as novas cartas
+     */
+    public void fazerSplit(Mao m, Baralho b) throws Exception{
+        // achando a mao proxima mao aberta
+        int pos;
+        if (maosSplit.get(0) == null) {pos = 0;}
+        else if (maosSplit.get(1) == null) {pos = 1;}
+        else { throw new Exception("Todas as maos estao em uso"); }
+
+        Mao nova_mao = m.fazerSplit();  // criando a nova mao
+        this.maosSplit.set(pos, nova_mao); // salvando a mao na lista de maos
+        this.aposta += this.aposta;    // aumentando a aposta
+        this.retirarDinheiro(this.aposta);  // retirando o dinheiro da aposta do jogador
+
+        this.fazerHit(b, m);   // adicionando uma carta em cada mao
+        this.fazerHit(b, nova_mao);
+
+        this.quantidadeJogadas -= 1; // os hits aumentaram +2 na quantidade. Retirando 1
+        this.ultimaJogada = Jogada.SPLIT;
+    }
+    public void fazerSplit(Baralho b) throws Exception {this.fazerSplit(this.mao, b);}
+
+    public void fazerSurrender() { /*TODO*/}
 }
