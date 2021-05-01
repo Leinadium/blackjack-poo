@@ -61,7 +61,7 @@ public class JogadorTest {
 	}
 
 	@Test
-	public void testRetirarDinheiro() {
+	public void testRetirarDinheiro() throws Exception { //eu fiquei em duvida nao era pra ser aquele expected = Exception.class? 
 		Jogador actual = new Jogador("Joao");
 		actual.retirarDinheiro(400);
 		assertEquals("O dinheiro foi retirado", actual.dinheiro, 100);
@@ -70,12 +70,11 @@ public class JogadorTest {
 	@Test
 	public void testPodeHitMao() {
 		Jogador actual = new Jogador("Joao");
-		Mao m = new Mao();
-		Carta c1 = new Carta(VERMELHO, AS, COPAS);
-		Carta c2 = new Carta(PRETO, VALETE, PAUS);
-		m.ganharCarta(c1);
-		m.ganharCarta(c2);
-		assertFalse("O jogador nao pode fazer Hit por causa do Blackjack", actual.podeHit(m));
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		assertFalse("O jogador nao pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
 	}
 
 	@Test
@@ -86,12 +85,11 @@ public class JogadorTest {
 	@Test
 	public void testPodeStandMao() {
 		Jogador actual = new Jogador("Joao");
-		Mao m = new Mao();
-		Carta c1 = new Carta(VERMELHO, AS, COPAS);
-		Carta c2 = new Carta(PRETO, VALETE, PAUS);
-		m.ganharCarta(c1);
-		m.ganharCarta(c2);
-		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand(m));
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand(actual.mao));
 	}
 
 	@Test
@@ -103,11 +101,10 @@ public class JogadorTest {
 	public void testPodeDoubleMao() {
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(52*4);
-		Mao m = new Mao();
-		Carta c1 = new Carta(VERMELHO, VALETE, COPAS);
-		Carta c2 = new Carta(PRETO, TRES, PAUS);
-		m.ganharCarta(c1);
-		m.ganharCarta(c2);
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
 		actual.fazerHit(baralho, m);
 		assertFalse("O jogador nao pode fazer Double pois nao é sua primeira jogada", actual.podeDouble(m));
 	}
@@ -120,12 +117,11 @@ public class JogadorTest {
 	@Test
 	public void testPodeSplitMao() {
 		Jogador actual = new Jogador("Joao");
-		Mao m = new Mao();
-		Carta c1 = new Carta(VERMELHO, VALETE, COPAS);
-		Carta c2 = new Carta(PRETO, VALETE, PAUS);
-		m.ganharCarta(c1);
-		m.ganharCarta(c2);
-		assertTrue("O jogador pode fazer split", actual.podeSplit(m));
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		assertTrue("O jogador pode fazer split", actual.podeSplit(actual.mao));
 	}
 
 	@Test
@@ -146,12 +142,13 @@ public class JogadorTest {
 	@Test
 	public void testFazerStandMao() {
 		Jogador actual = new Jogador("Joao");
-		Mao m = new Mao();
-		Carta c1 = new Carta(VERMELHO, VALETE, COPAS);
-		Carta c2 = new Carta(PRETO, VALETE, PAUS);
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
 		actual.finalizarAposta();
-		actual.fazerStand(m);
-		assertTrue("O jogador fez um stand", m.finalizado);
+		actual.fazerStand(actual.mao);
+		assertTrue("O jogador fez um stand", actual.mao.finalizado);
 	}
 
 	@Test
