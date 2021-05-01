@@ -9,9 +9,6 @@ import model.cartas.*;
  *     Mao mao -> mao do dealer
  */
 
-enum Jogada {
-    HIT, STAND
-}
 
 
 class Dealer {
@@ -19,7 +16,7 @@ class Dealer {
     private boolean finalizado;
 
     Dealer () {
-        this.mao = new.Mao();
+        this.mao = new Mao();
         this.finalizado = false;
 
     }
