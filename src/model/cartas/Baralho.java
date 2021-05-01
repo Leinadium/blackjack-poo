@@ -8,6 +8,7 @@ import java.util.Collections;
 public class Baralho {
 
 	List<Carta> cartas = new ArrayList<>();
+	private final int quantidade;
 
 	public Baralho(int quantidade) {
 		Cor cor;
@@ -29,6 +30,7 @@ public class Baralho {
 		}
 		// embaralhando
 		Collections.shuffle(cartas);
+		this.quantidade = quantidade;
 		
 	}
 
@@ -41,6 +43,16 @@ public class Baralho {
 	public Carta pop() {
 		Carta c = cartas.get(0);
 		cartas.remove(0);
+
+		// checando se o baralho precisa ser reiniciado
+		if (this.cartas.size() <= 9 * this.quantidade * 52 / 10) {this.embaralhar();}
+
 		return c;
+	}
+
+	public void embaralhar() {
+		// reinicia o baralho
+		Baralho b = new Baralho(this.quantidade);
+		this.cartas = b.cartas;
 	}
 }
