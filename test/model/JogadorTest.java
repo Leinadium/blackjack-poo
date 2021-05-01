@@ -2,7 +2,7 @@ package model;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import model.cartas.Carta;
+import model.cartas.*;
 import model.cartas.Baralho;
 
 public class JogadorTest {
@@ -144,8 +144,8 @@ public class JogadorTest {
 		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		actual.fazerHit(baralho, m);
-		assertFalse("O jogador nao pode fazer Double pois nao é sua primeira jogada", actual.podeDouble(m));
+		actual.fazerHit(baralho);
+		assertFalse("O jogador nao pode fazer Double pois nao é sua primeira jogada", actual.podeDouble());
 	}
 	
 	@Test
