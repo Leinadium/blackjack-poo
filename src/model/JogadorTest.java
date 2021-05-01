@@ -6,7 +6,6 @@ import model.cartas.Carta;
 import model.cartas.Baralho;
 
 public class JogadorTest {
-	public static Jogador jogador;
 	@Test
 	public void testTemDinheiro() {
 		Jogador actual = new Jogador("Joao");
@@ -196,18 +195,6 @@ public class JogadorTest {
 	@Test
 	public void testFazerHitBaralho() {
 		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testFazerStandMao() {
-		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
-		actual.finalizarAposta();
-		actual.fazerStand(actual.mao);
-		assertTrue("O jogador fez um stand", actual.mao.finalizado);
 	}
 	
 	@Test
