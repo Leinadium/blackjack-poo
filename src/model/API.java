@@ -1,10 +1,6 @@
 package model;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import model.cartas.*;
-import model.*;
 
 public class API {
     public static Baralho baralho;
@@ -14,10 +10,10 @@ public class API {
     public static void iniciar() {
         baralho = new Baralho(2);
         dealer = new Dealer();
-        //jogador = new Jogador();
+        // jogador = new Jogador();
     }
 
-    public static void exibir_baralho() {
+    public static void exibirBaralho() {
         baralho.exibirTodos();
     }
 }
