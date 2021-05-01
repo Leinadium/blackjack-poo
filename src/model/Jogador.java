@@ -45,6 +45,7 @@ class Jogador {
         this.aposta = 0;
         this.rendido = false;
         this.finalizado = false;
+        this.quantidadeJogadas = 0;
         this.ultimaJogada = null;
 
         // criando as fichas
@@ -75,7 +76,7 @@ class Jogador {
     }
 
     /**
-     * Verifica se o jogado ja tinha apostado naquela jogada
+     * Verifica se o jogador ja tinha apostado naquela jogada
      * @return true se tiver apostado
      */
     public boolean terApostado() {
