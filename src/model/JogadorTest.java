@@ -10,21 +10,21 @@ public class JogadorTest {
 	@Test
 	public void testTemDinheiro() {
 		Jogador actual = new Jogador("Joao");
-		assertTrue(actual.temDinheiro());
+		assertTrue("O jogador tem dinheiro", actual.temDinheiro());
 	}
 
 	@Test
 	public void testTerApostado() {
 		Jogador actual = new Jogador("Joao");
 		actual.aposta = 50;
-		assertTrue(actual.terApostado());
+		assertTrue("O jogador fez sua aposta", actual.terApostado());
 	}
 
 	@Test
 	public void testChecaFalencia() {
 		Jogador actual = new Jogador("Joao");
 		actual.dinheiro = 0;
-		assertTrue(actual.checaFalencia());
+		assertTrue("O jogador esta falido", actual.checaFalencia());
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class JogadorTest {
 		Ficha f = new Ficha(valor_ficha);
 		int saldo_antigo = actual.dinheiro;
 		actual.aumentarAposta(f);
-		assertEquals(saldo_antigo, actual.dinheiro-valor_ficha);
+		assertEquals("A aposta foi aumentada", saldo_antigo, actual.dinheiro-valor_ficha);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class JogadorTest {
 	public void testRetirarDinheiro() {
 		Jogador actual = new Jogador("Joao");
 		actual.retirarDinheiro(400);
-		assertEquals(actual.dinheiro, 100);
+		assertEquals("O dinheiro foi retirado", actual.dinheiro, 100);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class JogadorTest {
 		Carta c2 = new Carta(PRETO, VALETE, PAUS);
 		m.ganharCarta(c1);
 		m.ganharCarta(c2);
-		assertFalse(actual.podeHit(m));
+		assertFalse("O jogador nao pode fazer Hit por causa do Blackjack", actual.podeHit(m));
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class JogadorTest {
 		Carta c2 = new Carta(PRETO, VALETE, PAUS);
 		m.ganharCarta(c1);
 		m.ganharCarta(c2);
-		assertFalse(actual.podeStand(m));
+		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand(m));
 	}
 
 	@Test
@@ -109,7 +109,7 @@ public class JogadorTest {
 		m.ganharCarta(c1);
 		m.ganharCarta(c2);
 		actual.fazerHit(baralho, m);
-		assertFalse(actual.podeDouble(m));
+		assertFalse("O jogador nao pode fazer Double pois nao é sua primeira jogada", actual.podeDouble(m));
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class JogadorTest {
 		Carta c2 = new Carta(PRETO, VALETE, PAUS);
 		m.ganharCarta(c1);
 		m.ganharCarta(c2);
-		assertTrue(actual.podeSplit(m));
+		assertTrue("O jogador pode fazer split", actual.podeSplit(m));
 	}
 
 	@Test
@@ -151,7 +151,7 @@ public class JogadorTest {
 		Carta c2 = new Carta(PRETO, VALETE, PAUS);
 		actual.finalizarAposta();
 		actual.fazerStand(m);
-		assertTrue(m.finalizado);
+		assertTrue("O jogador fez um stand", m.finalizado);
 	}
 
 	@Test
