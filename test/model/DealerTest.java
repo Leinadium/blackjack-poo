@@ -2,6 +2,10 @@ package model;
 
 import org.junit.*;
 
+/*
+  Daniel Guimarães - 1910462
+  Mariana Barreto - 1820673
+ */
 import static org.junit.Assert.*;
 
 import model.cartas.*;
