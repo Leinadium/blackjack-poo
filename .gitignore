@@ -2,3 +2,7 @@
 .project
 bin/
 .idea/
+<<<<<<< HEAD
+=======
+.settings/
+>>>>>>> 0a60bb7 (Novo commit em novo projeto)

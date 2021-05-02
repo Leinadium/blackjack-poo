@@ -5,8 +5,11 @@ import model.cartas.*;
 import java.util.List;
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 import static org.junit.Assert.assertThrows;
 
+=======
+>>>>>>> 0a60bb7 (Novo commit em novo projeto)
 import java.lang.IllegalStateException;
 
 /**
