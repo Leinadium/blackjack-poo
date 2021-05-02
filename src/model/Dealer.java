@@ -1,7 +1,5 @@
 package model;
 
-import model.cartas.*;
-
 /**
  * Classe Dealer.
  *
@@ -36,12 +34,7 @@ class Dealer {
      */
     public boolean podeStand() {
         //nao finalizado e nao pode fazer hit
-        return (!this.mao.finalizado && !podeHit());
-    }
-    
-    private boolean verificaFinalizadoGeral() {
-        boolean ret = this.mao.finalizado;
-        return (ret);
+        return (!this.mao.finalizado && !podeHit() && !this.mao.blackjack);
     }
 
 

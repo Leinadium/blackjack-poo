@@ -74,6 +74,6 @@ public class DealerTest {
         Carta as = new Carta(Cor.PRETO, Nome.AS, Naipe.COPAS);
         d.mao.ganharCarta(as);
         d.mao.ganharCarta(dez);
-        assertTrue("Pode Stand com blackjack", d.podeStand());
+        assertFalse("Pode Stand com blackjack", d.podeStand());
     }
 }

@@ -53,6 +53,7 @@ public class FichaTest {
         lista.add(new Ficha(10));
         lista.add(new Ficha(20));
         lista.add(new Ficha(50));
+        lista.add(new Ficha(100));
         assertEquals(expected, Ficha.calculaValor(lista));
     }
 

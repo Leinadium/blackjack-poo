@@ -69,8 +69,19 @@ class Jogador {
         // criando as maos split nulas
         for (i = 0; i < 2; i ++) {maosSplit.add(null);}
     }
-
-
+    /**
+     * Prepara o jogador para uma nova rodada
+     */
+    public void iniciaJogada() {
+        this.mao = new Mao();
+        this.maosSplit = new ArrayList<>();
+        this.dinheiro = 500;
+        this.aposta = 0;
+        this.rendido = false;
+        this.finalizado = false;
+        this.quantidadeJogadas = 0;
+        this.ultimaJogada = null;
+    }
     /**
      * Retorna se o jogador possui algum dinheiro para poder apostar
      * @return true se tiver dinheiro
@@ -86,6 +97,21 @@ class Jogador {
     public boolean terApostado() {
         return (this.aposta > 0);
     }
+    /**
+     * Retorna se o jogador finalizou aquela jogada
+     * @return true se ele tiver finalizado
+     */
+    public boolean retornaJogadaFinalizada() {
+    	return (this.finalizado);
+    }
+    /**
+     * Altera o estado do jogador caso tenha sido finalizada uma jogada
+     * @param estado - estado (boolean) para qual deve ser alterado
+     */
+    public void alteraJogadaFinalizada(boolean estado) {
+    	this.finalizado = estado;
+    }
+    
 
     /**
      * Verifica se o jogador faliu e nao pode mais jogar
@@ -331,5 +357,31 @@ class Jogador {
         this.quantidadeJogadas -= 1; // os hits aumentaram +2 na quantidade. Retirando 1
         this.ultimaJogada = Jogada.SPLIT;
     }
-    public void fazerSplit(Baralho b) throws Exception {this.fazerSplit(this.mao, b);}
+    public void fazerSplit(Baralho b) throws Exception { this.fazerSplit(this.mao, b); }
+
+	/**
+	 * Calcula melhor valor da mao do jogador, contando o caso de ter mais de uma mao
+	 * @return soma de pontos da mão que indica a possibilidade para o jogador
+	 */
+	public int calculaMelhorValor() {
+		Mao mao1 = maosSplit.get(0);
+		Mao mao2 = maosSplit.get(1);
+		if (mao1 != null && mao2 != null) {
+			if (mao1.quebrado && mao2.quebrado) {
+				return mao1.soma;
+			}
+			else if (mao1.quebrado) {
+				return mao2.soma;
+			}
+			else if (mao2.quebrado) {
+				return mao1.soma;
+			}
+			else if ((21 - mao1.soma) <= (21 - mao2.soma)) {
+				return mao1.soma;
+			}
+			return mao2.soma;
+		}
+		return (this.mao.soma);
+	}
+
 }

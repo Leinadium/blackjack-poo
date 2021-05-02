@@ -46,20 +46,15 @@ public class JogadorTest {
 	@Test
 	public void testChecaFalencia() {
 		Jogador actual = new Jogador("Joao");
-		actual.finalizarAposta();
 		actual.dinheiro = 0;
-		assertTrue("O jogador nao esta falido", actual.checaFalencia()); //como finalizado é privado, como vou testar esse metodo? ele so vira true depois do stand
+		actual.alteraJogadaFinalizada(true);
+		assertTrue("O jogador nao esta falido", actual.checaFalencia());
 	}
 	
 	@Test
 	public void testChecaNaoFalencia() {
 		Jogador actual = new Jogador("Joao");
 		assertFalse("O jogador esta falido", actual.checaFalencia());
-	}
-
-	@Test
-	public void testFinalizarAposta() {
-		fail("Not yet implemented"); //nessa aqui o rendido é privado ai estou pensando como testar essa metodo?
 	}
 
 	@Test
@@ -245,8 +240,8 @@ public class JogadorTest {
 		assertEquals("Ultima jogada nao foi um split", Jogada.SPLIT, actual.retornaUltimaJogada()); //queria tentar por ultima jogada, mas ai é privada
 	}
 
-	@Test(expected = Exception.class)
-	public void testFazerDouble() throws Exception {
+	@Test
+	public void testFazerDouble() throws Exception{
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(4);
 		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);

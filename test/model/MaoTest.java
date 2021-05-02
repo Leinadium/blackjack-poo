@@ -28,7 +28,7 @@ public class MaoTest {
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.ganharCarta(c1);
 		actual.ganharCarta(c2);
-		assertFalse("A mao quebrou", actual.finalizado);
+		assertFalse("A mao quebrou", actual.quebrado);
 	}
 	
 	@Test
@@ -101,7 +101,7 @@ public class MaoTest {
 		actual.ganharCarta(c1);
 		actual.ganharCarta(c2);
 		actual.fazerSplit();
-		assertEquals("Nao foi realizado o split", 2, actual.cartas.size());
+		assertEquals("Nao foi realizado o split", 1, actual.cartas.size());
 	}
 
 }

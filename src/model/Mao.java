@@ -60,11 +60,27 @@ class Mao {
 		return (this.soma > 21);
 	}
 	/**
+	 * Verifica se tem blackjack
+	 */
+	private boolean verificaBlackjack(){
+		return (this.soma == 21);
+	}
+	/**
 	 * Atualiza as variaveis se a mao quebrou
 	 */
 	public void atualizaQuebrado(){
 		if (this.verificaQuebrado()){
 			this.finalizado = true;
+			this.quebrado = true;
+		}
+	}
+	/**
+	 * Atualiza as variaveis se a mao tem blackjack
+	 */
+	public void atualizaBlackjack(){
+		if (this.verificaBlackjack()){
+			this.finalizado = true;
+			this.blackjack = true;
 		}
 	}
 	/**
@@ -79,7 +95,7 @@ class Mao {
 			this.blackjack = false;
 		}
 		atualizaQuebrado(); //tem que ver isso tambem porque se quebrar mas pegar as cartas pelo baralho.pop vai dar problema
-
+		atualizaBlackjack();
 	}
 	/**
 	 * Faz o split da mao.
