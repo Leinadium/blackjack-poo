@@ -33,11 +33,11 @@ class Ficha {
     }
 
     /**
-     * Calcula uma combinação de fichas que mais aproxima ao dinheiro desejado
+     * Calcula uma combinaï¿½ï¿½o de fichas que mais aproxima ao dinheiro desejado
      * @param dinheiro Dinheiro a ser tranformado em fichas
      * @param listaPossiveis Lista de fichas disponiveis
      * @return Lista de fichas relativas ao dinheiro
-     * @throws Exception Error - Se não houver melhor escolha
+     * @throws Exception Error - Se nï¿½o houver melhor escolha
      */
     public static List<Ficha> calculaFicha(int dinheiro, List<Ficha> listaPossiveis) throws Exception{
         // Fazendo uma copia

@@ -18,7 +18,7 @@ public class MaoTest {
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.ganharCarta(c1);
 		actual.ganharCarta(c2);
-		assertTrue("A mao tem menos que duas cartas", actual.cartas.size() == 2);
+		assertEquals("A mao tem menos que duas cartas", 2, actual.cartas.size());
 	}
 	
 	@Test
@@ -60,7 +60,7 @@ public class MaoTest {
 		Carta c2 = new Carta(Cor.PRETO, Nome.DEZ, Naipe.ESPADAS);
 		actual.ganharCarta(c1);
 		actual.ganharCarta(c2);
-		assertTrue("Nao é possível fazer split", actual.podeSplit());
+		assertTrue("Nao ï¿½ possï¿½vel fazer split", actual.podeSplit());
 	}
 	
 	@Test

@@ -7,9 +7,10 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import model.cartas.*;
+import model.cartas.Baralho;
 
 public class JogadorTest {
-	
+
 	private void adicionaCarta(Jogador jog,  Cor cor, Nome nome, Naipe naipe) {
 		Carta c = new Carta(cor, nome, naipe);
 		jog.mao.ganharCarta(c);
@@ -27,7 +28,7 @@ public class JogadorTest {
 		actual.dinheiro = 0;
 		assertFalse("O jogador tem dinheiro", actual.temDinheiro());
 	}
-	
+
 	@Test
 	public void testTerApostado() {
 		Jogador actual = new Jogador("Joao");
@@ -38,7 +39,7 @@ public class JogadorTest {
 	@Test
 	public void testNaoTerApostado() {
 		Jogador actual = new Jogador("Joao");
-		
+
 		assertFalse("O jogador fez sua aposta", actual.terApostado());
 	}
 
@@ -60,7 +61,7 @@ public class JogadorTest {
 	public void testFinalizarAposta() {
 		fail("Not yet implemented"); //nessa aqui o rendido é privado ai estou pensando como testar essa metodo?
 	}
-	
+
 	@Test
 	public void testFazApostaValida() {
 		Jogador actual = new Jogador("Joao");
@@ -68,20 +69,20 @@ public class JogadorTest {
 		actual.fazAposta(100);
 		assertEquals("As apostas nao sao iguais", valor_esperado-100, actual.dinheiro);
 	}
-	
-	@Test(expected = IllegalStateException.class) 
+
+	@Test(expected = IllegalStateException.class)
 	public void testFazApostaInvalidaMaisQue100() {
 		Jogador actual = new Jogador("Joao");
 		actual.fazAposta(101);
 	}
-	
-	@Test(expected = IllegalStateException.class) 
+
+	@Test(expected = IllegalStateException.class)
 	public void testFazApostaInvalidaMenosQue20() {
 		Jogador actual = new Jogador("Joao");
 		actual.fazAposta(19);
 	}
-	
-	@Test(expected = IllegalStateException.class) 
+
+	@Test(expected = IllegalStateException.class)
 	public void testFazApostaInvalidaSemDinheiro() {
 		Jogador actual = new Jogador("Joao");
 		actual.dinheiro = 30;
@@ -96,6 +97,9 @@ public class JogadorTest {
 		int aposta_esperada = actual.aposta+100;
 		actual.aumentarAposta(f); //eu acho que voce nao aumentaria a aposta em fichas e sim aumentaria em dinheiro
 		assertEquals("A aposta nao foi aumentada", aposta_esperada, actual.aposta);
+		int saldo_antigo = actual.dinheiro;
+		actual.aumentarAposta(f);
+		assertEquals("A aposta foi aumentada", saldo_antigo, actual.dinheiro+valor_ficha);
 	}
 
 	@Test
@@ -114,7 +118,7 @@ public class JogadorTest {
 		actual.retirarFicha(f);
 		assertEquals("A ficha nao foi retirada", tamanho_esperado, actual.fichas.size());
 	}
-	
+
 	@Test (expected = IllegalStateException.class)
 	public void testRetirarFichaValorIgual() {
 		Jogador actual = new Jogador("Joao");
@@ -122,16 +126,16 @@ public class JogadorTest {
 		actual.retirarFicha(f1);
 		actual.retirarFicha(f1);
 		actual.retirarFicha(f1); //terceira ocorrencia, o jogador nao pode ter mais
-		
+
 	}
-	
+
 	@Test (expected = IllegalStateException.class)
 	public void testRetirarFichaListaVazia() {
 		Jogador actual = new Jogador("Joao");
 		actual.fichas = new ArrayList<>();
         actual.retirarFicha(new Ficha(100));
 	}
-	
+
 	@Test (expected = IllegalStateException.class)
 	public void testRetirarFichaInexistente() {
 		Jogador actual = new Jogador("Joao");
@@ -143,14 +147,14 @@ public class JogadorTest {
 	}
 
 	@Test
-	public void testRetirarDinheiro() {
+	public void testRetirarDinheiro() throws Exception {
 		Jogador actual = new Jogador("Joao");
 		actual.retirarDinheiro(400);
 		assertEquals("O dinheiro nao foi retirado", actual.dinheiro, 100);
 	}
-	
+
 	@Test (expected = Exception.class)
-	public void testRetirarDinheiroSemDinheiro() {
+	public void testRetirarDinheiroSemDinheiro() throws Exception {
 		Jogador actual = new Jogador("Joao");
 		actual.retirarDinheiro(500);
 		actual.retirarDinheiro(100);
@@ -163,7 +167,7 @@ public class JogadorTest {
 		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		assertFalse("O jogador pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
 	}
-	
+
 	@Test
 	public void testPodeHit() {
 		Jogador actual = new Jogador("Joao");
@@ -179,7 +183,7 @@ public class JogadorTest {
 		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand());
 	}
-	
+
 	@Test
 	public void testPodeStand() {
 		Jogador actual = new Jogador("Joao");
@@ -212,7 +216,7 @@ public class JogadorTest {
 		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		assertTrue("O jogador nao pode fazer split", actual.podeSplit());
 	}
-	
+
 	@Test
 	public void testNaoPodeSplit() {
 		Jogador actual = new Jogador("Joao");
@@ -230,9 +234,9 @@ public class JogadorTest {
 		actual.fazerHit(baralho);
 		assertEquals("Ultima jogada nao foi um hit", Jogada.HIT, actual.retornaUltimaJogada());
 	}
-	
+
 	@Test
-	public void testFazerSplit() {
+	public void testFazerSplit() throws Exception {
 		Jogador actual = new Jogador("Joao");
 		Baralho b = new Baralho(4);
 		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
@@ -242,7 +246,7 @@ public class JogadorTest {
 	}
 
 	@Test(expected = Exception.class)
-	public void testFazerDouble() {
+	public void testFazerDouble() throws Exception {
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(4);
 		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
@@ -272,7 +276,7 @@ public class JogadorTest {
 		actual.fazerSurrender(actual.mao);
 		assertEquals("A aposta nao foi modificada", aposta_esperada, actual.aposta);
 	}
-	
+
 	@Test
 	public void testFazerSurrender() {
 		Jogador actual = new Jogador("Joao");

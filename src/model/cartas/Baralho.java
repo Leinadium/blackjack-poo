@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-// disclaimer: era para ser não-pública, mas não seria acessivel para classes fora de model.cartas
+// disclaimer: era para ser nï¿½o-pï¿½blica, mas nï¿½o seria acessivel para classes fora de model.cartas
 public class Baralho {
 
 	public List<Carta> cartas = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Baralho {
 	
 	public Carta pop() throws IndexOutOfBoundsException{
 		if (cartas.size() == 0) {
-			throw new IndexOutOfBoundsException("Tentativa de remoção de Baralho vazio");
+			throw new IndexOutOfBoundsException("Tentativa de remoï¿½ï¿½o de Baralho vazio");
 		}
 		else {
 			Carta c = cartas.get(0);
