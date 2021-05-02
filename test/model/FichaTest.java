@@ -8,6 +8,12 @@ import java.util.List;
 
 public class FichaTest {
 
+	@Test
+	public void criacaoFichaRoxo() {
+		Ficha f = new Ficha(1);
+		assertEquals(f.cor, "roxo");
+	}
+
     @Test
     public void criacaoFichaBranco() {
         Ficha f = new Ficha(5);
@@ -41,13 +47,13 @@ public class FichaTest {
     @Test
     public void calculaValorLista() {
         List<Ficha> lista = new ArrayList<>();
+        int expected = 186;
+        lista.add(new Ficha(1));
         lista.add(new Ficha(5));
         lista.add(new Ficha(10));
         lista.add(new Ficha(20));
         lista.add(new Ficha(50));
-        lista.add(new Ficha(100));
-
-        assertEquals(Ficha.calculaValor(lista), 185);
+        assertEquals(expected, Ficha.calculaValor(lista));
     }
 
     @Test

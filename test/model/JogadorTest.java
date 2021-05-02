@@ -1,11 +1,15 @@
 package model;
+
+import org.junit.*;
+
 import static org.junit.Assert.*;
-import org.junit.Test;
+
+import java.util.ArrayList;
 
 import model.cartas.*;
-import model.cartas.Baralho;
 
 public class JogadorTest {
+	
 	@Test
 	public void testTemDinheiro() {
 		Jogador actual = new Jogador("Joao");
@@ -16,39 +20,67 @@ public class JogadorTest {
 	public void testNaoTemDinheiro() {
 		Jogador actual = new Jogador("Joao");
 		actual.dinheiro = 0;
-		assertTrue("O jogador nao tem dinheiro", actual.temDinheiro());
+		assertFalse("O jogador tem dinheiro", actual.temDinheiro());
 	}
 	
-		
 	@Test
 	public void testTerApostado() {
 		Jogador actual = new Jogador("Joao");
 		actual.aposta = 50;
-		assertTrue("O jogador fez sua aposta", actual.terApostado());
+		assertTrue("O jogador nao fez sua aposta", actual.terApostado());
 	}
 	
 	@Test
 	public void testNaoTerApostado() {
 		Jogador actual = new Jogador("Joao");
-		assertTrue("O jogador nao fez sua aposta", actual.terApostado());
+		
+		assertFalse("O jogador fez sua aposta", actual.terApostado());
 	}
 
 	@Test
 	public void testChecaFalencia() {
 		Jogador actual = new Jogador("Joao");
+		actual.finalizarAposta();
 		actual.dinheiro = 0;
-		assertTrue("O jogador esta falido", actual.checaFalencia());
+		assertTrue("O jogador nao esta falido", actual.checaFalencia()); //como finalizado é privado, como vou testar esse metodo? ele so vira true depois do stand
 	}
 	
 	@Test
 	public void testChecaNaoFalencia() {
 		Jogador actual = new Jogador("Joao");
-		assertFalse("O jogador nao esta falido", actual.checaFalencia());
+		assertFalse("O jogador esta falido", actual.checaFalencia());
 	}
 
 	@Test
 	public void testFinalizarAposta() {
-		fail("Not yet implemented");
+		fail("Not yet implemented"); //nessa aqui o rendido é privado ai estou pensando como testar essa metodo?
+	}
+	
+	@Test
+	public void testFazApostaValida() {
+		Jogador actual = new Jogador("Joao");
+		int valor_esperado = actual.dinheiro;
+		actual.fazAposta(100);
+		assertEquals("As apostas nao sao iguais", valor_esperado-100, actual.dinheiro);
+	}
+	
+	@Test(expected = IllegalStateException.class) 
+	public void testFazApostaInvalidaMaisQue100() {
+		Jogador actual = new Jogador("Joao");
+		actual.fazAposta(101);
+	}
+	
+	@Test(expected = IllegalStateException.class) 
+	public void testFazApostaInvalidaMenosQue20() {
+		Jogador actual = new Jogador("Joao");
+		actual.fazAposta(19);
+	}
+	
+	@Test(expected = IllegalStateException.class) 
+	public void testFazApostaInvalidaSemDinheiro() {
+		Jogador actual = new Jogador("Joao");
+		actual.dinheiro = 30;
+		actual.fazAposta(31);
 	}
 
 	@Test
@@ -56,90 +88,113 @@ public class JogadorTest {
 		Jogador actual = new Jogador("Joao");
 		int valor_ficha = 100;
 		Ficha f = new Ficha(valor_ficha);
-		int saldo_antigo = actual.dinheiro;
-		actual.aumentarAposta(f);
-		assertEquals("A aposta foi aumentada", saldo_antigo, actual.dinheiro-valor_ficha);
+		int aposta_esperada = actual.aposta+100;
+		actual.aumentarAposta(f); //eu acho que voce nao aumentaria a aposta em fichas e sim aumentaria em dinheiro
+		assertEquals("A aposta nao foi aumentada", aposta_esperada, actual.aposta);
 	}
 
 	@Test
 	public void testAdicionarFicha() {
 		Jogador actual = new Jogador("Joao");
-		int valor_ficha = 100;
-		Ficha f = new Ficha(valor_ficha);
+		Ficha f = new Ficha(100);
 		actual.adicionarFicha(f);
-		//aqui acho que voce ia mudar como ia ficar a lista entao nao terminei
+		assertEquals("A ficha nao foi adicionada", f, actual.fichas.get(actual.fichas.size()-1));
 	}
 
 	@Test
-	public void testRetirarFicha() {
+	public void testRetirarFichaTamanhoReduzido() {
 		Jogador actual = new Jogador("Joao");
-		int valor_ficha = 50;
-		Ficha f = new Ficha(valor_ficha);
+		Ficha f = new Ficha(100);
+		int tamanho_esperado = actual.fichas.size()-1;
 		actual.retirarFicha(f);
-		//aqui acho que voce ia mudar como ia ficar a lista entao nao terminei
+		assertEquals("A ficha nao foi retirada", tamanho_esperado, actual.fichas.size());
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void testRetirarFichaValorIgual() {
+		Jogador actual = new Jogador("Joao");
+		Ficha f1 = new Ficha(100);
+		actual.retirarFicha(f1);
+		actual.retirarFicha(f1);
+		actual.retirarFicha(f1); //terceira ocorrencia, o jogador nao pode ter mais
+		
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void testRetirarFichaListaVazia() {
+		Jogador actual = new Jogador("Joao");
+		actual.fichas = new ArrayList<>();
+        actual.retirarFicha(new Ficha(100));
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void testRetirarFichaInexistente() {
+		Jogador actual = new Jogador("Joao");
+		Ficha f1 = new Ficha(100);
+		Ficha f2 = new Ficha(50);
+		actual.fichas = null;
+		actual.adicionarFicha(f1);
+		actual.retirarFicha(f2);
 	}
 
 	@Test
-	public void testRetirarDinheiro() throws Exception { //eu fiquei em duvida nao era pra ser aquele expected = Exception.class? 
+	public void testRetirarDinheiro() {
 		Jogador actual = new Jogador("Joao");
 		actual.retirarDinheiro(400);
-		assertEquals("O dinheiro foi retirado", actual.dinheiro, 100);
+		assertEquals("O dinheiro nao foi retirado", actual.dinheiro, 100);
+	}
+	
+	@Test (expected = Exception.class)
+	public void testRetirarDinheiroSemDinheiro() {
+		Jogador actual = new Jogador("Joao");
+		actual.retirarDinheiro(500);
+		actual.retirarDinheiro(100);
 	}
 
 	@Test
-	public void testNaoPodeHitBlackjackMao() {
+	public void testNaoPodeHitBlackjack() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		assertFalse("O jogador nao pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
+		assertFalse("O jogador pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
 	}
 	
 	@Test
-	public void testPodeHitMao() {
+	public void testPodeHit() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		assertTrue("O jogador pode fazer Hit", actual.podeHit(actual.mao));
+		assertTrue("O jogador pode fazer Hit", actual.podeHit());
 	}
 
 	@Test
-	public void testPodeHit() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testNaoPodeStandBlackjackMao() {
+	public void testNaoPodeStandBlackjack() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand(actual.mao));
+		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand());
 	}
 	
 	@Test
-	public void testPodeStandMao() {
+	public void testPodeStand() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		assertTrue("O jogador pode fazer Stand", actual.podeStand(actual.mao));
-	}	
-
-	@Test
-	public void testPodeStand() {
-		fail("Not yet implemented"); // TODO
+		assertTrue("O jogador pode fazer Stand", actual.podeStand());
 	}
 
 	@Test
-	public void testNaoPodeDoubleMao() {
+	public void testNaoPodeDouble() {
 		Jogador actual = new Jogador("Joao");
-		Baralho baralho = new Baralho(52*4);
+		Baralho baralho = new Baralho(4);
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
@@ -149,94 +204,101 @@ public class JogadorTest {
 	}
 	
 	@Test
-	public void testPodeDoubleMao() {
+	public void testPodeDouble() {
 		Jogador actual = new Jogador("Joao");
-		Baralho baralho = new Baralho(52*4);
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		actual.mao.ganharCarta(c1);
 		assertTrue("O jogador pode fazer Double", actual.podeDouble(actual.mao));
 	}
 
 	@Test
-	public void testPodeDouble() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testPodeSplitMao() {
+	public void testPodeSplit() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		assertTrue("O jogador pode fazer split", actual.podeSplit(actual.mao));
+		assertTrue("O jogador nao pode fazer split", actual.podeSplit());
 	}
 	
 	@Test
-	public void testNaoPodeSplitMao() {
+	public void testNaoPodeSplit() {
 		Jogador actual = new Jogador("Joao");
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		assertFalse("O jogador pode fazer split", actual.podeSplit(actual.mao));
+		assertFalse("O jogador pode fazer split", actual.podeSplit());
 	}
 
 	@Test
-	public void testPodeSplit() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testFazerHitBaralhoMao() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testFazerHitBaralho() {
-		fail("Not yet implemented"); // TODO
+	public void testFazerHit() {
+		Jogador actual = new Jogador("Joao");
+		Baralho baralho = new Baralho(4);
+		Carta c1 = baralho.pop();
+		Carta c2 = baralho.pop();
+		actual.fazerHit(baralho);
+		assertEquals("Ultima jogada nao foi um hit", Jogada.HIT, actual.retornaUltimaJogada());
 	}
 	
 	@Test
-	public void testFazerStandMao() {
+	public void testFazerSplit() {
 		Jogador actual = new Jogador("Joao");
+		Baralho b = new Baralho(4);
 		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
 		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.mao.ganharCarta(c1);
 		actual.mao.ganharCarta(c2);
-		actual.finalizarAposta();
-		actual.fazerStand(actual.mao);
-		assertEquals("O jogador fez um stand", actual.mao.finalizado); //queria tentar por ultima jogada, mas ai é privada
+		actual.fazerSplit(b);
+		assertEquals("Ultima jogada nao foi um split", Jogada.SPLIT, actual.retornaUltimaJogada()); //queria tentar por ultima jogada, mas ai é privada
+	}
+
+	@Test(expected = Exception.class)
+	public void testFazerDouble() {
+		Jogador actual = new Jogador("Joao");
+		Baralho baralho = new Baralho(4);
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		actual.fazerDouble(baralho);
+		assertEquals("Ultima jogada nao foi um double", Jogada.DOUBLE, actual.retornaUltimaJogada());
 	}
 
 	@Test
 	public void testFazerStand() {
-		fail("Not yet implemented"); // TODO
+		Jogador actual = new Jogador("Joao");
+		Baralho b = new Baralho(4);
+		Carta c1 = b.pop();
+		Carta c2 = b.pop();
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		actual.fazerStand(actual.mao);
+		assertEquals("O stand nao foi a ultima jogada", Jogada.STAND, actual.retornaUltimaJogada());
 	}
 
 	@Test
-	public void testFazerDoubleMaoBaralho() {
-		fail("Not yet implemented"); // TODO
+	public void testFazerSurrenderApostaReduzida() {
+		Jogador actual = new Jogador("Joao");
+		int aposta_esperada = actual.aposta/2;
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		actual.fazerSurrender(actual.mao);
+		assertEquals("A aposta nao foi modificada", aposta_esperada, actual.aposta);
 	}
-
-	@Test
-	public void testFazerDoubleBaralho() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testFazerSplitMaoBaralho() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testFazerSplitBaralho() {
-		fail("Not yet implemented"); // TODO
-	}
-
+	
 	@Test
 	public void testFazerSurrender() {
-		fail("Not yet implemented"); // TODO
+		Jogador actual = new Jogador("Joao");
+		int aposta_esperada = actual.aposta/2;
+		Carta c1 = new Carta(Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		actual.fazerSurrender(actual.mao);
+		assertEquals("O jogador nao fez um surrender", Jogada.SURRENDER, actual.retornaUltimaJogada());
 	}
 
 }
