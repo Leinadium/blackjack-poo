@@ -10,6 +10,11 @@ import model.cartas.*;
 
 public class JogadorTest {
 	
+	private void adicionaCarta(Jogador jog,  Cor cor, Nome nome, Naipe naipe) {
+		Carta c = new Carta(cor, nome, naipe);
+		jog.mao.ganharCarta(c);
+	}
+
 	@Test
 	public void testTemDinheiro() {
 		Jogador actual = new Jogador("Joao");
@@ -154,51 +159,41 @@ public class JogadorTest {
 	@Test
 	public void testNaoPodeHitBlackjack() {
 		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		assertFalse("O jogador pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
 	}
 	
 	@Test
 	public void testPodeHit() {
 		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.TRES, Naipe.PAUS);
 		assertTrue("O jogador pode fazer Hit", actual.podeHit());
 	}
 
 	@Test
 	public void testNaoPodeStandBlackjack() {
 		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand());
 	}
 	
 	@Test
 	public void testPodeStand() {
 		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		assertTrue("O jogador pode fazer Stand", actual.podeStand());
 	}
 
 	@Test
-	public void testNaoPodeDouble() {
+	public void testNaoPodeDoubleSegundaJogada() {
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(4);
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.TRES, Naipe.PAUS);
 		actual.fazerHit(baralho);
 		assertFalse("O jogador nao pode fazer Double pois nao é sua primeira jogada", actual.podeDouble());
 	}
@@ -206,28 +201,23 @@ public class JogadorTest {
 	@Test
 	public void testPodeDouble() {
 		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		actual.mao.ganharCarta(c1);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		assertTrue("O jogador pode fazer Double", actual.podeDouble(actual.mao));
 	}
 
 	@Test
 	public void testPodeSplit() {
 		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		assertTrue("O jogador nao pode fazer split", actual.podeSplit());
 	}
 	
 	@Test
 	public void testNaoPodeSplit() {
 		Jogador actual = new Jogador("Joao");
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.TRES, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.TRES, Naipe.PAUS);
 		assertFalse("O jogador pode fazer split", actual.podeSplit());
 	}
 
@@ -245,10 +235,8 @@ public class JogadorTest {
 	public void testFazerSplit() {
 		Jogador actual = new Jogador("Joao");
 		Baralho b = new Baralho(4);
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.fazerSplit(b);
 		assertEquals("Ultima jogada nao foi um split", Jogada.SPLIT, actual.retornaUltimaJogada()); //queria tentar por ultima jogada, mas ai é privada
 	}
@@ -257,10 +245,8 @@ public class JogadorTest {
 	public void testFazerDouble() {
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(4);
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		actual.fazerDouble(baralho);
 		assertEquals("Ultima jogada nao foi um double", Jogada.DOUBLE, actual.retornaUltimaJogada());
 	}
@@ -281,10 +267,8 @@ public class JogadorTest {
 	public void testFazerSurrenderApostaReduzida() {
 		Jogador actual = new Jogador("Joao");
 		int aposta_esperada = actual.aposta/2;
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
 		actual.fazerSurrender(actual.mao);
 		assertEquals("A aposta nao foi modificada", aposta_esperada, actual.aposta);
 	}
@@ -293,10 +277,8 @@ public class JogadorTest {
 	public void testFazerSurrender() {
 		Jogador actual = new Jogador("Joao");
 		int aposta_esperada = actual.aposta/2;
-		Carta c1 = new Carta(Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
-		actual.mao.ganharCarta(c1);
-		actual.mao.ganharCarta(c2);
+		adicionaCarta(actual, Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
+		adicionaCarta(actual, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
 		actual.fazerSurrender(actual.mao);
 		assertEquals("O jogador nao fez um surrender", Jogada.SURRENDER, actual.retornaUltimaJogada());
 	}
