@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-// disclaimer: era para ser n√£o-publica, mas a√≠ n√£o seria acessivel para classes fora de model.cartas
+// disclaimer: era para ser n„o-p˙blica, mas n„o seria acessivel para classes fora de model.cartas
 public class Baralho {
 
-	List<Carta> cartas = new ArrayList<>();
+	public List<Carta> cartas = new ArrayList<>();
 	private final int quantidade;
 
 	public Baralho(int quantidade) {
@@ -40,14 +40,19 @@ public class Baralho {
 		}
 	}
 	
-	public Carta pop() {
-		Carta c = cartas.get(0);
-		cartas.remove(0);
-
-		// checando se o baralho precisa ser reiniciado
-		if (this.cartas.size() <= 9 * this.quantidade * 52 / 10) {this.embaralhar();}
-
-		return c;
+	public Carta pop() throws IndexOutOfBoundsException{
+		if (cartas.size() == 0) {
+			throw new IndexOutOfBoundsException("Tentativa de remoÁ„o de Baralho vazio");
+		}
+		else {
+			Carta c = cartas.get(0);
+			cartas.remove(0);
+	
+			// checando se o baralho precisa ser reiniciado
+			if (this.cartas.size() <= 9 * this.quantidade * 52 / 10) {this.embaralhar();}
+	
+			return c;
+		}
 	}
 
 	public void embaralhar() {

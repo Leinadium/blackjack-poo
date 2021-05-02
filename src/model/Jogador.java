@@ -4,6 +4,9 @@ import model.cartas.*;
 
 import java.util.List;
 import java.util.ArrayList;
+
+import static org.junit.Assert.assertThrows;
+
 import java.lang.IllegalStateException;
 
 /**
@@ -61,6 +64,9 @@ class Jogador {
         for (i = 0; i < 8; i ++) {
             this.fichas.add(new Ficha(5));
         }
+        for (i = 0; i < 10; i ++) {
+            this.fichas.add(new Ficha(1));
+        }
 
         // criando as maos split nulas
         for (i = 0; i < 2; i ++) {maosSplit.add(null);}
@@ -88,9 +94,30 @@ class Jogador {
      * @return true se o jogador tiver falido
      */
     public boolean checaFalencia() {
-        return (this.finalizado && this.dinheiro < 0);
+        return (this.finalizado && this.dinheiro <= 0); //acho que aqui eh menor ou igual porque se ele finalizou entao ele nao pode apostar mais pq faliu
     }
-
+    /**
+     * Verifica se uma aposta pode ser feita
+     * @return true se o jogador pode fazer a aposta
+     */
+    private boolean verificaAposta(int valor){
+    	if (valor < 20 || valor > 100 || valor > this.dinheiro) {
+    		return false;
+    	}
+    	return true;
+    }
+    /**
+     * Faz uma aposta
+     */
+    public void fazAposta(int valor) throws IllegalStateException {
+    	if (verificaAposta(valor)) {
+    		this.dinheiro -= valor;
+    		// eu nao entendi como posso usar a calculaFichas nesse caso, mas teoricamente tem que mexer nas fichas tambem
+    	}
+    	else {
+    		throw new IllegalStateException("O jogador nao pode fazer a aposta com o valor inserido");
+    	}
+    }
     /**
      * Finaliza a aposta atual, e coloca pronto para a partida
      */
@@ -115,6 +142,9 @@ class Jogador {
      */
     public void adicionarFicha(Ficha f) {
         this.dinheiro += f.valor;
+        if (this.fichas == null) {
+        	this.fichas = new ArrayList<>(); //pode acontecer caso o jogador aposte tudo mas acabe ganhando depois
+        }
         this.fichas.add(f);
     }
 
@@ -125,14 +155,16 @@ class Jogador {
      */
     public void retirarFicha(Ficha f) throws IllegalStateException {
         int i;
-        for (i = 0; i < this.fichas.size(); i ++ ) {
-            if (this.fichas.get(i).valor == f.valor) {
-                this.fichas.remove(i);
-                this.dinheiro -= f.valor;
-                return;
-            }
+        if (this.fichas != null) {
+	        for (i = 0; i < this.fichas.size(); i ++ ) {
+	            if (this.fichas.get(i).valor == f.valor) {
+	                this.fichas.remove(i);
+	                this.dinheiro -= f.valor;
+	                return;
+	            }
+	        }
         }
-        throw new IllegalStateException("Essa ficha nao existe");
+        throw new IllegalStateException("O jogador nao possui essa ficha");
     }
 
     /**
@@ -142,24 +174,31 @@ class Jogador {
      */
     public void retirarDinheiro(int dinheiro) throws Exception {
         // coletando as fichas a serem retiradas
-        List<Ficha> fichasParaRetirar = Ficha.calculaFicha(dinheiro, this.fichas);
-
-        // retirando as fichas
-        for (Ficha f: fichasParaRetirar) {
-            fichas.remove(f);
-        }
-
-        // removendo o dinheiro
-        this.dinheiro -= dinheiro;
+    	try {
+    		List<Ficha> fichasParaRetirar = Ficha.calculaFicha(dinheiro, this.fichas);
+            // retirando as fichas
+            for (Ficha f: fichasParaRetirar) {
+                fichas.remove(f);
+            }
+            if (this.dinheiro-dinheiro >= 0) {
+                // removendo o dinheiro
+                this.dinheiro -= dinheiro;
+                return;
+            }
+            throw new Exception("O jogador nao possui esse dinheiro");
+    	}
+    	catch (Exception e){
+    		throw new Exception("Nao foi possível calcular as fichas a serem retiradas");
+    	}
     }
 
     public boolean podeHit(Mao m) {
-        return (!m.finalizado && this.ultimaJogada != Jogada.DOUBLE);
+        return (!m.finalizado && this.ultimaJogada != Jogada.DOUBLE && !this.mao.blackjack); //duvida em relacao as maos do split
     }
     public boolean podeHit() { return podeHit(this.mao); }
 
     public boolean podeStand(Mao m) {
-        return (!m.finalizado);
+        return (!m.finalizado && !m.blackjack);
     }
     public boolean podeStand() { return podeStand(this.mao);}
 
@@ -174,6 +213,27 @@ class Jogador {
         return (this.quantidadeSplits < 2 && m.podeSplit());
     }
     public boolean podeSplit() { return podeSplit(this.mao);}
+    
+    public boolean podeSurrender(Mao m) {
+    	return (!m.finalizado && this.ultimaJogada == null && this.mao.cartas.size() == 2);
+    }
+    public boolean podeSurrender() { return podeSurrender(this.mao);}
+    
+    public boolean validaSurrender(Dealer d) {
+    	return (!d.mao.blackjack);
+    }
+    
+    public void fazerSurrender(Mao m) {
+    	this.rendido = true;
+    	this.finalizado = true;
+    	this.aposta = this.aposta/2;
+    	this.ultimaJogada = Jogada.SURRENDER;
+    }
+    public void fazerSurrender() { fazerSurrender(this.mao); }
+    
+    public Jogada retornaUltimaJogada() {
+    	return (this.ultimaJogada);
+    }
 
     /**
      * Faz a jogada de HIT para aquela mao.
@@ -208,9 +268,11 @@ class Jogador {
      */
     private boolean verificaFinalizadoGeral() {
         boolean ret = this.mao.finalizado;
-        for (Mao m: this.maosSplit) {
-            ret = ret && m.finalizado;
-        }
+	    for (Mao m: this.maosSplit) {
+	    	if (m != null) {
+	    		ret = ret && m.finalizado;
+	    	}
+	    } //aqui teoricamente o finalizado do jogador viraria verdadeiro?
         return ret;
     }
 
@@ -222,18 +284,31 @@ class Jogador {
      */
     public void fazerDouble(Mao m, Baralho b) throws Exception {
         aposta += aposta;
-        this.retirarDinheiro(this.aposta);
-        this.fazerHit(b, m);
-        this.fazerStand(m);
-        this.quantidadeJogadas -= 1;  // Hit e Stand adicionaram +2. Retirando 1 para ficar com +1 jogada
-        this.ultimaJogada = Jogada.DOUBLE;
+        try {
+        	this.retirarDinheiro(this.aposta);
+            this.fazerHit(b, m);
+            this.fazerStand(m);
+            this.quantidadeJogadas -= 1;  // Hit e Stand adicionaram +2. Retirando 1 para ficar com +1 jogada
+            this.ultimaJogada = Jogada.DOUBLE;
+        }
+        catch (Exception e) {
+        	throw new Exception("O jogador nao possui dinheiro para fazer double");
+        }
     }
-    public void fazerDouble(Baralho b) throws Exception { this.fazerDouble(this.mao, b); }
+    public void fazerDouble(Baralho b) throws Exception{
+    	try {
+    		this.fazerDouble(this.mao, b);
+    	}
+    	catch (Exception e) {
+    		throw new Exception("O jogador nao possui dinheiro para fazer double");
+    	}
+    }
 
     /**
      * Faz a jogada de SPLIT para aquela mao
      * @param m Mao a ser dividida
      * @param b Baralho para pegar as novas cartas
+     * @throws Exception Error se todas as maos estiverem em uso
      */
     public void fazerSplit(Mao m, Baralho b) throws Exception{
         // achando a mao proxima mao aberta
@@ -245,7 +320,12 @@ class Jogador {
         Mao nova_mao = m.fazerSplit();  // criando a nova mao
         this.maosSplit.set(pos, nova_mao); // salvando a mao na lista de maos
         this.aposta += this.aposta;    // aumentando a aposta
-        this.retirarDinheiro(this.aposta);  // retirando o dinheiro da aposta do jogador
+        try {
+        	this.retirarDinheiro(this.aposta);  // retirando o dinheiro da aposta do jogador
+        }
+        catch (Exception e) {
+        	throw new Exception("O jogador nao possui dinheiro");
+        }
 
         this.fazerHit(b, m);   // adicionando uma carta em cada mao
         this.fazerHit(b, nova_mao);
@@ -254,6 +334,4 @@ class Jogador {
         this.ultimaJogada = Jogada.SPLIT;
     }
     public void fazerSplit(Baralho b) throws Exception {this.fazerSplit(this.mao, b);}
-
-    public void fazerSurrender() { /*TODO*/}
 }

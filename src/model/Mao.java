@@ -56,8 +56,14 @@ class Mao {
 	/**
 	 * Verifica se a mao quebrou
 	 */
-	public void verificaQuebrado(){
-		if (this.soma > 21){
+	private boolean verificaQuebrado(){
+		return (this.soma > 21);
+	}
+	/**
+	 * Atualiza as variaveis se a mao quebrou
+	 */
+	public void atualizaQuebrado(){
+		if (this.verificaQuebrado()){
 			this.finalizado = true;
 		}
 	}
@@ -72,7 +78,7 @@ class Mao {
 		if (this.cartas.size() == 2 && this.soma != 21) {
 			this.blackjack = false;
 		}
-		verificaQuebrado();
+		atualizaQuebrado(); //tem que ver isso tambem porque se quebrar mas pegar as cartas pelo baralho.pop vai dar problema
 
 	}
 	/**
@@ -87,7 +93,7 @@ class Mao {
 		}
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
-		m.blackjack = false;   // proibi a mao split de ter um blackjack
+		m.blackjack = false;   // inicia a mao split como nao tendo um blackjack (apenas 1 carta)
 		this.blackjack = false;
 
 		this.cartas.remove(1);
@@ -96,6 +102,6 @@ class Mao {
 	}
 
 	public boolean podeSplit() {
-		return (this.cartas.size() == 2 && this.cartas.get(0).equals(this.cartas.get(1)));
+		return (this.cartas.size() == 2 && this.cartas.get(0).equals(this.cartas.get(1))); //seriam duas funcoes de podeSplit mesmo?
 	}
 }

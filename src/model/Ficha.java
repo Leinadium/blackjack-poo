@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
 
-public class Ficha {
+class Ficha {
     public int valor;
     public String cor;
 
     public Ficha(int valor) throws IllegalArgumentException {
-        if (valor == 5) { this.cor = "branco"; }
+        if (valor == 1) { this.cor = "roxo"; }
+        else if (valor == 5)  { this.cor = "branco"; }
         else if (valor == 10) { this.cor = "vermelho"; }
         else if (valor == 20) { this.cor = "verde"; }
         else if (valor == 50) { this.cor = "azul"; }
@@ -32,10 +33,11 @@ public class Ficha {
     }
 
     /**
-     * Calcula uma combinaÃ§Ã£o de fichas que mais aproxima ao dinheiro desejado
+     * Calcula uma combinação de fichas que mais aproxima ao dinheiro desejado
      * @param dinheiro Dinheiro a ser tranformado em fichas
      * @param listaPossiveis Lista de fichas disponiveis
      * @return Lista de fichas relativas ao dinheiro
+     * @throws Exception Error - Se não houver melhor escolha
      */
     public static List<Ficha> calculaFicha(int dinheiro, List<Ficha> listaPossiveis) throws Exception{
         // Fazendo uma copia
