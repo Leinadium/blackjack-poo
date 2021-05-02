@@ -5,83 +5,87 @@
 package model;
 
 import org.junit.*;
-
-/*
-  Daniel Guimarães - 1910462
-  Mariana Barreto - 1820673
- */
 import static org.junit.Assert.*;
 
 import model.cartas.*;
 
 public class DealerTest {
-
+	
+	private void adicionaCartaMao(Mao m,  Cor cor, Nome nome, Naipe naipe) {
+		Carta c = new Carta(cor, nome, naipe);
+		m.ganharCarta(c);
+	}
+	
     @Test
     public void podeHitInicial() {
-        Dealer d = new Dealer();
-        assertTrue("Pode Hit no inicio", d.podeHit());
+        Dealer actual = new Dealer();
+        assertTrue("Pode Hit no inicio", actual.podeHit());
     }
 
     @Test
     public void podeHitSegundo() {
-        Dealer d = new Dealer();
+        Dealer actual = new Dealer();
         Baralho b = new Baralho(4);
-        d.mao.ganharCarta(b.pop());
-        assertTrue("Pode Hit na primera carta", d.podeHit());
+        actual.mao.ganharCarta(b.pop());
+        assertTrue("Pode Hit na primera carta", actual.podeHit());
     }
 
     @Test
     public void podeHitMais17() {
-        Dealer d = new Dealer();
-        Carta as = new Carta(Cor.PRETO, Nome.AS, Naipe.COPAS);
-        Carta dez = new Carta(Cor.PRETO, Nome.DEZ, Naipe.COPAS);
-        d.mao.ganharCarta(as);
-        d.mao.ganharCarta(dez);
-        assertFalse("Pode Hit com mais de 17 pontos", d.podeHit());
+        Dealer actual = new Dealer();
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.AS, Naipe.PAUS);
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.ESPADAS);
+        assertFalse("Pode Hit com mais de 17 pontos", actual.podeHit());
     }
 
     @Test
     public void podeStandInicial() {
-        Dealer d = new Dealer();
-        assertFalse("Pode Stand no inicio", d.podeStand());
+        Dealer actual = new Dealer();
+        assertFalse("Pode Stand no inicio", actual.podeStand());
     }
 
     @Test
     public void podeStandSegundo() {
-        Dealer d = new Dealer();
+        Dealer actual = new Dealer();
         Baralho b = new Baralho(4);
-        d.mao.ganharCarta(b.pop());
+        actual.mao.ganharCarta(b.pop());
 
-        assertFalse("Pode Stand na primeira carta", d.podeStand());
+        assertFalse("Pode Stand na primeira carta", actual.podeStand());
     }
 
     @Test
     public void podeStand16() {
-        Dealer d = new Dealer();
-        Carta dez = new Carta(Cor.PRETO, Nome.DEZ, Naipe.COPAS);
-        Carta seis = new Carta(Cor.PRETO, Nome.SEIS, Naipe.COPAS);
-        d.mao.ganharCarta(seis);
-        d.mao.ganharCarta(dez);
-        assertFalse("Pode Stand com 16 pontos", d.podeStand());
+        Dealer actual = new Dealer();
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.PAUS);
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.SEIS, Naipe.ESPADAS);
+        assertFalse("Pode Stand com 16 pontos", actual.podeStand());
     }
 
     @Test
     public void podeStand17() {
-        Dealer d = new Dealer();
-        Carta dez = new Carta(Cor.PRETO, Nome.DEZ, Naipe.COPAS);
-        Carta sete = new Carta(Cor.PRETO, Nome.SETE, Naipe.COPAS);
-        d.mao.ganharCarta(sete);
-        d.mao.ganharCarta(dez);
-        assertTrue("Pode Stand com 17 pontos", d.podeStand());
+        Dealer actual = new Dealer();
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.PAUS);
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.SETE, Naipe.PAUS);
+        assertTrue("Pode Stand com 17 pontos", actual.podeStand());
     }
 
     @Test
     public void podeStandBlackjack() {
-        Dealer d = new Dealer();
-        Carta dez = new Carta(Cor.PRETO, Nome.DEZ, Naipe.COPAS);
-        Carta as = new Carta(Cor.PRETO, Nome.AS, Naipe.COPAS);
-        d.mao.ganharCarta(as);
-        d.mao.ganharCarta(dez);
-        assertFalse("Pode Stand com blackjack", d.podeStand());
+        Dealer actual = new Dealer();
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.PAUS);
+        adicionaCartaMao(actual.mao, Cor.PRETO, Nome.AS, Naipe.PAUS);
+        assertFalse("Pode Stand com blackjack", actual.podeStand());
     }
+    
+	@Test
+	public void testFazerStand() {
+		Dealer actual = new Dealer();
+		Baralho b = new Baralho(4);
+		Carta c1 = b.pop();
+		Carta c2 = b.pop();
+		actual.mao.ganharCarta(c1);
+		actual.mao.ganharCarta(c2);
+		actual.fazerStand(actual.mao);
+		assertTrue("Nao foi feita uma jogada", actual.verificaFinalizadoGeral());
+	}
 }

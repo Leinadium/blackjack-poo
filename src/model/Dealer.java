@@ -4,6 +4,9 @@
  */
 package model;
 
+import model.cartas.Baralho;
+import model.cartas.Carta;
+
 /**
  * Classe Dealer.
  *
@@ -34,9 +37,36 @@ class Dealer {
     * Lembrando que, segundo a estratégia básica, a melhor jogada para qualquer soma de pontos maior ou igual que 17 é STAND
      */
     public boolean podeStand() {
-        //nao finalizado e nao pode fazer hit
+        //nao finalizado, nao pode fazer hit e nao pode ter feito blackjack
         return (!this.mao.finalizado && !podeHit() && !this.mao.blackjack);
     }
-
+    /**
+     * Funcao privada para verificar todas as maos se foram finalizadas
+     * @return true se a mao tiver sido finalizada
+     */
+    public boolean verificaFinalizadoGeral() {
+       return (this.mao.finalizado);
+    }
+    /**
+     * Faz a jogada de STAND para aquela mao;
+     * Finaliza a jogada
+     * @param m Mao do dealer
+     */
+    public void fazerStand(Mao m) {
+        m.finalizado = true;
+        // verifica se esse stand foi o ultimo de todas as maos
+        this.finalizado = this.verificaFinalizadoGeral();
+    }
+    public void fazerStand() { fazerStand(this.mao); }
+    /**
+     * Faz a jogada de HIT para aquela mao;
+     * @param m Mao do dealer
+     * @param baralho Baralho
+     */
+    public void fazerHit(Baralho baralho, Mao m) {
+        Carta c = baralho.pop();
+        m.ganharCarta(c);
+    }
+    public void fazerHit(Baralho baralho) { this.fazerHit(baralho, this.mao); }
 
 }
