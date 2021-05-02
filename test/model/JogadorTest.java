@@ -1,5 +1,5 @@
 /*
-  Daniel Guimarães - 1910462
+  Daniel Guimaraes - 1910462
   Mariana Barreto - 1820673
  */
 package model;
@@ -11,13 +11,38 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import model.cartas.*;
-import model.cartas.Baralho;
 
 public class JogadorTest {
 
-	private void adicionaCarta(Jogador jog,  Cor cor, Nome nome, Naipe naipe) {
+	private void adicionaCartaMao(Mao m,  Cor cor, Nome nome, Naipe naipe) {
 		Carta c = new Carta(cor, nome, naipe);
-		jog.mao.ganharCarta(c);
+		m.ganharCarta(c);
+	}
+	
+	private void criaBlackjack(Mao m) {
+		adicionaCartaMao(m, Cor.VERMELHO, Nome.AS, Naipe.OUROS);
+		adicionaCartaMao(m, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+	}
+	
+	private void criaSplit(Mao m) {
+		adicionaCartaMao(m, Cor.VERMELHO, Nome.SETE, Naipe.OUROS);
+		adicionaCartaMao(m, Cor.PRETO, Nome.SETE, Naipe.PAUS);
+	}
+	
+	private void criaMaoComumMenosPontos(Mao m) {
+		adicionaCartaMao(m, Cor.VERMELHO, Nome.TRES, Naipe.OUROS);
+		adicionaCartaMao(m, Cor.PRETO, Nome.TRES, Naipe.PAUS);
+	}
+	
+	private void criaMaoComumMaisPontos(Mao m) {
+		adicionaCartaMao(m, Cor.VERMELHO, Nome.AS, Naipe.OUROS);
+		adicionaCartaMao(m, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
+	}
+	
+	private void criaMaoQuebrada(Mao m) {
+		adicionaCartaMao(m, Cor.VERMELHO, Nome.VALETE, Naipe.OUROS);
+		adicionaCartaMao(m, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		adicionaCartaMao(m, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
 	}
 
 	@Test
@@ -43,7 +68,6 @@ public class JogadorTest {
 	@Test
 	public void testNaoTerApostado() {
 		Jogador actual = new Jogador("Joao");
-
 		assertFalse("O jogador fez sua aposta", actual.terApostado());
 	}
 
@@ -162,32 +186,28 @@ public class JogadorTest {
 	@Test
 	public void testNaoPodeHitBlackjack() {
 		Jogador actual = new Jogador("Joao");
-		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		criaBlackjack(actual.mao);
 		assertFalse("O jogador pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
 	}
 
 	@Test
 	public void testPodeHit() {
 		Jogador actual = new Jogador("Joao");
-		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.TRES, Naipe.PAUS);
+		criaMaoComumMenosPontos(actual.mao);
 		assertTrue("O jogador pode fazer Hit", actual.podeHit());
 	}
 
 	@Test
 	public void testNaoPodeStandBlackjack() {
 		Jogador actual = new Jogador("Joao");
-		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		criaBlackjack(actual.mao);
 		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand());
 	}
 
 	@Test
 	public void testPodeStand() {
 		Jogador actual = new Jogador("Joao");
-		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		criaMaoComumMaisPontos(actual.mao);
 		assertTrue("O jogador pode fazer Stand", actual.podeStand());
 	}
 
@@ -195,8 +215,7 @@ public class JogadorTest {
 	public void testNaoPodeDoubleSegundaJogada() {
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(4);
-		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.TRES, Naipe.PAUS);
+		criaMaoComumMaisPontos(actual.mao);
 		actual.fazerHit(baralho);
 		assertFalse("O jogador nao pode fazer Double pois nao é sua primeira jogada", actual.podeDouble());
 	}
@@ -204,23 +223,21 @@ public class JogadorTest {
 	@Test
 	public void testPodeDouble() {
 		Jogador actual = new Jogador("Joao");
-		adicionaCarta(actual, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
+		adicionaCartaMao(actual.mao, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		assertTrue("O jogador pode fazer Double", actual.podeDouble(actual.mao));
 	}
 
 	@Test
 	public void testPodeSplit() {
 		Jogador actual = new Jogador("Joao");
-		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		criaSplit(actual.mao);
 		assertTrue("O jogador nao pode fazer split", actual.podeSplit());
 	}
 
 	@Test
 	public void testNaoPodeSplit() {
 		Jogador actual = new Jogador("Joao");
-		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.TRES, Naipe.PAUS);
+		criaMaoComumMaisPontos(actual.mao);
 		assertFalse("O jogador pode fazer split", actual.podeSplit());
 	}
 
@@ -228,8 +245,8 @@ public class JogadorTest {
 	public void testFazerHit() {
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(4);
-		Carta c1 = baralho.pop();
-		Carta c2 = baralho.pop();
+		baralho.pop();
+		baralho.pop();
 		actual.fazerHit(baralho);
 		assertEquals("Ultima jogada nao foi um hit", Jogada.HIT, actual.retornaUltimaJogada());
 	}
@@ -238,8 +255,7 @@ public class JogadorTest {
 	public void testFazerSplit() throws Exception {
 		Jogador actual = new Jogador("Joao");
 		Baralho b = new Baralho(4);
-		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		criaSplit(actual.mao);
 		actual.fazerSplit(b);
 		assertEquals("Ultima jogada nao foi um split", Jogada.SPLIT, actual.retornaUltimaJogada()); //queria tentar por ultima jogada, mas ai é privada
 	}
@@ -248,8 +264,7 @@ public class JogadorTest {
 	public void testFazerDouble() throws Exception{
 		Jogador actual = new Jogador("Joao");
 		Baralho baralho = new Baralho(4);
-		adicionaCarta(actual, Cor.VERMELHO, Nome.VALETE, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
+		criaSplit(actual.mao);
 		actual.fazerDouble(baralho);
 		assertEquals("Ultima jogada nao foi um double", Jogada.DOUBLE, actual.retornaUltimaJogada());
 	}
@@ -270,8 +285,7 @@ public class JogadorTest {
 	public void testFazerSurrenderApostaReduzida() {
 		Jogador actual = new Jogador("Joao");
 		int aposta_esperada = actual.aposta/2;
-		adicionaCarta(actual, Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
+		criaMaoComumMenosPontos(actual.mao);
 		actual.fazerSurrender(actual.mao);
 		assertEquals("A aposta nao foi modificada", aposta_esperada, actual.aposta);
 	}
@@ -279,11 +293,32 @@ public class JogadorTest {
 	@Test
 	public void testFazerSurrender() {
 		Jogador actual = new Jogador("Joao");
-		int aposta_esperada = actual.aposta/2;
-		adicionaCarta(actual, Cor.VERMELHO, Nome.QUATRO, Naipe.COPAS);
-		adicionaCarta(actual, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
+		criaMaoComumMenosPontos(actual.mao);
 		actual.fazerSurrender(actual.mao);
 		assertEquals("O jogador nao fez um surrender", Jogada.SURRENDER, actual.retornaUltimaJogada());
+	}
+	
+	private void exemploCalculaMelhorValorSplit(Jogador jog) throws Exception{
+		Baralho baralho = new Baralho(4);
+		criaSplit(jog.mao);
+		jog.fazerSplit(baralho);
+	}
+	
+	private Mao decideMelhorMao(Jogador jog){
+		Mao m1 = jog.maosSplit.get(0);
+		Mao m2 = jog.maosSplit.get(1);
+		if (m1.soma >= m2.soma) {
+			return m1;
+		}
+		return m2;
+	}	
+	
+	@Test
+	public void testCalculaMelhorValorMaosComSplit() throws Exception{
+		Jogador actual = new Jogador("Joao");
+		exemploCalculaMelhorValorSplit(actual);
+		Mao expected_mao = decideMelhorMao(actual);
+		assertEquals("O total de pontos da mao nao foi como esperado", expected_mao.soma, actual.calculaMelhorValor());
 	}
 
 }

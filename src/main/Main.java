@@ -1,5 +1,5 @@
 /*
-  Daniel Guimarães - 1910462
+  Daniel Guimaraes - 1910462
   Mariana Barreto - 1820673
  */
 

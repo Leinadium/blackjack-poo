@@ -1,5 +1,5 @@
 /*
-  Daniel Guimarães - 1910462
+  Daniel Guimaraes - 1910462
   Mariana Barreto - 1820673
  */
 package model;
@@ -340,13 +340,14 @@ class Jogador {
      */
     public void fazerSplit(Mao m, Baralho b) throws Exception{
         // achando a mao proxima mao aberta
-        int pos;
-        if (maosSplit.get(0) == null) {pos = 0;}
-        else if (maosSplit.get(1) == null) {pos = 1;}
+        int pos, pos2;
+        if (maosSplit.get(0) == null) {pos = 0; pos2 = 1;}
+        else if (maosSplit.get(1) == null) {pos = 1; pos2 = 0;}
         else { throw new Exception("Todas as maos estao em uso"); }
 
         Mao nova_mao = m.fazerSplit();  // criando a nova mao
         this.maosSplit.set(pos, nova_mao); // salvando a mao na lista de maos
+        this.maosSplit.set(pos2, m);
         this.aposta += this.aposta;    // aumentando a aposta
         try {
         	this.retirarDinheiro(this.aposta);  // retirando o dinheiro da aposta do jogador
