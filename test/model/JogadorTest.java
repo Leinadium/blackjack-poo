@@ -38,12 +38,6 @@ public class JogadorTest {
 		adicionaCartaMao(m, Cor.VERMELHO, Nome.AS, Naipe.OUROS);
 		adicionaCartaMao(m, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
 	}
-	
-	private void criaMaoQuebrada(Mao m) {
-		adicionaCartaMao(m, Cor.VERMELHO, Nome.VALETE, Naipe.OUROS);
-		adicionaCartaMao(m, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
-		adicionaCartaMao(m, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
-	}
 
 	@Test
 	public void testTemDinheiro() {

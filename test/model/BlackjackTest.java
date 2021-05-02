@@ -47,7 +47,7 @@ public class BlackjackTest {
 	}
 	
 	@Test
-	public final void testeJogadorGanhandoComBlackjack() {
+	public final void testJogadorGanhandoComBlackjack() {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
@@ -56,8 +56,21 @@ public class BlackjackTest {
 		assertEquals("O jogador nao foi vencedor da partida", Resultado.JOGADOR, actual.verificaGanhador(actual_jogador, actual_dealer));
 	}
 	
+	@Test 
+	public final void testJogadorGanhandoComBlackjackVerificaPagamento() {
+		Blackjack actual = new Blackjack(1, "Joao");
+		Jogador actual_jogador = actual.jogadores.get(0);
+		int expected_aposta = actual_jogador.aposta;
+		Dealer actual_dealer = actual.dealer;
+		actual_jogador.fazAposta(50);
+		criaBlackjack(actual_jogador.mao);
+		criaMaoComumMenosPontos(actual_dealer.mao);
+		actual.verificaGanhador(actual_jogador, actual_dealer);
+		assertNotEquals("O pagamento nao foi feito como esperado", expected_aposta, actual_jogador.aposta);
+	}
+	
 	@Test
-	public final void testeJogadorGanhandoNormal() {
+	public final void testJogadorGanhandoNormal() {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
@@ -67,7 +80,7 @@ public class BlackjackTest {
 	}
 	
 	@Test
-	public final void testeJogadorGanhandoDealerQuebrando() {
+	public final void testJogadorGanhandoDealerQuebrando() {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
@@ -77,7 +90,7 @@ public class BlackjackTest {
 	}
 	
 	@Test
-	public final void testeDealerGanhandoDoisQuebrando() {
+	public final void testDealerGanhandoDoisQuebrando() {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
@@ -87,7 +100,7 @@ public class BlackjackTest {
 	}
 	
 	@Test
-	public final void testeDealerGanhandoDoisBlackjacks() {
+	public final void testDealerGanhandoDoisBlackjacks() {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
@@ -97,7 +110,7 @@ public class BlackjackTest {
 	}
 	
 	@Test
-	public final void testePush() {
+	public final void testPush() {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
@@ -107,7 +120,7 @@ public class BlackjackTest {
 	}
 	
 	@Test
-	public final void testeJogadorGanhandoComMaosSplit() throws Exception {
+	public final void testJogadorGanhandoComMaosSplit() throws Exception {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
@@ -118,7 +131,7 @@ public class BlackjackTest {
 	}
 	
 	@Test
-	public final void testeDealerGanhandoComMaosSplit() throws Exception {
+	public final void testDealerGanhandoComMaosSplit() throws Exception {
 		Blackjack actual = new Blackjack(1, "Joao");
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;

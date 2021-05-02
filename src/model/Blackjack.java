@@ -39,15 +39,18 @@ public class Blackjack {
     		return Resultado.DEALER;
     	}
     	else if (jog.mao.blackjack) {
+    		jog.recebePagamentoBlackjack();
     		return Resultado.JOGADOR;
     	}
     	else if (jog.mao.quebrado) {
     		return Resultado.DEALER;
     	}
     	else if (d.mao.quebrado) {
+    		jog.dinheiro += jog.aposta;
     		return Resultado.JOGADOR;
     	}
     	else if ((21-jog.calculaMelhorValor()) < (21-d.mao.soma)) {
+    		jog.dinheiro += jog.aposta;
     		return Resultado.JOGADOR;
     	}
     	else if ((21-jog.calculaMelhorValor()) > (21-d.mao.soma)) {

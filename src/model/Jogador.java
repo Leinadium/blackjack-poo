@@ -140,7 +140,7 @@ class Jogador {
     public void fazAposta(int valor) throws IllegalStateException {
     	if (verificaAposta(valor)) {
     		this.dinheiro -= valor;
-    		// eu nao entendi como posso usar a calculaFichas nesse caso, mas teoricamente tem que mexer nas fichas tambem
+    		this.aposta = valor;
     	}
     	else {
     		throw new IllegalStateException("O jogador nao pode fazer a aposta com o valor inserido");
@@ -162,6 +162,12 @@ class Jogador {
     public void aumentarAposta(Ficha f) {
         this.retirarFicha(f);
         this.aposta += f.valor;
+    }
+    /**
+     * Recebe pagamento caso tenha feito Blackjack
+     */
+    public void recebePagamentoBlackjack() {
+    	this.dinheiro += this.aposta * (3/2);
     }
 
     /**
