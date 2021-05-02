@@ -1,3 +1,7 @@
+/*
+  Daniel Guimarães - 1910462
+  Mariana Barreto - 1820673
+ */
 package model;
 
 import model.cartas.*;

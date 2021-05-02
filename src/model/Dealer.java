@@ -1,3 +1,7 @@
+/*
+  Daniel Guimarães - 1910462
+  Mariana Barreto - 1820673
+ */
 package model;
 
 import model.cartas.*;
@@ -8,9 +12,6 @@ import model.cartas.*;
  * Metodos e funcoes:
  *     Mao mao -> mao do dealer
  */
-
-
-
 class Dealer {
     public Mao mao;
     private boolean finalizado;
