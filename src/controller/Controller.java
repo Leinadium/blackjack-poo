@@ -7,12 +7,15 @@ public class Controller {
     FrameDealer frameDealer;
 
     public Controller() {
+        // carrega as imagens
+        Imagem.carregar();
+
         this.frameInicial = new FrameInicial(this);
         this.frameInicial.abrir();
     }
 
     public void iniciarPartida(int quantidadeJogadores) {
         this.frameInicial.fechar();
-        System.out.println("comecando a partida com " + quantidadeJogadores + " jogadores");
+        this.frameDealer = new FrameDealer();
     }
 }
