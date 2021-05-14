@@ -49,11 +49,10 @@ public class FrameInicial extends JFrame implements ActionListener{
         comboQuantidadeJogadores.setSelectedIndex(0);
         comboQuantidadeJogadores.addActionListener(this);
 
-        // criando os botoes e colocando em um painel
+        // criando os botoes e colocando no painel do frame
         // adiciona os botoes
-        JPanel p = new JPanel();
-        GroupLayout layout = new GroupLayout(p);
-        p.setLayout(layout);
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
@@ -79,8 +78,6 @@ public class FrameInicial extends JFrame implements ActionListener{
                         .addComponent(botaoCarregarPartida, GroupLayout.PREFERRED_SIZE,
                                 GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
-
-        getContentPane().add(p);  // colocando o novo painel
     }
 
     public void abrir() {
@@ -108,5 +105,4 @@ public class FrameInicial extends JFrame implements ActionListener{
             System.out.println("quantidade: " + quantidade);
         }
     }
-
 }
