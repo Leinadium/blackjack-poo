@@ -6,9 +6,9 @@ package model.cartas;
 
 // disclaimer: era para ser não-publica, mas aí não seria acessivel para classes fora de model.cartas
 public class Carta {
-    Cor cor;
-    Nome nome;
-    Naipe naipe;
+    public Cor cor;
+    public Nome nome;
+    public Naipe naipe;
 
     public Carta (Cor c, Nome no, Naipe na) {
         cor = c;
@@ -43,5 +43,9 @@ public class Carta {
     	if (o == null || this.getClass() != o.getClass()) { return false;}
     	Carta c = (Carta) o;
     	return (this.nome == c.nome);
+    }
+
+    public String toString() {
+        return nome.toString() + "-" + naipe.toString();
     }
 }

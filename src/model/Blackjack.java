@@ -28,6 +28,22 @@ public class Blackjack {
     public void exibirBaralho() {
         this.baralho.exibirTodos();
     }
+
+
+	/**
+	 * Distribui duas cartas para o Dealer, e retorna as cartas
+	 * no formato string delas ("NOME-NAIPE")
+	 * @return String[] = {"NOME-NAIPE", "NOME-NAIPE"}
+	 */
+	public String[] distribuiCartasDealer() {
+    	this.dealer.mao.ganharCarta(baralho.pop());
+		this.dealer.mao.ganharCarta(baralho.pop());
+
+		List<Carta> cartas = this.dealer.mao.cartas;
+		return new String[]{cartas.get(0).toString(), cartas.get(1).toString()};
+	}
+
+
     /**
      * Retorna o resultado de uma partida entre um jogador e um dealer
      * @param jog - Jogador.

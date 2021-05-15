@@ -46,7 +46,7 @@ public class Baralho {
 	
 	public Carta pop() throws IndexOutOfBoundsException{
 		if (cartas.size() == 0) {
-			throw new IndexOutOfBoundsException("Tentativa de remo��o de Baralho vazio");
+			throw new IndexOutOfBoundsException("Tentativa de remocao de Baralho vazio");
 		}
 		else {
 			Carta c = cartas.get(0);

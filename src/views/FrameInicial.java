@@ -1,13 +1,16 @@
 package views;
 
 import controller.Controller;
+import controller.observer.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
-public class FrameInicial extends JFrame implements ActionListener{
+public class FrameInicial extends JFrame implements ActionListener, ObservadoMenu {
     public final int ALTURA = 130;
     public final int COMPRIMENTO = 300;
 
@@ -17,13 +20,12 @@ public class FrameInicial extends JFrame implements ActionListener{
     protected JComboBox<String> comboQuantidadeJogadores;
     protected String[] opcoesJogadores;
 
-    protected Controller c;  // para poder notificar o controller quando mudar algo
+    protected ArrayList<ObservadorMenu> listaObservadores;
+    private NotificacoesMenu notificacao;
 
     public boolean ativado;
 
-    public FrameInicial(Controller c) {
-        this.c = c;
-
+    public FrameInicial() {
         // pega as informacoes do monitor
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
@@ -92,11 +94,15 @@ public class FrameInicial extends JFrame implements ActionListener{
 
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
+        boolean devoNotificar = false;
+
         if (obj.equals(botaoNovaPartida)) {  // apertou o botao de nova partida
-            this.c.iniciarPartida(this.quantidadeJogadores);
+            this.notificacao = NotificacoesMenu.Iniciar;
+            devoNotificar = true;
 
         } else if (obj.equals(botaoCarregarPartida)) {  // apertou o botao de carregar partida
-            System.out.println("carregar partida ainda nao implementado");
+            this.notificacao = NotificacoesMenu.Carregar;
+            devoNotificar = true;
 
         } else {  // mudou a quantidade de jogadores
             JComboBox<String> cb = (JComboBox<String>) obj;
@@ -104,5 +110,20 @@ public class FrameInicial extends JFrame implements ActionListener{
             this.quantidadeJogadores = Integer.parseInt(String.valueOf(quantidade.charAt(0)));
             System.out.println("quantidade: " + quantidade);
         }
+        if (devoNotificar) { for (ObservadorMenu x : listaObservadores) { x.notificar(this); } }
+
     }
+
+    public void registraObservador(ObservadorMenu o) {
+        if (listaObservadores == null) { listaObservadores = new ArrayList<>(); }
+        listaObservadores.add(o);
+    }
+    public void retiraObservador(ObservadorMenu o) {
+        listaObservadores.remove(o);
+    }
+    public NotificacoesMenu get() {
+        return notificacao;
+    }
+    public int getQuantidadeJogadores() { return quantidadeJogadores; }
+    public File getArquivo() { return null; }  // ainda nao implementado
 }
