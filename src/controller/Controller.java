@@ -2,11 +2,10 @@ package controller;
 
 import java.util.ArrayList;
 
-import controller.observer.*;
 import views.*;
 import model.Blackjack;
 
-public class Controller implements ObservadorDealer, ObservadorJogador, ObservadorMenu {
+public class Controller {
     FrameInicial frameInicial;
     FrameDealer frameDealer;
     ArrayList<FrameJogador> frameJogador;
@@ -15,40 +14,23 @@ public class Controller implements ObservadorDealer, ObservadorJogador, Observad
     public Controller() {
         // carrega as imagens
         Imagem.carregar();
-        this.frameInicial = new FrameInicial();
-        this.frameInicial.registraObservador(this);
+        this.frameInicial = new FrameInicial(this);
         this.frameInicial.abrir();
     }
-
-
-    public void notificar(ObservadoMenu o) {
-        switch (o.get()) {
-            case Carregar -> System.out.println("Ainda nao implementado");
-            case Iniciar -> iniciarPartida(o.getQuantidadeJogadores());
-        }
-    }
-
-    public void notificar(ObservadoDealer o) {
-        switch (o.get()) {
-            case PartidaEncerrada -> fecharPartida();
-            case PartidaSalva -> System.out.println("Ainda nao implementado");
-            case RodadaNova -> iniciarRodada();
-        }
-    }
     
-    public void notificar(ObservadoJogador o){
-    	switch(o.get()) {
-    	case STAND -> System.out.println("Ainda nao implementado");
-    	case HIT -> System.out.println("Ainda nao implementado");
-    	case DOUBLE -> System.out.println("Ainda nao implementado");
-    	case SURRENDER -> System.out.println("Ainda nao implementado");
-    	case SPLIT -> acionaSplit(0); //por enquanto é só do jogador 1, depois vamos expandir para os demais
+    public void fazerJogada(String numJogador, String acao){
+    	switch(acao) {
+            case "STAND" -> System.out.println("Ainda nao implementado");
+            case "HIT" -> System.out.println("Ainda nao implementado");
+            case "DOUBLE" -> System.out.println("Ainda nao implementado");
+            case "SURRENDER" -> System.out.println("Ainda nao implementado");
+            case "SPLIT" -> acionaSplit(0); //por enquanto é só do jogador 1, depois vamos expandir para os demais
     	}
     }
 
     void acionaSplit(int numJogador) {
     	String numJogadorString = String.format("%d", numJogador+1);
-    	this.frameJogador.add(new FrameJogador(numJogadorString)); //cria nova janela para a mao splitada
+    	this.frameJogador.add(new FrameJogador(this, numJogadorString)); //cria nova janela para a mao splitada
     	int ultimo = this.frameJogador.size() - 1;
     	this.frameJogador.get(ultimo).iniciarRodada(); //ultima janela precisa ser inicializada
     	String[] cartasJogador = api.distribuiCartasJogador(numJogador, true); //distribui as cartas para o jogador
@@ -58,8 +40,6 @@ public class Controller implements ObservadorDealer, ObservadorJogador, Observad
     	this.frameJogador.get(numJogador).substituirCarta(0,  cartasJogador[0]);
     	this.frameJogador.get(numJogador).substituirCarta(1, cartasJogador[1]);
     }
-    
-    
     
     public void fecharPartida() {
     	int i;
@@ -74,22 +54,28 @@ public class Controller implements ObservadorDealer, ObservadorJogador, Observad
         this.frameInicial.abrir();
     }
 
+    public void salvarPartida() {
+        System.out.println("Salvando partida (ainda nao implementado)!");
+        // TODO
+    }
+
+    public void carregarPartida() {
+        System.out.println("Carregar partida! (ainda nao implementado)");
+        // TODO
+    }
+
     public void iniciarPartida(int quantidadeJogadores) {
         // fecha o menu
         this.frameInicial.fechar();
 
         // inicia o jogo
         api = new Blackjack(quantidadeJogadores);
-        this.frameJogador = new ArrayList<FrameJogador>();
+        this.frameJogador = new ArrayList<>();
         for (int i = 0; i < quantidadeJogadores; i++) {
         	String numJogador = String.format("%d", i+1);
-        	this.frameJogador.add(new FrameJogador(numJogador));
+        	this.frameJogador.add(new FrameJogador(this, numJogador));
         }
-        this.frameDealer = new FrameDealer();
-        this.frameDealer.registraObservador(this);
-        for (int i = 0; i < quantidadeJogadores; i++) {
-        	this.frameJogador.get(i).registraObservador(this);
-        }
+        this.frameDealer = new FrameDealer(this);
     }
 
     public void iniciarRodada() {

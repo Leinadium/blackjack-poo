@@ -1,16 +1,13 @@
 package views;
 
 import controller.Controller;
-import controller.observer.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
 
-public class FrameInicial extends JFrame implements ActionListener, ObservadoMenu {
+public class FrameInicial extends JFrame implements ActionListener {
     public final int ALTURA = 130;
     public final int COMPRIMENTO = 300;
 
@@ -20,12 +17,11 @@ public class FrameInicial extends JFrame implements ActionListener, ObservadoMen
     protected JComboBox<String> comboQuantidadeJogadores;
     protected String[] opcoesJogadores;
 
-    protected ArrayList<ObservadorMenu> listaObservadores;
-    private NotificacoesMenu notificacao;
-
+    protected Controller controller;
     public boolean ativado;
 
-    public FrameInicial() {
+    public FrameInicial(Controller controller) {
+        this.controller = controller;
         // pega as informacoes do monitor
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
@@ -94,36 +90,17 @@ public class FrameInicial extends JFrame implements ActionListener, ObservadoMen
 
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
-        boolean devoNotificar = false;
 
         if (obj.equals(botaoNovaPartida)) {  // apertou o botao de nova partida
-            this.notificacao = NotificacoesMenu.Iniciar;
-            devoNotificar = true;
+            this.controller.iniciarPartida(quantidadeJogadores);
 
         } else if (obj.equals(botaoCarregarPartida)) {  // apertou o botao de carregar partida
-            this.notificacao = NotificacoesMenu.Carregar;
-            devoNotificar = true;
+            this.controller.carregarPartida();
 
         } else {  // mudou a quantidade de jogadores
             JComboBox<String> cb = (JComboBox<String>) obj;
             String quantidade = (String)cb.getSelectedItem();
             this.quantidadeJogadores = Integer.parseInt(String.valueOf(quantidade.charAt(0)));
-            System.out.println("quantidade: " + quantidade);
         }
-        if (devoNotificar) { for (ObservadorMenu x : listaObservadores) { x.notificar(this); } }
-
     }
-
-    public void registraObservador(ObservadorMenu o) {
-        if (listaObservadores == null) { listaObservadores = new ArrayList<>(); }
-        listaObservadores.add(o);
-    }
-    public void retiraObservador(ObservadorMenu o) {
-        listaObservadores.remove(o);
-    }
-    public NotificacoesMenu get() {
-        return notificacao;
-    }
-    public int getQuantidadeJogadores() { return quantidadeJogadores; }
-    public File getArquivo() { return null; }  // ainda nao implementado
 }

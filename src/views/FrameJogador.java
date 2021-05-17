@@ -6,9 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import controller.observer.NotificacoesJogador;
-import controller.observer.ObservadoJogador;
-import controller.observer.ObservadorJogador;
+import controller.Controller;
 
 /**
  * Janela do Jogador
@@ -16,7 +14,7 @@ import controller.observer.ObservadorJogador;
  * e mão do jogador.
  */
 
-public class FrameJogador extends JFrame implements ActionListener, ObservadoJogador {
+public class FrameJogador extends JFrame implements ActionListener {
     public final int COMPRIMENTO = 900;
     public final int ALTURA = 700;
     private final Image background = Imagem.get("background");
@@ -29,13 +27,14 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadoJog
     protected JButton botaoDouble;
 
     protected ArrayList<String> listaCartas;
+    protected Controller controller;
+    protected String numJogador;
 
-    protected ArrayList<ObservadorJogador> listaObservadores;
-    private NotificacoesJogador notificacao;
 
-
-    public FrameJogador(String numJogador) {
+    public FrameJogador(Controller controller, String numJogador) {
         this.listaCartas = new ArrayList<>();
+        this.controller = controller;
+        this.numJogador = numJogador;
 
         // iniciando o frame
         setBounds(0, 0, 900, 700);
@@ -104,10 +103,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadoJog
                 Image imagemCarta = Imagem.get(carta[0], carta[1]);
                 g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
             }
-            
             //coloca o total de pontos da mao
         }
-        
     }
 
     public void fechar() { setVisible(false);}
@@ -115,18 +112,16 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadoJog
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();  // pega de onde veio o evento (qual botao)
         if (obj.equals(botaoStand)) {
-        	notificacao = NotificacoesJogador.STAND;
+        	this.controller.fazerJogada(numJogador, "STAND");
         } else if (obj.equals(botaoHit)) {
-        	notificacao = NotificacoesJogador.HIT;
+        	this.controller.fazerJogada(numJogador,"HIT");
         } else if (obj.equals(botaoDouble)) {
-        	notificacao = NotificacoesJogador.DOUBLE;
+        	this.controller.fazerJogada(numJogador,"DOUBLE");
         } else if (obj.equals(botaoSplit)) {
-        	notificacao = NotificacoesJogador.SPLIT;
+        	this.controller.fazerJogada(numJogador,"SPLIT");
         } else {
-        	notificacao = NotificacoesJogador.SURRENDER;
+        	this.controller.fazerJogada(numJogador,"SURRENDER");
         }
-        // notifica os observadores
-        for (ObservadorJogador x : listaObservadores) { x.notificar(this); }
     }
 
     void colocarBotoes() {
@@ -172,15 +167,4 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadoJog
     public void iniciarRodada() {
     	mudarEstadoBotoes(true);
     }
-
-    public void registraObservador(ObservadorJogador o) {
-        if (listaObservadores == null) {listaObservadores = new ArrayList<>();}
-        listaObservadores.add(o);
-    }
-    public void retiraObservador(ObservadorJogador o) { listaObservadores.remove(o); }
-    public NotificacoesJogador get() {
-        return notificacao;
-    }
-
-
 }
