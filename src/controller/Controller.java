@@ -70,21 +70,28 @@ public class Controller {
 
         // inicia o jogo
         api = new Blackjack(quantidadeJogadores);
+
+        // inicia os frames dos jogadores
         this.frameJogador = new ArrayList<>();
         for (int i = 0; i < quantidadeJogadores; i++) {
         	String numJogador = String.format("%d", i+1);
         	this.frameJogador.add(new FrameJogador(this, numJogador));
         }
+        // inicia o frame do dealer
         this.frameDealer = new FrameDealer(this);
+
+        // liga o dealer ao model (padrao observer)
+        this.api.registraObservador(this.frameDealer);
+
+        // liga os jogadores ao model (padrao observer)
+        // TODO
     }
 
     public void iniciarRodada() {
     	int i;
     	int quantidadeJogadores = this.frameJogador.size();
         // distribui as cartas para o dealer
-        String[] cartasDealer = api.distribuiCartasDealer();
-        frameDealer.adicionarCarta(cartasDealer[0]);
-        frameDealer.adicionarCarta(cartasDealer[1]);
+        api.distribuiCartasDealer();
         
         // distribui as cartas para o jogador
         for(i = 0; i < quantidadeJogadores; i++) {

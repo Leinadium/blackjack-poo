@@ -4,21 +4,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import controller.Controller;
+import controller.observer.*;
 
 
 /**
  * Janela do Dealer
- * É inicializada no meio da tela, e contem o fundo da mesa, baralho
- * mão do dealer.
+ * É inicializada no meio da tela, e contem o fundo da mesa, baralho e a
+ * mão do dealer, alem de tres botoes.
+ *
+ * Eh observador da API do model (model.blackjack)
  */
 
-public class FrameDealer extends JFrame implements ActionListener {
+public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI {
     public final int COMPRIMENTO = 900;
     public final int ALTURA = 700;
-    private final Image background = Imagem.get("background");
+    private final Image background = Imagem.get("background");      // imagens carregadas
     private final Image cartaAzul = Imagem.get("azul");
     private final Image cartaVermelha = Imagem.get("vermelho");
     private final Image ficha1 = Imagem.get("ficha1");
@@ -28,19 +30,18 @@ public class FrameDealer extends JFrame implements ActionListener {
     private final Image ficha50 = Imagem.get("ficha50");
     private final Image ficha100 = Imagem.get("ficha100");
 
-    protected JButton botaoEncerrar;
+    protected JButton botaoEncerrar;                                // botoes
     protected JButton botaoNovaRodada;
     protected JButton botaoSalvar;
     protected JLabel labelValorCartas;
 
-    protected ArrayList<String> listaCartas;
-    protected int valorCartas = 21;  // temporario
+    protected String[] cartas;          // cartas do dealer. Sao coletadas atraves da api
+    protected int valorCartas;          // valor das cartas do dealer. Sao coletadas atraves da api
 
     protected Controller controller;
 
     public FrameDealer(Controller c) {
         this.controller = c;
-        this.listaCartas = new ArrayList<>();
 
         // pegando informacoes da monitor
         // Toolkit tk = Toolkit.getDefaultToolkit();
@@ -65,19 +66,24 @@ public class FrameDealer extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public void adicionarCarta(String carta) {
-        labelValorCartas.setVisible(true);
-        listaCartas.add(carta);
-        repaint();
-    }
-
+    /**
+     * Reinicia as propriedades do Dealer:
+     * - Exclui as cartas da mao dele
+     * - Esconde o label
+     * - Libera o botao de Nova Rodada
+     */
     public void reiniciarDealer() {
-        listaCartas.clear();
+        cartas = null;
         labelValorCartas.setVisible(false);
         this.botaoNovaRodada.setEnabled(true);
         repaint();
     }
 
+    /**
+     * Override do metodo de pintar o Frame
+     * @param g Graphics
+     */
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
@@ -89,7 +95,6 @@ public class FrameDealer extends JFrame implements ActionListener {
         botaoEncerrar.repaint();
         botaoNovaRodada.repaint();
         botaoSalvar.repaint();
-        labelValorCartas.repaint();  // so eh visivel se tiver cartas
 
         // desenha o baralho
         int deslocamentoBaralhoX = 30;
@@ -99,24 +104,28 @@ public class FrameDealer extends JFrame implements ActionListener {
         g2d.drawImage(cartaAzul, deslocamentoBaralhoX + 8, deslocamentoBaralhoY + 4, null);
 
         // desenha as cartas do dealer
-        if (listaCartas.size() > 0) {
+        if (cartas != null) {
             int deslocamentoPorCarta = 20;
-            int inicio = (COMPRIMENTO/2) - deslocamentoPorCarta * listaCartas.size();
+            int inicio = (COMPRIMENTO/2) - deslocamentoPorCarta * cartas.length;
             int y = 350;
 
             // bota a primeira carta virada para cima
-            String[] carta = listaCartas.get(0).split("-");
+            String[] carta = this.cartas[0].split("-");
             Image imagemCarta = Imagem.get(carta[0], carta[1]);
             g2d.drawImage(imagemCarta, inicio, y, null);
 
             // coloca as outras cartas viradas para baixo
-            for (int i = 1; i < listaCartas.size(); i ++) {
-                carta = listaCartas.get(i).split("-");
+            for (int i = 1; i < this.cartas.length; i ++) {
+                carta = this.cartas[i].split("-");
                 if (carta[1].equals("ESPADAS") || carta[1].equals("PAUS")) {
                     imagemCarta = cartaAzul;
                 } else { imagemCarta = cartaVermelha; }
                 g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
             }
+            // desenha o label
+            labelValorCartas.setText(Integer.toString(this.valorCartas));
+            labelValorCartas.repaint();
+
         }
         //desenha as fichas (temporario)
         int deslocamentoFichaX = 30;
@@ -130,8 +139,15 @@ public class FrameDealer extends JFrame implements ActionListener {
         g2d.drawImage(ficha100, 16*deslocamentoFichaX, deslocamentoFichaY, null);
     }
 
+    /**
+     * Fecha a tela do Dealer
+     */
     public void fechar() { setVisible(false);}
 
+    /**
+     * Implementacao do Listener de acoes
+     * @param e ActionEvent
+     */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();  // pega de onde veio o evento (qual botao)
         if (obj.equals(botaoEncerrar)) { this.controller.fecharPartida(); }
@@ -142,6 +158,9 @@ public class FrameDealer extends JFrame implements ActionListener {
         else { this.controller.salvarPartida(); }
     }
 
+    /**
+     * Cria o label para exibir o valor das cartas.
+     */
     void criaLabelValor() {
         labelValorCartas = new JLabel(Integer.toString(valorCartas));
         labelValorCartas.setOpaque(false);
@@ -153,6 +172,9 @@ public class FrameDealer extends JFrame implements ActionListener {
         getContentPane().add(labelValorCartas);
     }
 
+    /**
+     * Cria os botoes e coloca nas posicoes corretas
+     */
     void colocarBotoes() {
         // criando os botoes
         botaoEncerrar = new JButton("Fechar partida");
@@ -175,8 +197,34 @@ public class FrameDealer extends JFrame implements ActionListener {
         getContentPane().add(botaoNovaRodada);
         getContentPane().add(botaoSalvar);
     }
-    
+
+    /**
+     * Coloca as fichas nas posicoes corretas
+     */
     void colocarFichas() {
     	// TODO
+    }
+
+    /**
+     * Implementacao de recebimento de notificacao da api
+     * Notificacoes consideradas:
+     * - DealerCartas
+     * - DealerAposta
+     *
+     * @param o Api do blackjack
+     */
+    public void notificar(ObservadoAPI o) {
+        switch (o.getNotificacao()) {   // pega a notificacao
+            case DealerCartas: {
+                labelValorCartas.setVisible(true);          // mostra o label
+                this.cartas = o.getCartasDealer();          // atualiza as cartas
+                this.valorCartas = o.getValorDealer();      // pega a soma das cartas
+                repaint();                                  // atualiza a tela inteira
+            }
+            case DealerAposta: {
+                // TODO
+            }
+            default: {}     // outras notificacoes sao ignoradas
+        }
     }
 }

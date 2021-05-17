@@ -7,38 +7,46 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.observer.*;
 import model.cartas.*;
 
-public class Blackjack {
-	public Baralho baralho;
-	public Dealer dealer;
-	public List<Jogador> jogadores;
+public class Blackjack implements ObservadoAPI {
+
+	// Implementacao o Observer
+	ArrayList<ObservadorAPI> listaObservadores;
+	NotificacaoAPI notificacaoAPI;
+
+	// Objetos essenciais
+	Baralho baralho;
+	Dealer dealer;
+	List<Jogador> jogadores;
+
+
     public Blackjack(int quantidadeJogadores){
     	int i;
     	this.baralho = new Baralho(4);
     	this.dealer = new Dealer();
-    	this.jogadores = new ArrayList<Jogador>();
+    	this.jogadores = new ArrayList<>();
     	for (i = 0; i < quantidadeJogadores; i++) {
     		jogadores.add(new Jogador(i));
     	}
     }
-    
-    public void exibirBaralho() {
+
+	/**
+	 * Exibe o baralho inteiro no sdout (para testes da implementacao)
+	 */
+	public void exibirBaralho() {
         this.baralho.exibirTodos();
     }
 
-
 	/**
-	 * Distribui duas cartas para o Dealer, e retorna as cartas
-	 * no formato string delas ("NOME-NAIPE")
-	 * @return String[] = {"NOME-NAIPE", "NOME-NAIPE"}
+	 * Distribui duas cartas para o Dealer
 	 */
-	public String[] distribuiCartasDealer() {
+	public void distribuiCartasDealer() {
     	this.dealer.mao.ganharCarta(baralho.pop());
 		this.dealer.mao.ganharCarta(baralho.pop());
 
-		List<Carta> cartas = this.dealer.mao.cartas;
-		return new String[]{cartas.get(0).toString(), cartas.get(1).toString()};
+		notificarTodos(NotificacaoAPI.DealerCartas);
 	}
 
 	/**
@@ -124,4 +132,29 @@ public class Blackjack {
     	}
     	return Resultado.PUSH;
     }
+
+
+    /* ==== FUNCOES DO OBSERVADOR ==== */
+
+    public void registraObservador(ObservadorAPI o) {
+    	if (listaObservadores == null) { listaObservadores = new ArrayList<>(); }
+		listaObservadores.add(o);
+	}
+    public void removeObservador(ObservadorAPI o) {
+    	listaObservadores.remove(o);
+	}
+	public NotificacaoAPI getNotificacao() {
+		return notificacaoAPI;
+	}
+	public void notificarTodos(NotificacaoAPI n) {
+    	this.notificacaoAPI = n;
+    	for (ObservadorAPI o: listaObservadores) { o.notificar(this); }
+    }
+	public String[] getCartasDealer() {
+		List<Carta> cartas = this.dealer.mao.cartas;
+		return new String[]{cartas.get(0).toString(), cartas.get(1).toString()};
+	}
+	public int getValorDealer() {
+    	return this.dealer.mao.soma;
+	}
 }
