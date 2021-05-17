@@ -6,9 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import controller.observer.NotificacoesDealer;
-import controller.observer.ObservadoDealer;
-import controller.observer.ObservadorDealer;
+import controller.Controller;
+
 
 /**
  * Janela do Dealer
@@ -16,7 +15,7 @@ import controller.observer.ObservadorDealer;
  * mão do dealer.
  */
 
-public class FrameDealer extends JFrame implements ActionListener, ObservadoDealer {
+public class FrameDealer extends JFrame implements ActionListener {
     public final int COMPRIMENTO = 900;
     public final int ALTURA = 700;
     private final Image background = Imagem.get("background");
@@ -32,14 +31,15 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
     protected JButton botaoEncerrar;
     protected JButton botaoNovaRodada;
     protected JButton botaoSalvar;
+    protected JLabel labelValorCartas;
 
     protected ArrayList<String> listaCartas;
+    protected int valorCartas = 21;  // temporario
 
-    protected ArrayList<ObservadorDealer> listaObservadores;
-    private NotificacoesDealer notificacao;
+    protected Controller controller;
 
-
-    public FrameDealer() {
+    public FrameDealer(Controller c) {
+        this.controller = c;
         this.listaCartas = new ArrayList<>();
 
         // pegando informacoes da monitor
@@ -60,16 +60,20 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
 
         // colocando os botoes
         colocarBotoes();
+        // cria o label com o valor das cartas
+        criaLabelValor();
         setVisible(true);
     }
 
     public void adicionarCarta(String carta) {
+        labelValorCartas.setVisible(true);
         listaCartas.add(carta);
         repaint();
     }
 
     public void reiniciarDealer() {
         listaCartas.clear();
+        labelValorCartas.setVisible(false);
         this.botaoNovaRodada.setEnabled(true);
         repaint();
     }
@@ -85,6 +89,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
         botaoEncerrar.repaint();
         botaoNovaRodada.repaint();
         botaoSalvar.repaint();
+        labelValorCartas.repaint();  // so eh visivel se tiver cartas
 
         // desenha o baralho
         int deslocamentoBaralhoX = 30;
@@ -99,11 +104,12 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
             int inicio = (COMPRIMENTO/2) - deslocamentoPorCarta * listaCartas.size();
             int y = 350;
 
-            // bota a primeira carta virada pra cima
+            // bota a primeira carta virada para cima
             String[] carta = listaCartas.get(0).split("-");
             Image imagemCarta = Imagem.get(carta[0], carta[1]);
             g2d.drawImage(imagemCarta, inicio, y, null);
 
+            // coloca as outras cartas viradas para baixo
             for (int i = 1; i < listaCartas.size(); i ++) {
                 carta = listaCartas.get(i).split("-");
                 if (carta[1].equals("ESPADAS") || carta[1].equals("PAUS")) {
@@ -112,8 +118,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
                 g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
             }
         }
-        
-        //desenha as fichas
+        //desenha as fichas (temporario)
         int deslocamentoFichaX = 30;
         int deslocamentoFichaY = 600;
         
@@ -129,16 +134,23 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
 
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();  // pega de onde veio o evento (qual botao)
-        if (obj.equals(botaoEncerrar)) {
-            notificacao = NotificacoesDealer.PartidaEncerrada;
-        } else if (obj.equals(botaoNovaRodada)) {
-            notificacao = NotificacoesDealer.RodadaNova;
+        if (obj.equals(botaoEncerrar)) { this.controller.fecharPartida(); }
+        else if (obj.equals(botaoNovaRodada)) {
             this.botaoNovaRodada.setEnabled(false);
-        } else {  // botaoSalvar
-            notificacao = NotificacoesDealer.PartidaSalva;
+            this.controller.iniciarRodada();
         }
-        // notifica os observadores
-        for (ObservadorDealer x : listaObservadores) { x.notificar(this); }
+        else { this.controller.salvarPartida(); }
+    }
+
+    void criaLabelValor() {
+        labelValorCartas = new JLabel(Integer.toString(valorCartas));
+        labelValorCartas.setOpaque(false);
+        labelValorCartas.setHorizontalTextPosition(JLabel.CENTER);
+        labelValorCartas.setFont(new Font("Serif", Font.BOLD, 18));
+        labelValorCartas.setBounds(COMPRIMENTO / 2 - 10, 420, 20, 30);
+
+        labelValorCartas.setVisible(false);
+        getContentPane().add(labelValorCartas);
     }
 
     void colocarBotoes() {
@@ -165,17 +177,6 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
     }
     
     void colocarFichas() {
-    	
+    	// TODO
     }
-
-    public void registraObservador(ObservadorDealer o) {
-        if (listaObservadores == null) {listaObservadores = new ArrayList<>();}
-        listaObservadores.add(o);
-    }
-    public void retiraObservador(ObservadorDealer o) { listaObservadores.remove(o); }
-    public NotificacoesDealer get() {
-        return notificacao;
-    }
-
-
 }
