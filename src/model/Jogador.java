@@ -28,7 +28,7 @@ import java.lang.IllegalStateException;
 
 
 class Jogador {
-    public String nome;
+    public int numero;
     public Mao mao;
     public List<Mao> maosSplit;
     public List<Ficha> fichas;
@@ -41,9 +41,9 @@ class Jogador {
     private int quantidadeJogadas;
     private int quantidadeSplits;
 
-    Jogador (String nome) {
+    Jogador (int numJogador) {
         int i;
-        this.nome = nome;
+        this.numero = numJogador;
         this.mao = new Mao();
         this.maosSplit = new ArrayList<>();
         this.dinheiro = 500;

@@ -41,33 +41,33 @@ public class JogadorTest {
 
 	@Test
 	public void testTemDinheiro() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		assertTrue("O jogador tem dinheiro", actual.temDinheiro());
 	}
 
 	@Test
 	public void testNaoTemDinheiro() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.dinheiro = 0;
 		assertFalse("O jogador tem dinheiro", actual.temDinheiro());
 	}
 
 	@Test
 	public void testTerApostado() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.aposta = 50;
 		assertTrue("O jogador nao fez sua aposta", actual.terApostado());
 	}
 	
 	@Test
 	public void testNaoTerApostado() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		assertFalse("O jogador fez sua aposta", actual.terApostado());
 	}
 
 	@Test
 	public void testChecaFalencia() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.dinheiro = 0;
 		actual.alteraJogadaFinalizada(true);
 		assertTrue("O jogador nao esta falido", actual.checaFalencia());
@@ -75,13 +75,13 @@ public class JogadorTest {
 	
 	@Test
 	public void testChecaNaoFalencia() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		assertFalse("O jogador esta falido", actual.checaFalencia());
 	}
 
 	@Test
 	public void testFazApostaValida() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		int valor_esperado = actual.dinheiro;
 		actual.fazAposta(100);
 		assertEquals("As apostas nao sao iguais", valor_esperado-100, actual.dinheiro);
@@ -89,26 +89,26 @@ public class JogadorTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testFazApostaInvalidaMaisQue100() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.fazAposta(101);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testFazApostaInvalidaMenosQue20() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.fazAposta(19);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testFazApostaInvalidaSemDinheiro() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.dinheiro = 30;
 		actual.fazAposta(31);
 	}
 
 	@Test
 	public void testAumentarAposta() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		int valor_ficha = 100;
 		Ficha f = new Ficha(valor_ficha);
 		int aposta_esperada = actual.aposta+100;
@@ -121,7 +121,7 @@ public class JogadorTest {
 
 	@Test
 	public void testAdicionarFicha() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Ficha f = new Ficha(100);
 		actual.adicionarFicha(f);
 		assertEquals("A ficha nao foi adicionada", f, actual.fichas.get(actual.fichas.size()-1));
@@ -129,7 +129,7 @@ public class JogadorTest {
 
 	@Test
 	public void testRetirarFichaTamanhoReduzido() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Ficha f = new Ficha(100);
 		int tamanho_esperado = actual.fichas.size()-1;
 		actual.retirarFicha(f);
@@ -138,7 +138,7 @@ public class JogadorTest {
 
 	@Test (expected = IllegalStateException.class)
 	public void testRetirarFichaValorIgual() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Ficha f1 = new Ficha(100);
 		actual.retirarFicha(f1);
 		actual.retirarFicha(f1);
@@ -148,14 +148,14 @@ public class JogadorTest {
 
 	@Test (expected = IllegalStateException.class)
 	public void testRetirarFichaListaVazia() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.fichas = new ArrayList<>();
         actual.retirarFicha(new Ficha(100));
 	}
 
 	@Test (expected = IllegalStateException.class)
 	public void testRetirarFichaInexistente() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Ficha f1 = new Ficha(100);
 		Ficha f2 = new Ficha(50);
 		actual.fichas = null;
@@ -165,49 +165,49 @@ public class JogadorTest {
 
 	@Test
 	public void testRetirarDinheiro() throws Exception {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.retirarDinheiro(400);
 		assertEquals("O dinheiro nao foi retirado", actual.dinheiro, 100);
 	}
 
 	@Test (expected = Exception.class)
 	public void testRetirarDinheiroSemDinheiro() throws Exception {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		actual.retirarDinheiro(500);
 		actual.retirarDinheiro(100);
 	}
 
 	@Test
 	public void testNaoPodeHitBlackjack() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		criaBlackjack(actual.mao);
 		assertFalse("O jogador pode fazer Hit por causa do Blackjack", actual.podeHit(actual.mao));
 	}
 
 	@Test
 	public void testPodeHit() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		criaMaoComumMenosPontos(actual.mao);
 		assertTrue("O jogador pode fazer Hit", actual.podeHit());
 	}
 
 	@Test
 	public void testNaoPodeStandBlackjack() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		criaBlackjack(actual.mao);
 		assertFalse("O jogador nao pode fazer Stand por causa do Blackjack", actual.podeStand());
 	}
 
 	@Test
 	public void testPodeStand() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		criaMaoComumMaisPontos(actual.mao);
 		assertTrue("O jogador pode fazer Stand", actual.podeStand());
 	}
 
 	@Test
 	public void testNaoPodeDoubleSegundaJogada() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Baralho baralho = new Baralho(4);
 		criaMaoComumMaisPontos(actual.mao);
 		actual.fazerHit(baralho);
@@ -216,28 +216,28 @@ public class JogadorTest {
 	
 	@Test
 	public void testPodeDouble() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		adicionaCartaMao(actual.mao, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
 		assertTrue("O jogador pode fazer Double", actual.podeDouble(actual.mao));
 	}
 
 	@Test
 	public void testPodeSplit() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		criaSplit(actual.mao);
 		assertTrue("O jogador nao pode fazer split", actual.podeSplit());
 	}
 
 	@Test
 	public void testNaoPodeSplit() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		criaMaoComumMaisPontos(actual.mao);
 		assertFalse("O jogador pode fazer split", actual.podeSplit());
 	}
 
 	@Test
 	public void testFazerHit() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Baralho baralho = new Baralho(4);
 		baralho.pop();
 		baralho.pop();
@@ -247,7 +247,7 @@ public class JogadorTest {
 
 	@Test
 	public void testFazerSplit() throws Exception {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Baralho b = new Baralho(4);
 		criaSplit(actual.mao);
 		actual.fazerSplit(b);
@@ -256,7 +256,7 @@ public class JogadorTest {
 
 	@Test
 	public void testFazerDouble() throws Exception{
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Baralho baralho = new Baralho(4);
 		criaSplit(actual.mao);
 		actual.fazerDouble(baralho);
@@ -265,7 +265,7 @@ public class JogadorTest {
 
 	@Test
 	public void testFazerStand() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		Baralho b = new Baralho(4);
 		Carta c1 = b.pop();
 		Carta c2 = b.pop();
@@ -277,7 +277,7 @@ public class JogadorTest {
 
 	@Test
 	public void testFazerSurrenderApostaReduzida() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		int aposta_esperada = actual.aposta/2;
 		criaMaoComumMenosPontos(actual.mao);
 		actual.fazerSurrender(actual.mao);
@@ -286,7 +286,7 @@ public class JogadorTest {
 
 	@Test
 	public void testFazerSurrender() {
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		criaMaoComumMenosPontos(actual.mao);
 		actual.fazerSurrender(actual.mao);
 		assertEquals("O jogador nao fez um surrender", Jogada.SURRENDER, actual.retornaUltimaJogada());
@@ -309,7 +309,7 @@ public class JogadorTest {
 	
 	@Test
 	public void testCalculaMelhorValorMaosComSplit() throws Exception{
-		Jogador actual = new Jogador("Joao");
+		Jogador actual = new Jogador(1);
 		exemploCalculaMelhorValorSplit(actual);
 		Mao expected_mao = decideMelhorMao(actual);
 		assertEquals("O total de pontos da mao nao foi como esperado", expected_mao.soma, actual.calculaMelhorValor());

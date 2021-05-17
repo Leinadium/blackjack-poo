@@ -26,6 +26,7 @@ public class Imagem {
             d.put("VALETE-PAUS", ImageIO.read(new File(f+"jc.gif")));
             d.put("DAMA-PAUS", ImageIO.read(new File(f+"qc.gif")));
             d.put("REI-PAUS", ImageIO.read(new File(f+"kc.gif")));
+            d.put("AS-PAUS", ImageIO.read(new File(f+"ac.gif")));
 
             d.put("DOIS-OUROS", ImageIO.read(new File(f+"2d.gif")));
             d.put("TRES-OUROS", ImageIO.read(new File(f+"3d.gif")));
@@ -39,19 +40,21 @@ public class Imagem {
             d.put("VALETE-OUROS", ImageIO.read(new File(f+"jd.gif")));
             d.put("DAMA-OUROS", ImageIO.read(new File(f+"qd.gif")));
             d.put("REI-OUROS", ImageIO.read(new File(f+"kd.gif")));
+            d.put("AS-OUROS", ImageIO.read(new File(f+"ad.gif")));
 
-            d.put("DOIS-COPAS", ImageIO.read(new File(f+"2c.gif")));
-            d.put("TRES-COPAS", ImageIO.read(new File(f+"3c.gif")));
-            d.put("QUATRO-COPAS", ImageIO.read(new File(f+"4c.gif")));
-            d.put("CINCO-COPAS", ImageIO.read(new File(f+"5c.gif")));
-            d.put("SEIS-COPAS", ImageIO.read(new File(f+"6c.gif")));
-            d.put("SETE-COPAS", ImageIO.read(new File(f+"7c.gif")));
-            d.put("OITO-COPAS", ImageIO.read(new File(f+"8c.gif")));
-            d.put("NOVE-COPAS", ImageIO.read(new File(f+"9c.gif")));
-            d.put("DEZ-COPAS", ImageIO.read(new File(f+"tc.gif")));
-            d.put("VALETE-COPAS", ImageIO.read(new File(f+"jc.gif")));
-            d.put("DAMA-COPAS", ImageIO.read(new File(f+"qc.gif")));
-            d.put("REI-COPAS", ImageIO.read(new File(f+"kc.gif")));
+            d.put("DOIS-COPAS", ImageIO.read(new File(f+"2h.gif")));
+            d.put("TRES-COPAS", ImageIO.read(new File(f+"3h.gif")));
+            d.put("QUATRO-COPAS", ImageIO.read(new File(f+"4h.gif")));
+            d.put("CINCO-COPAS", ImageIO.read(new File(f+"5h.gif")));
+            d.put("SEIS-COPAS", ImageIO.read(new File(f+"6h.gif")));
+            d.put("SETE-COPAS", ImageIO.read(new File(f+"7h.gif")));
+            d.put("OITO-COPAS", ImageIO.read(new File(f+"8h.gif")));
+            d.put("NOVE-COPAS", ImageIO.read(new File(f+"9h.gif")));
+            d.put("DEZ-COPAS", ImageIO.read(new File(f+"th.gif")));
+            d.put("VALETE-COPAS", ImageIO.read(new File(f+"jh.gif")));
+            d.put("DAMA-COPAS", ImageIO.read(new File(f+"qh.gif")));
+            d.put("REI-COPAS", ImageIO.read(new File(f+"kh.gif")));
+            d.put("AS-COPAS", ImageIO.read(new File(f+"ah.gif")));
 
             d.put("DOIS-ESPADAS", ImageIO.read(new File(f+"2s.gif")));
             d.put("TRES-ESPADAS", ImageIO.read(new File(f+"3s.gif")));
@@ -65,6 +68,7 @@ public class Imagem {
             d.put("VALETE-ESPADAS", ImageIO.read(new File(f+"js.gif")));
             d.put("DAMA-ESPADAS", ImageIO.read(new File(f+"qs.gif")));
             d.put("REI-ESPADAS", ImageIO.read(new File(f+"ks.gif")));
+            d.put("AS-ESPADAS", ImageIO.read(new File(f+"as.gif")));
 
             d.put("ficha1", ImageIO.read(new File(f+"ficha 1$.png")));
             d.put("ficha5", ImageIO.read(new File(f+"ficha 5$.png")));
@@ -74,7 +78,7 @@ public class Imagem {
             d.put("ficha100", ImageIO.read(new File(f+"ficha 100$.PNG")));
 
 
-            d.put("dealer", ImageIO.read(new File(f+"blackjackBKG.png")));
+            d.put("background", ImageIO.read(new File(f+"blackjackBKG.png")));
             d.put("azul", ImageIO.read(new File(f+"deck1.gif")));
             d.put("vermelho", ImageIO.read(new File(f+"deck2.gif")));
         }

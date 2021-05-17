@@ -19,9 +19,15 @@ import controller.observer.ObservadorDealer;
 public class FrameDealer extends JFrame implements ActionListener, ObservadoDealer {
     public final int COMPRIMENTO = 900;
     public final int ALTURA = 700;
-    private final Image background = Imagem.get("dealer");
+    private final Image background = Imagem.get("background");
     private final Image cartaAzul = Imagem.get("azul");
     private final Image cartaVermelha = Imagem.get("vermelho");
+    private final Image ficha1 = Imagem.get("ficha1");
+    private final Image ficha5 = Imagem.get("ficha5");
+    private final Image ficha10 = Imagem.get("ficha10");
+    private final Image ficha20 = Imagem.get("ficha20");
+    private final Image ficha50 = Imagem.get("ficha50");
+    private final Image ficha100 = Imagem.get("ficha100");
 
     protected JButton botaoEncerrar;
     protected JButton botaoNovaRodada;
@@ -37,16 +43,17 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
         this.listaCartas = new ArrayList<>();
 
         // pegando informacoes da monitor
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Dimension screenSize = tk.getScreenSize();
+        // Toolkit tk = Toolkit.getDefaultToolkit();
+        // Dimension screenSize = tk.getScreenSize();
         // pegando o meio da tela
-        int comp = screenSize.width;
-        int altu = screenSize.height;
-        int x = (comp - ALTURA) / 2;
-        int y = (altu - COMPRIMENTO) / 2;
+        // int comp = screenSize.width;
+        // int altu = screenSize.height;
+        // int x = (comp - ALTURA) / 2;
+        // int y = (altu - COMPRIMENTO) / 2;
 
         // iniciando o frame
-        setBounds(x, y, COMPRIMENTO, ALTURA);
+        // setBounds(x, y, COMPRIMENTO, ALTURA);
+        setBounds(0, 0, 900, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Dealer [BLACKJACK]");
         getContentPane().setLayout(null);
@@ -105,6 +112,17 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
                 g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
             }
         }
+        
+        //desenha as fichas
+        int deslocamentoFichaX = 30;
+        int deslocamentoFichaY = 600;
+        
+        g2d.drawImage(ficha1, deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha5, 4*deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha10, 7*deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha20, 10*deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha50, 13*deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha100, 16*deslocamentoFichaX, deslocamentoFichaY, null);
     }
 
     public void fechar() { setVisible(false);}
@@ -144,6 +162,10 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadoDeal
         getContentPane().add(botaoEncerrar);
         getContentPane().add(botaoNovaRodada);
         getContentPane().add(botaoSalvar);
+    }
+    
+    void colocarFichas() {
+    	
     }
 
     public void registraObservador(ObservadorDealer o) {

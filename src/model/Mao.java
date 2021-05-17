@@ -108,9 +108,9 @@ class Mao {
 	 */
 	public Mao fazerSplit() throws IllegalStateException{
 		if (this.cartas.size() != 2) {throw new IllegalStateException("Nao possui duas cartas."); }
-		if (!this.cartas.get(0).equals(this.cartas.get(1))) {
-			throw new IllegalStateException("As duas cartas sao diferentes"); 
-		}
+		//if (!this.cartas.get(0).equals(this.cartas.get(1))) {
+			//throw new IllegalStateException("As duas cartas sao diferentes"); 
+		//} -- essa parte está apenas comentada para testar a views
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
 		m.blackjack = false;   // inicia a mao split como nao tendo um blackjack (apenas 1 carta)

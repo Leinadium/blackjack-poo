@@ -48,7 +48,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testJogadorGanhandoComBlackjack() {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaBlackjack(actual_jogador.mao);
@@ -58,7 +58,7 @@ public class BlackjackTest {
 	
 	@Test 
 	public final void testJogadorGanhandoComBlackjackVerificaPagamento() {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		int expected_aposta = actual_jogador.aposta;
 		Dealer actual_dealer = actual.dealer;
@@ -71,7 +71,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testJogadorGanhandoNormal() {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaMaoComumMaisPontos(actual_jogador.mao);
@@ -81,7 +81,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testJogadorGanhandoDealerQuebrando() {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaMaoComumMaisPontos(actual_jogador.mao);
@@ -91,7 +91,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testDealerGanhandoDoisQuebrando() {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaMaoQuebrada(actual_jogador.mao);
@@ -101,7 +101,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testDealerGanhandoDoisBlackjacks() {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaBlackjack(actual_jogador.mao);
@@ -111,7 +111,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testPush() {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaMaoComumMenosPontos(actual_jogador.mao);
@@ -121,7 +121,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testJogadorGanhandoComMaosSplit() throws Exception {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaSplit(actual_jogador.mao);
@@ -132,7 +132,7 @@ public class BlackjackTest {
 	
 	@Test
 	public final void testDealerGanhandoComMaosSplit() throws Exception {
-		Blackjack actual = new Blackjack(1, "Joao");
+		Blackjack actual = new Blackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
 		Dealer actual_dealer = actual.dealer;
 		criaMaoComumMenosPontos(actual_jogador.mao);
