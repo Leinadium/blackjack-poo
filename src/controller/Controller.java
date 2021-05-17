@@ -57,9 +57,6 @@ public class Controller implements ObservadorDealer, ObservadorJogador, Observad
     	this.frameJogador.get(ultimo).iniciarRodada();
     	this.frameJogador.get(numJogador).substituirCarta(0,  cartasJogador[0]);
     	this.frameJogador.get(numJogador).substituirCarta(1, cartasJogador[1]);
-    
-    	
-    	
     }
     
     

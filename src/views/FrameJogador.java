@@ -104,7 +104,10 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadoJog
                 Image imagemCarta = Imagem.get(carta[0], carta[1]);
                 g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
             }
+            
+            //coloca o total de pontos da mao
         }
+        
     }
 
     public void fechar() { setVisible(false);}

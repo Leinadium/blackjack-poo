@@ -67,6 +67,32 @@ public class Blackjack {
 		}
 		return new String[]{cartas.get(0).toString(), cartas.get(1).toString()};
 	}	
+	
+	/**
+	 * Retorna o valor de pontos de uma mão do dealer
+	 * @return String = com o total de pontos da mao
+	 */
+	public String retornaValorPontosDealer() {
+		return String.format("%d", this.dealer.mao.soma);
+	}
+	
+	/**
+	 * Retorna o valor de pontos de uma mão do jogador
+	 * @param numJogador = número do Jogador (entre 0 a 3)
+	 * @param numMao = 0 se mao normal, 1 se primeira mao do split, 2 se segunda mao do split
+	 * @return String = com o total de pontos da mao
+	 */
+	public String retornaValorPontosJogador(int numJogador, int numMao) {
+		if (numMao == 0) {
+			return String.format("%d", this.jogadores.get(numJogador).mao.soma);
+		}
+		else if (numMao == 1){
+			return String.format("%d", this.jogadores.get(numJogador).maosSplit.get(0).soma);
+		}
+		else {
+			return String.format("%d", this.jogadores.get(numJogador).maosSplit.get(1).soma);
+		}
+	}
 
     /**
      * Retorna o resultado de uma partida entre um jogador e um dealer
