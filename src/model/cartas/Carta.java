@@ -28,7 +28,10 @@ public class Carta {
             case SETE: ret = 7; break;
             case OITO: ret = 8; break;
             case NOVE: ret = 9; break;
-            case VALETE, REI, DAMA, DEZ: ret = 10; break;
+            case VALETE: ret = 10; break;
+            case REI: ret = 10; break;
+            case DAMA: ret = 10; break;
+            case DEZ: ret = 10; break;
             default: ret = 0; break;
         }
         return ret;
