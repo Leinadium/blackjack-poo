@@ -19,17 +19,17 @@ public class Carta {
     public int valor() {
         int ret;
         switch (this.nome) {
-            case AS -> ret = -1;
-            case DOIS -> ret = 2;
-            case TRES -> ret = 3;
-            case QUATRO -> ret = 4;
-            case CINCO -> ret = 5;
-            case SEIS -> ret = 6;
-            case SETE -> ret = 7;
-            case OITO -> ret = 8;
-            case NOVE -> ret = 9;
-            case VALETE, REI, DAMA, DEZ -> ret = 10;
-            default -> ret = 0;
+            case AS: ret = -1; break;
+            case DOIS: ret = 2; break;
+            case TRES: ret = 3; break;
+            case QUATRO: ret = 4; break;
+            case CINCO: ret = 5; break;
+            case SEIS: ret = 6; break;
+            case SETE: ret = 7; break;
+            case OITO: ret = 8; break;
+            case NOVE: ret = 9; break;
+            case VALETE, REI, DAMA, DEZ: ret = 10; break;
+            default: ret = 0; break;
         }
         return ret;
     }

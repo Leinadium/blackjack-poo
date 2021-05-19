@@ -20,11 +20,11 @@ public class Controller {
     
     public void fazerJogada(String numJogador, String acao){
     	switch(acao) {
-            case "STAND" -> System.out.println("Ainda nao implementado");
-            case "HIT" -> System.out.println("Ainda nao implementado");
-            case "DOUBLE" -> System.out.println("Ainda nao implementado");
-            case "SURRENDER" -> System.out.println("Ainda nao implementado");
-            case "SPLIT" -> acionaSplit(0); //por enquanto é só do jogador 1, depois vamos expandir para os demais
+            case "STAND": System.out.println("Ainda nao implementado");break;
+            case "HIT": System.out.println("Ainda nao implementado");break;
+            case "DOUBLE": System.out.println("Ainda nao implementado");break;
+            case "SURRENDER": System.out.println("Ainda nao implementado");break;
+            case "SPLIT": acionaSplit(0);break;     //por enquanto é só do jogador 1, depois vamos expandir para os demais
     	}
     }
 
