@@ -395,40 +395,4 @@ class Jogador {
 		return (this.mao.soma);
 	}
 
-    public List<Ficha> calculaFicha(int dinheiro){
-    	int i, qtd_fichas100, qtd_fichas50, qtd_fichas20, qtd_fichas10, qtd_fichas5, qtd_fichas1;
-    	// Fazendo uma copia
-        List<Ficha> lista = new ArrayList<>();
-        
-        //Descubrindo a quantidade de cada ficha daquele valor
-        qtd_fichas100 = dinheiro / 100;
-        qtd_fichas50 = (dinheiro % 100) / 50;
-        qtd_fichas20 = ((dinheiro % 100) % 50) / 20;
-        qtd_fichas10 = (((dinheiro % 100) % 50) % 20) / 10;
-        qtd_fichas5 = ((((dinheiro % 100) % 50) % 20) % 10) / 5;
-        qtd_fichas1 = ((((dinheiro % 100) % 50) % 20) % 10) % 5;
-        
-        //Adicionando n fichas daquele valor para a nova lista
-        for (i = 0; i < qtd_fichas100; i++) {
-        	lista.add(new Ficha(100));
-        }
-        for (i = 0; i < qtd_fichas50; i++) {
-        	lista.add(new Ficha(50));
-        }
-        for (i = 0; i < qtd_fichas20; i++) {
-        	lista.add(new Ficha(20));
-        }
-        for (i = 0; i < qtd_fichas10; i++) {
-        	lista.add(new Ficha(10));
-        }
-        for (i = 0; i < qtd_fichas5; i++) {
-        	lista.add(new Ficha(5));
-        }
-        for (i = 0; i < qtd_fichas1; i++) {
-        	lista.add(new Ficha(1));
-        }
-    	
-    	return lista;
-    }
-
 }

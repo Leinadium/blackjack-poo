@@ -115,6 +115,47 @@ public class FichaTest {
         }
     }
     
-    
+	@Test
+	public void testCalculaFichas100() {
+		List<Ficha> actual = Ficha.calculaFicha(100);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 100, actual.get(0).valor);	
+		
+	}
+	
+	@Test
+	public void testCalculaFichas50() {
+		List<Ficha> actual = Ficha.calculaFicha(150);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 50, actual.get(1).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas20() {
+		List<Ficha> actual = Ficha.calculaFicha(170);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 20, actual.get(2).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas10() {
+		List<Ficha> actual = Ficha.calculaFicha(180);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 10, actual.get(3).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas5() {
+		List<Ficha> actual = Ficha.calculaFicha(185);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 5, actual.get(4).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas1() {
+		List<Ficha> actual = Ficha.calculaFicha(186);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 1, actual.get(5).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichasMaisDeUmaIgual() {
+		List<Ficha> actual = Ficha.calculaFicha(40);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 20, actual.get(1).valor);	
+	}
     
 }
