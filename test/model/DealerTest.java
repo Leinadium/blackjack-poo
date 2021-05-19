@@ -17,13 +17,13 @@ public class DealerTest {
 	}
 	
     @Test
-    public void podeHitInicial() {
+    public void testPodeHitInicial() {
         Dealer actual = new Dealer();
         assertTrue("Pode Hit no inicio", actual.podeHit());
     }
 
     @Test
-    public void podeHitSegundo() {
+    public void testPodeHitSegundo() {
         Dealer actual = new Dealer();
         Baralho b = new Baralho(4);
         actual.mao.ganharCarta(b.pop());
@@ -31,7 +31,7 @@ public class DealerTest {
     }
 
     @Test
-    public void podeHitMais17() {
+    public void testPodeHitMais17() {
         Dealer actual = new Dealer();
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.AS, Naipe.PAUS);
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.ESPADAS);
@@ -39,13 +39,13 @@ public class DealerTest {
     }
 
     @Test
-    public void podeStandInicial() {
+    public void testPodeStandInicial() {
         Dealer actual = new Dealer();
         assertFalse("Pode Stand no inicio", actual.podeStand());
     }
 
     @Test
-    public void podeStandSegundo() {
+    public void testPodeStandSegundo() {
         Dealer actual = new Dealer();
         Baralho b = new Baralho(4);
         actual.mao.ganharCarta(b.pop());
@@ -54,7 +54,7 @@ public class DealerTest {
     }
 
     @Test
-    public void podeStand16() {
+    public void testPodeStand16() {
         Dealer actual = new Dealer();
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.PAUS);
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.SEIS, Naipe.ESPADAS);
@@ -62,7 +62,7 @@ public class DealerTest {
     }
 
     @Test
-    public void podeStand17() {
+    public void testPodeStand17() {
         Dealer actual = new Dealer();
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.PAUS);
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.SETE, Naipe.PAUS);
@@ -70,7 +70,7 @@ public class DealerTest {
     }
 
     @Test
-    public void podeStandBlackjack() {
+    public void testPodeStandBlackjack() {
         Dealer actual = new Dealer();
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.DEZ, Naipe.PAUS);
         adicionaCartaMao(actual.mao, Cor.PRETO, Nome.AS, Naipe.PAUS);

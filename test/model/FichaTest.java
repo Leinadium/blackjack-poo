@@ -13,43 +13,43 @@ import java.util.List;
 public class FichaTest {
 
 	@Test
-	public void criacaoFichaRoxo() {
+	public void testCriacaoFichaRoxo() {
 		Ficha f = new Ficha(1);
 		assertEquals(f.cor, "roxo");
 	}
 
     @Test
-    public void criacaoFichaBranco() {
+    public void testCriacaoFichaBranco() {
         Ficha f = new Ficha(5);
         assertEquals(f.cor, "branco");
     }
     @Test
-    public void criacaoFichaVermelho() {
+    public void testCriacaoFichaVermelho() {
         Ficha f = new Ficha(10);
         assertEquals(f.cor, "vermelho");
     }
     @Test
-    public void criacaoFichaVerde() {
+    public void testCriacaoFichaVerde() {
         Ficha f = new Ficha(20);
         assertEquals(f.cor, "verde");
     }
     @Test
-    public void criacaoFichaAzul() {
+    public void testCriacaoFichaAzul() {
         Ficha f = new Ficha(50);
         assertEquals(f.cor, "azul");
     }
     @Test
-    public void criacaoFichaPreto() {
+    public void testCriacaoFichaPreto() {
         Ficha f = new Ficha(100);
         assertEquals(f.cor, "preto");
     }
     @Test(expected = IllegalArgumentException.class)
-    public void criacaoFichaNaoExistente() {
+    public void testCriacaoFichaNaoExistente() {
         Ficha f = new Ficha(101);
     }
 
     @Test
-    public void calculaValorLista() {
+    public void testCalculaValorLista() {
         List<Ficha> lista = new ArrayList<>();
         int expected = 186;
         lista.add(new Ficha(1));
@@ -62,7 +62,7 @@ public class FichaTest {
     }
 
     @Test
-    public void calculaValorListaRepetida() {
+    public void testCalculaValorListaRepetida() {
         List<Ficha> lista = new ArrayList<>();
         lista.add(new Ficha(10));
         lista.add(new Ficha(5));
@@ -71,14 +71,14 @@ public class FichaTest {
     }
 
     @Test(expected = Exception.class)
-    public void calculaFichaNaoSuficiente() throws Exception {
+    public void testCalculaFichaNaoSuficiente() throws Exception {
         List<Ficha> lista = new ArrayList<>();
         lista.add(new Ficha(10));
         Ficha.calculaFicha(100, lista);
     }
-
+    
     @Test
-    public void calculaFichaCorreta() throws Exception {
+    public void testCalculaFichaCorreta() throws Exception {
         List<Ficha> totais = new ArrayList<>();
         List<Ficha> resposta = new ArrayList<>();
         List<Ficha> actual;
@@ -98,7 +98,7 @@ public class FichaTest {
     }
 
     @Test
-    public void calculaFichaNaoCorreta() throws Exception {
+    public void testCalculaFichaNaoCorreta() throws Exception {
         List<Ficha> totais = new ArrayList<>();
         List<Ficha> resposta = new ArrayList<>();
         List<Ficha> actual;
@@ -114,4 +114,7 @@ public class FichaTest {
             assertEquals(resposta.get(i).valor, actual.get(i).valor);
         }
     }
+    
+    
+    
 }

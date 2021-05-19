@@ -86,6 +86,7 @@ class Ficha {
     }
 }
 
+
 // para a ordenacao da lista
 class SortByValorReverse implements Comparator<Ficha> {
     public int compare(Ficha a, Ficha b) {

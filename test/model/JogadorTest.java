@@ -314,5 +314,55 @@ public class JogadorTest {
 		Mao expected_mao = decideMelhorMao(actual);
 		assertEquals("O total de pontos da mao nao foi como esperado", expected_mao.soma, actual.calculaMelhorValor());
 	}
+	
+	@Test
+	public void testCalculaFichas100Valor() {
+		Jogador actual = new Jogador(1);
+		actual.fichas = actual.calculaFicha(100);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 100, actual.fichas.get(0).valor);	
+		
+	}
+	
+	@Test
+	public void testCalculaFichas50() {
+		Jogador actual = new Jogador(1);
+		actual.fichas = actual.calculaFicha(150);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 50, actual.fichas.get(1).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas20() {
+		Jogador actual = new Jogador(1);
+		actual.fichas = actual.calculaFicha(170);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 20, actual.fichas.get(2).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas10() {
+		Jogador actual = new Jogador(1);
+		actual.fichas = actual.calculaFicha(180);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 10, actual.fichas.get(3).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas5() {
+		Jogador actual = new Jogador(1);
+		actual.fichas = actual.calculaFicha(185);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 5, actual.fichas.get(4).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichas1() {
+		Jogador actual = new Jogador(1);
+		actual.fichas = actual.calculaFicha(186);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 1, actual.fichas.get(5).valor);	
+	}
+	
+	@Test
+	public void testCalculaFichasMaisDeUmaIgual() {
+		Jogador actual = new Jogador(1);
+		actual.fichas = actual.calculaFicha(40);
+		assertEquals("A lista de fichas nao corresponde ao esperado", 20, actual.fichas.get(1).valor);	
+	}
 
 }
