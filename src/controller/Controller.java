@@ -18,28 +18,39 @@ public class Controller {
         this.frameInicial.abrir();
     }
     
-    public void fazerJogada(String numJogador, String acao){
-    	switch(acao) {
+    public void fazerJogada(int idJogador, String acao){
+    	switch (acao) {
             case "STAND": System.out.println("Ainda nao implementado");break;
-            case "HIT": System.out.println("Ainda nao implementado");break;
+            case "HIT": {
+                this.api.fazerHitJogador(idJogador, 0); // por enquanto so na primeira mao
+                break;
+            }
             case "DOUBLE": System.out.println("Ainda nao implementado");break;
             case "SURRENDER": System.out.println("Ainda nao implementado");break;
-            case "SPLIT": acionaSplit(0);break;     //por enquanto é só do jogador 1, depois vamos expandir para os demais
+            case "SPLIT": {
+                acionaSplit(idJogador);    //por enquanto é só do jogador 1
+                break;
+            }
     	}
     }
 
-    void acionaSplit(int numJogador) {
-    	String numJogadorString = String.format("%d", numJogador+1);
-    	this.frameJogador.add(new FrameJogador(this, numJogadorString)); //cria nova janela para a mao splitada
-    	int ultimo = this.frameJogador.size() - 1;
-    	this.frameJogador.get(ultimo).iniciarRodada(); //ultima janela precisa ser inicializada
-    	String[] cartasJogador = api.distribuiCartasJogador(numJogador, true); //distribui as cartas para o jogador
-    	this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[2]);
-    	this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[3]);
-    	this.frameJogador.get(ultimo).iniciarRodada();
-    	this.frameJogador.get(numJogador).substituirCarta(0,  cartasJogador[0]);
-    	this.frameJogador.get(numJogador).substituirCarta(1, cartasJogador[1]);
+    void acionaSplit(int idJogador) {
+    	String numJogadorString = String.format("%d", idJogador+1);
+    	int mao = api.quantidadeMaosSplitJogador(idJogador) + 1; // nova mao
+    	this.frameJogador.add(new FrameJogador(this, numJogadorString, idJogador, mao)); //cria nova janela para a mao splitada
+        int ultimo = this.frameJogador.size() - 1;
+        FrameJogador novoFrame = this.frameJogador.get(ultimo);
+
+        novoFrame.iniciarRodada();          //ultima janela precisa ser inicializada
+    	api.distribuiCartasJogador(idJogador, true); //distribui as cartas para o jogador
+
+        // this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[2]);
+    	// this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[3]);
+    	// this.frameJogador.get(ultimo).iniciarRodada();
+    	// this.frameJogador.get(numJogador).substituirCarta(0,  cartasJogador[0]);
+    	// this.frameJogador.get(numJogador).substituirCarta(1, cartasJogador[1]);
     }
+
     
     public void fecharPartida() {
     	int i;
@@ -75,7 +86,7 @@ public class Controller {
         this.frameJogador = new ArrayList<>();
         for (int i = 0; i < quantidadeJogadores; i++) {
         	String numJogador = String.format("%d", i+1);
-        	this.frameJogador.add(new FrameJogador(this, numJogador));
+            this.frameJogador.add(new FrameJogador(this, numJogador, i, 0));
         }
         // inicia o frame do dealer
         this.frameDealer = new FrameDealer(this);
@@ -84,7 +95,9 @@ public class Controller {
         this.api.registraObservador(this.frameDealer);
 
         // liga os jogadores ao model (padrao observer)
-        // TODO
+        for (int i = 0; i < quantidadeJogadores; i ++) {
+            this.api.registraObservador(this.frameJogador.get(i));
+        }
     }
 
     public void iniciarRodada() {
@@ -95,9 +108,9 @@ public class Controller {
         
         // distribui as cartas para o jogador
         for(i = 0; i < quantidadeJogadores; i++) {
-        	String[] cartasJogador = api.distribuiCartasJogador(i, false);
-        	this.frameJogador.get(i).adicionarCarta(cartasJogador[0]);
-        	this.frameJogador.get(i).adicionarCarta(cartasJogador[1]);
+        	api.distribuiCartasJogador(i, false);
+        	// this.frameJogador.get(i).adicionarCarta(cartasJogador[0]);
+        	// this.frameJogador.get(i).adicionarCarta(cartasJogador[1]);
         	this.frameJogador.get(i).iniciarRodada();
         }
     }

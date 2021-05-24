@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import controller.Controller;
+import controller.observer.*;
 
 /**
  * Janela do Jogador
@@ -14,7 +15,7 @@ import controller.Controller;
  * e mão do jogador.
  */
 
-public class FrameJogador extends JFrame implements ActionListener {
+public class FrameJogador extends JFrame implements ActionListener, ObservadorAPI {
     public final int COMPRIMENTO = 900;
     public final int ALTURA = 700;
     private final Image background = Imagem.get("background");
@@ -26,15 +27,18 @@ public class FrameJogador extends JFrame implements ActionListener {
     protected JButton botaoSurrender;
     protected JButton botaoDouble;
 
-    protected ArrayList<String> listaCartas;
+    protected String[] listaCartas;
     protected Controller controller;
     protected String numJogador;
+    protected int idJogador;
+    protected int idMao;
 
 
-    public FrameJogador(Controller controller, String numJogador) {
-        this.listaCartas = new ArrayList<>();
+    public FrameJogador(Controller controller, String numJogador, int idJogador, int idMao) {
         this.controller = controller;
         this.numJogador = numJogador;
+        this.idMao = idMao;
+        this.idJogador = idJogador;
 
         // iniciando o frame
         setBounds(0, 0, 900, 700);
@@ -50,18 +54,22 @@ public class FrameJogador extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    // FOI SUBSTITUIDO PELA ATUALIZACAO DENTRO DO notificar()
+    /*
     public void adicionarCarta(String carta) {
         listaCartas.add(carta);
         repaint();
     }
-    
+
+    // FOI SUBSTITUIDO PELA ATUALIZACAO DENTRO DO notificar()
     public void substituirCarta(int indice, String carta) {
     	listaCartas.set(indice, carta);
     	repaint();
     }
+     */
 
     public void reiniciarJogador() {
-        listaCartas.clear();
+        listaCartas = null;
         repaint();
     }
 
@@ -87,19 +95,14 @@ public class FrameJogador extends JFrame implements ActionListener {
         g2d.drawImage(cartaAzul, deslocamentoBaralhoX + 8, deslocamentoBaralhoY + 4, null);
 
         // desenha as cartas do jogador
-        if (listaCartas.size() > 0) {
+        if (listaCartas != null) {
             int deslocamentoPorCarta = 20;
-            int inicio = (COMPRIMENTO/2) - deslocamentoPorCarta * listaCartas.size();
+            int inicio = (COMPRIMENTO - deslocamentoPorCarta * listaCartas.length) / 2;
             int y = 350;
-
-            // bota a primeira carta virada pra cima
-            String[] carta1 = listaCartas.get(0).split("-");
-            Image imagemCarta1 = Imagem.get(carta1[0], carta1[1]);
-            g2d.drawImage(imagemCarta1, inicio, y, null);
             
-            // bota as demais cartas viradas pra cima
-            for (int i = 1; i < listaCartas.size(); i++) {
-                String[] carta = listaCartas.get(i).split("-");
+            // bota as cartas viradas pra cima
+            for (int i = 0; i < listaCartas.length; i++) {
+                String[] carta = listaCartas[i].split("-");
                 Image imagemCarta = Imagem.get(carta[0], carta[1]);
                 g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
             }
@@ -112,15 +115,15 @@ public class FrameJogador extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();  // pega de onde veio o evento (qual botao)
         if (obj.equals(botaoStand)) {
-        	this.controller.fazerJogada(numJogador, "STAND");
+        	this.controller.fazerJogada(idJogador, "STAND");
         } else if (obj.equals(botaoHit)) {
-        	this.controller.fazerJogada(numJogador,"HIT");
+        	this.controller.fazerJogada(idJogador,"HIT");
         } else if (obj.equals(botaoDouble)) {
-        	this.controller.fazerJogada(numJogador,"DOUBLE");
+        	this.controller.fazerJogada(idJogador,"DOUBLE");
         } else if (obj.equals(botaoSplit)) {
-        	this.controller.fazerJogada(numJogador,"SPLIT");
+        	this.controller.fazerJogada(idJogador,"SPLIT");
         } else {
-        	this.controller.fazerJogada(numJogador,"SURRENDER");
+        	this.controller.fazerJogada(idJogador,"SURRENDER");
         }
     }
 
@@ -161,10 +164,32 @@ public class FrameJogador extends JFrame implements ActionListener {
         botaoDouble.setVisible(estado);
         botaoSurrender.setVisible(estado);
         botaoSplit.setVisible(estado);
-    	
+        repaint();
     }
     
     public void iniciarRodada() {
     	mudarEstadoBotoes(true);
+    }
+
+    /**
+     * Implementacao de recebimento de notificacao da api
+     * Notificacoes consideradas:
+     *  - JogadorCartas
+     *  - JogadorAposta
+     *
+     * @param o Api do blackjack
+     */
+    public void notificar(ObservadoAPI o) {
+        switch (o.getNotificacao()) {
+            case JogadorCartas: {
+                listaCartas = o.getCartasJogador(idJogador, idMao);
+                // TODO: precisa verificar os botoes (se pode acionar ou nao)
+                repaint();
+            }
+            case JogadorAposta: {
+                // TODO
+            }
+            default: {}     // outras notificacoes sao ignoradas
+        }
     }
 }

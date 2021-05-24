@@ -110,7 +110,7 @@ class Mao {
 		if (this.cartas.size() != 2) {throw new IllegalStateException("Nao possui duas cartas."); }
 		//if (!this.cartas.get(0).equals(this.cartas.get(1))) {
 			//throw new IllegalStateException("As duas cartas sao diferentes"); 
-		//} -- essa parte está apenas comentada para testar a views
+		//} -- essa parte estï¿½ apenas comentada para testar a views
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
 		m.blackjack = false;   // inicia a mao split como nao tendo um blackjack (apenas 1 carta)
@@ -123,5 +123,13 @@ class Mao {
 
 	public boolean podeSplit() {
 		return (this.cartas.size() == 2 && this.cartas.get(0).equals(this.cartas.get(1))); //seriam duas funcoes de podeSplit mesmo?
+	}
+
+	public String[] toArray() {
+		String[] ret = new String[this.cartas.size()];
+		for (int i = 0; i < this.cartas.size(); i++) {
+			ret[i] = this.cartas.get(i).toString();
+		}
+		return ret;
 	}
 }

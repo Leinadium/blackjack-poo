@@ -8,4 +8,7 @@ public interface ObservadoAPI {
 
     String[] getCartasDealer();                 // notificacao: DealerCartas
     int getValorDealer();                       // notificacao: DealerCartas
+
+    String[] getCartasJogador(int idJogador, int mao);     // notificacao: JogadorCartas
+    int getValorJogador(int idJogador, int mao);           // notificacao: JogadorCartas
 }

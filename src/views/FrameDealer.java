@@ -106,7 +106,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         // desenha as cartas do dealer
         if (cartas != null) {
             int deslocamentoPorCarta = 20;
-            int inicio = (COMPRIMENTO/2) - deslocamentoPorCarta * cartas.length;
+            int inicio = (COMPRIMENTO - deslocamentoPorCarta * cartas.length) / 2;
             int y = 350;
 
             // bota a primeira carta virada para cima

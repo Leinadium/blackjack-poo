@@ -50,19 +50,13 @@ public class Blackjack implements ObservadoAPI {
 	}
 
 	/**
-	 * Distribui duas cartas para um jogador, e retorna as cartas
-	 * no formato string delas ("NOME-NAIPE")
-	 * @return String[] = {"NOME-NAIPE", "NOME-NAIPE"}
+	 * Distribui duas cartas para um jogador.
 	 */
-	public String[] distribuiCartasJogador(int numJogador, boolean split) {
+	public void distribuiCartasJogador(int numJogador, boolean split) {
 		List<Carta> cartas = this.jogadores.get(numJogador).mao.cartas;
 		if (split) {
 			try {
 				this.jogadores.get(numJogador).fazerSplit(this.jogadores.get(numJogador).mao, baralho);
-				List<Carta> cartas_mao1 = this.jogadores.get(numJogador).maosSplit.get(0).cartas;
-				List<Carta> cartas_mao2 = this.jogadores.get(numJogador).maosSplit.get(1).cartas;
-				return new String[]{cartas_mao1.get(0).toString(), cartas_mao1.get(1).toString(),
-						cartas_mao2.get(0).toString(), cartas_mao2.get(1).toString()};
 			} catch (Exception e) {
 				System.out.println(e);
 			}
@@ -70,20 +64,21 @@ public class Blackjack implements ObservadoAPI {
 		else {
 	    	this.jogadores.get(numJogador).mao.ganharCarta(baralho.pop());
 			this.jogadores.get(numJogador).mao.ganharCarta(baralho.pop());
-			cartas = this.jogadores.get(numJogador).mao.cartas;
-			return new String[]{cartas.get(0).toString(), cartas.get(1).toString()};
+
 		}
-		return new String[]{cartas.get(0).toString(), cartas.get(1).toString()};
-	}	
-	
-	/**
-	 * Retorna o valor de pontos de uma mão do dealer
-	 * @return String = com o total de pontos da mao
-	 */
-	public String retornaValorPontosDealer() {
-		return String.format("%d", this.dealer.mao.soma);
+		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
-	
+
+	public void fazerHitJogador(int numJogador, int mao) {
+		Jogador jog = this.jogadores.get(numJogador);
+		if (mao == 0) {
+			jog.fazerHit(baralho);
+		} else {
+			jog.fazerHit(baralho, jog.maosSplit.get(mao-1));
+		}
+		notificarTodos(NotificacaoAPI.JogadorCartas);
+	}
+
 	/**
 	 * Retorna o valor de pontos de uma mão do jogador
 	 * @param numJogador = número do Jogador (entre 0 a 3)
@@ -101,6 +96,9 @@ public class Blackjack implements ObservadoAPI {
 			return String.format("%d", this.jogadores.get(numJogador).maosSplit.get(1).soma);
 		}
 	}
+
+	public int quantidadeMaosSplitJogador(int numJogador) { return this.jogadores.get(numJogador).maosSplit.size();}
+
 
     /**
      * Retorna o resultado de uma partida entre um jogador e um dealer
@@ -150,11 +148,26 @@ public class Blackjack implements ObservadoAPI {
     	this.notificacaoAPI = n;
     	for (ObservadorAPI o: listaObservadores) { o.notificar(this); }
     }
+
 	public String[] getCartasDealer() {
-		List<Carta> cartas = this.dealer.mao.cartas;
-		return new String[]{cartas.get(0).toString(), cartas.get(1).toString()};
+		return this.dealer.mao.toArray();
 	}
 	public int getValorDealer() {
     	return this.dealer.mao.soma;
+	}
+
+	public String[] getCartasJogador(int idJogador, int mao) {
+    	if (mao==0) {
+    		return this.jogadores.get(idJogador).mao.toArray();
+		} else {
+    		return this.jogadores.get(idJogador).maosSplit.get(mao - 1).toArray();
+		}
+	}
+	public int getValorJogador(int idJogador, int mao) {
+    	if (mao==0) {
+    		return this.jogadores.get(idJogador).mao.soma;
+		} else {
+    		return this.jogadores.get(idJogador).maosSplit.get(mao -1).soma;
+		}
 	}
 }
