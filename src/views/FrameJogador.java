@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import controller.Controller;
 import controller.observer.*;
@@ -16,8 +16,8 @@ import controller.observer.*;
  */
 
 public class FrameJogador extends JFrame implements ActionListener, ObservadorAPI {
-    public final int COMPRIMENTO = 900;
-    public final int ALTURA = 700;
+    public final int COMPRIMENTO = 450;
+    public final int ALTURA = 350;
     private final Image background = Imagem.get("background");
     private final Image cartaAzul = Imagem.get("azul");
     private final Image cartaVermelha = Imagem.get("vermelho");
@@ -28,6 +28,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     protected JButton botaoDouble;
 
     protected String[] listaCartas;
+    protected HashMap<Integer, Integer> mapaFichas;
+
     protected Controller controller;
     protected String numJogador;
     protected int idJogador;
@@ -40,8 +42,10 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         this.idMao = idMao;
         this.idJogador = idJogador;
 
+        mapaFichas = new HashMap<>();
+
         // iniciando o frame
-        setBounds(0, 0, 900, 700);
+        setBounds(0, 0, COMPRIMENTO, ALTURA);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         String titulo = String.format("Jogador nº %s [BLACKJACK]", numJogador);
         setTitle(titulo);
@@ -98,7 +102,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         if (listaCartas != null) {
             int deslocamentoPorCarta = 20;
             int inicio = (COMPRIMENTO - deslocamentoPorCarta * listaCartas.length) / 2;
-            int y = 350;
+            int y = COMPRIMENTO / 2;
             
             // bota as cartas viradas pra cima
             for (int i = 0; i < listaCartas.length; i++) {
@@ -108,6 +112,9 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
             }
             //coloca o total de pontos da mao
         }
+
+        // desenha as fichas do jogador
+
     }
 
     public void fechar() { setVisible(false);}
@@ -187,7 +194,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
                 repaint();
             }
             case JogadorAposta: {
-                // TODO
+                mapaFichas = o.getFichasJogador(idJogador);
+                repaint();
             }
             default: {}     // outras notificacoes sao ignoradas
         }

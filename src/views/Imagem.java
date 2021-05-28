@@ -70,15 +70,15 @@ public class Imagem {
             d.put("REI-ESPADAS", ImageIO.read(new File(f+"ks.gif")));
             d.put("AS-ESPADAS", ImageIO.read(new File(f+"as.gif")));
 
-            d.put("ficha1", ImageIO.read(new File(f+"ficha 1$.png")));
-            d.put("ficha5", ImageIO.read(new File(f+"ficha 5$.png")));
-            d.put("ficha10", ImageIO.read(new File(f+"ficha 10$.png")));
-            d.put("ficha20", ImageIO.read(new File(f+"ficha 20$.PNG")));
-            d.put("ficha50", ImageIO.read(new File(f+"ficha 50$.PNG")));
-            d.put("ficha100", ImageIO.read(new File(f+"ficha 100$.PNG")));
+            d.put("ficha1", ImageIO.read(new File(f+"ficha1.png")));
+            d.put("ficha5", ImageIO.read(new File(f+"ficha5.png")));
+            d.put("ficha10", ImageIO.read(new File(f+"ficha10.png")));
+            d.put("ficha20", ImageIO.read(new File(f+"ficha20.png")));
+            d.put("ficha50", ImageIO.read(new File(f+"ficha50.png")));
+            d.put("ficha100", ImageIO.read(new File(f+"ficha100.png")));
 
 
-            d.put("background", ImageIO.read(new File(f+"blackjackBKG.png")));
+            d.put("background", ImageIO.read(new File(f+"fundo_700_550.png")));
             d.put("azul", ImageIO.read(new File(f+"deck1.gif")));
             d.put("vermelho", ImageIO.read(new File(f+"deck2.gif")));
         }

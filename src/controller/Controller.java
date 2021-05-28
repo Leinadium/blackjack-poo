@@ -28,7 +28,7 @@ public class Controller {
             case "DOUBLE": System.out.println("Ainda nao implementado");break;
             case "SURRENDER": System.out.println("Ainda nao implementado");break;
             case "SPLIT": {
-                acionaSplit(idJogador);    //por enquanto é só do jogador 1
+                acionaSplit(idJogador);
                 break;
             }
     	}

@@ -23,7 +23,7 @@ import java.lang.IllegalStateException;
  *
  *     boolean tem_dinheiro() -> retorna se o jogador tem dinheiro
  *     void adicionar_ficha(Ficha) -> adiciona uma ficha a lista do jogador, atualizando o dinheiro
- *     void retirar_ficua(Ficha) -> remove aquela ficha do jogador, atualizando o dinheiro.
+ *     void retirar_ficha(Ficha) -> remove aquela ficha do jogador, atualizando o dinheiro.
  */
 
 
@@ -79,7 +79,6 @@ class Jogador {
     public void iniciaJogada() {
         this.mao = new Mao();
         this.maosSplit = new ArrayList<>();
-        this.dinheiro = 500;
         this.aposta = 0;
         this.rendido = false;
         this.finalizado = false;

@@ -18,8 +18,8 @@ import controller.observer.*;
  */
 
 public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI {
-    public final int COMPRIMENTO = 900;
-    public final int ALTURA = 700;
+    public final int COMPRIMENTO = 700;
+    public final int ALTURA = 550;
     private final Image background = Imagem.get("background");      // imagens carregadas
     private final Image cartaAzul = Imagem.get("azul");
     private final Image cartaVermelha = Imagem.get("vermelho");
@@ -54,7 +54,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
 
         // iniciando o frame
         // setBounds(x, y, COMPRIMENTO, ALTURA);
-        setBounds(0, 0, 900, 700);
+        setBounds(0, 0, COMPRIMENTO, ALTURA);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Dealer [BLACKJACK]");
         getContentPane().setLayout(null);
@@ -107,7 +107,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         if (cartas != null) {
             int deslocamentoPorCarta = 20;
             int inicio = (COMPRIMENTO - deslocamentoPorCarta * cartas.length) / 2;
-            int y = 350;
+            int y = ALTURA / 2;
 
             // bota a primeira carta virada para cima
             String[] carta = this.cartas[0].split("-");
@@ -129,7 +129,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         }
         //desenha as fichas (temporario)
         int deslocamentoFichaX = 30;
-        int deslocamentoFichaY = 600;
+        int deslocamentoFichaY = ALTURA * 4 / 5;
         
         g2d.drawImage(ficha1, deslocamentoFichaX, deslocamentoFichaY, null);
         g2d.drawImage(ficha5, 4*deslocamentoFichaX, deslocamentoFichaY, null);
@@ -166,7 +166,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         labelValorCartas.setOpaque(false);
         labelValorCartas.setHorizontalTextPosition(JLabel.CENTER);
         labelValorCartas.setFont(new Font("Serif", Font.BOLD, 18));
-        labelValorCartas.setBounds(COMPRIMENTO / 2 - 10, 420, 20, 30);
+        labelValorCartas.setBounds(COMPRIMENTO / 2 - 10, ALTURA * 7 / 10, 20, 30);
 
         labelValorCartas.setVisible(false);
         getContentPane().add(labelValorCartas);
@@ -187,10 +187,9 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         botaoSalvar.addActionListener(this);
 
         // posicionando
-        botaoEncerrar.setBounds(700, 30, 150, 30);
-        botaoSalvar.setBounds(700, 80, 150, 30);
-
-        botaoNovaRodada.setBounds(COMPRIMENTO / 2 - 75, 100, 150, 30);
+        botaoEncerrar.setBounds(COMPRIMENTO * 3 / 5, 30, 150, 30);
+        botaoSalvar.setBounds(COMPRIMENTO * 3 / 5, 80, 150, 30);
+        botaoNovaRodada.setBounds(COMPRIMENTO * 3 / 5, 130, 150, 30);
 
         // colocando
         getContentPane().add(botaoEncerrar);

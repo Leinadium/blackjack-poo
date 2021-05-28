@@ -10,7 +10,7 @@ import java.util.Comparator;
 
 class Ficha {
     public int valor;
-    public String cor;
+    public String cor;      // nao eh utilizado, pode ser retirado posteriormente
 
     public Ficha(int valor) throws IllegalArgumentException {
         if (valor == 1) { this.cor = "roxo"; }
@@ -87,7 +87,7 @@ class Ficha {
     
     
     /**
-     * Calcula uma combinação de fichas a partir de um dinheiro
+     * Calcula uma combinaï¿½ï¿½o de fichas a partir de um dinheiro
      * @param dinheiro Dinheiro a ser tranformado em fichas
      * @return Lista de fichas relativas ao dinheiro
      */

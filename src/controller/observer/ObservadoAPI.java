@@ -1,5 +1,7 @@
 package controller.observer;
 
+import java.util.HashMap;
+
 public interface ObservadoAPI {
     void registraObservador(ObservadorAPI o);   // registra um observador
     void removeObservador(ObservadorAPI o);     // remove um observador
@@ -11,4 +13,6 @@ public interface ObservadoAPI {
 
     String[] getCartasJogador(int idJogador, int mao);     // notificacao: JogadorCartas
     int getValorJogador(int idJogador, int mao);           // notificacao: JogadorCartas
+
+    HashMap<Integer, Integer> getFichasJogador(int idJogador);      // notificacao: JogadorAposta
 }

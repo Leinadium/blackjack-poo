@@ -5,6 +5,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 
 import controller.observer.*;
@@ -169,5 +171,19 @@ public class Blackjack implements ObservadoAPI {
 		} else {
     		return this.jogadores.get(idJogador).maosSplit.get(mao -1).soma;
 		}
+	}
+
+	public HashMap<Integer, Integer> getFichasJogador(int idJogador) {
+    	Jogador jog = this.jogadores.get(idJogador);
+		HashMap<Integer, Integer> ret = new HashMap<>();
+
+		for (Ficha f: jog.fichas) {
+			if (ret.containsKey(f.valor)) {
+				ret.put(f.valor, ret.get(f.valor) + 1);
+			} else {
+				ret.put(f.valor, 1);
+			}
+		}
+		return ret;
 	}
 }
