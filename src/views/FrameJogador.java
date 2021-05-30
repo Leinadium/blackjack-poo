@@ -322,6 +322,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
                 listaAposta = o.getApostaJogador(idJogador);
                 valorDinheiro = o.getDinheiroJogador(idJogador);
                 valorAposta = o.getValorApostaJogador(idJogador);
+
+                botaoFinalizarAposta.setEnabled(o.getPodeApostaJogador(idJogador));
                 repaint();
             }
             default: {}     // outras notificacoes sao ignoradas

@@ -19,4 +19,5 @@ public interface ObservadoAPI {
     ArrayList<Integer> getApostaJogador(int idJogador);
     int getDinheiroJogador(int idJogador);
     int getValorApostaJogador(int idJogador);
+    boolean getPodeApostaJogador(int idJogador);
 }
