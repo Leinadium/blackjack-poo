@@ -98,6 +98,15 @@ class Jogador {
     }
 
     /**
+     * Verifica se a aposta atual do jogador eh valida
+     * @return true se for valida
+     */
+    public boolean apostaValida() {
+        return this.aposta >= 20 && this.aposta <= 100;
+    }
+
+
+    /**
      * Verifica se o jogador ja tinha apostado naquela jogada
      * @return true se tiver apostado
      */

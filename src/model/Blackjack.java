@@ -295,8 +295,5 @@ public class Blackjack implements ObservadoAPI {
 	public int getValorApostaJogador(int idJogador) {
     	return this.jogadores.get(idJogador).aposta;
 	}
-	public boolean getPodeApostaJogador(int idJogador) {
-    	int aposta = this.jogadores.get(idJogador).aposta;
-    	return (aposta >= 20 && aposta <= 100);
-	}
+	public boolean getPodeApostaJogador(int idJogador) { return this.jogadores.get(idJogador).apostaValida(); }
 }
