@@ -10,6 +10,7 @@ public class Controller {
     FrameDealer frameDealer;
     ArrayList<FrameJogador> frameJogador;
     Blackjack api;
+    int modo;   // 0 para aposta, 1 para partida, 2 para esperando
 
     public Controller() {
         // carrega as imagens
@@ -18,23 +19,40 @@ public class Controller {
         this.frameInicial.abrir();
     }
     
-    public void fazerJogada(int idJogador, String acao){
+    public void fazerJogada(String acao) {
     	switch (acao) {
-            case "STAND": System.out.println("Ainda nao implementado");break;
+            case "STAND": {
+                // por enquanto so passa a vez
+                passaVez();
+                break;
+            }
             case "HIT": {
-                this.api.fazerHitJogador(idJogador, 0); // por enquanto so na primeira mao
+                this.api.fazerHitJogador(0); // por enquanto so na primeira mao
                 break;
             }
             case "DOUBLE": System.out.println("Ainda nao implementado");break;
             case "SURRENDER": System.out.println("Ainda nao implementado");break;
             case "SPLIT": {
-                acionaSplit(idJogador);
+                acionaSplit();
                 break;
             }
     	}
     }
 
-    void acionaSplit(int idJogador) {
+    public void passaVez() {
+        api.passaVez();
+
+        if (api.getJogadoresFinalizados()) {
+            System.out.println("TODOS OS JOGADORES JOGARAM");
+            // TODO
+        } else {
+            api.distribuiCartasJogador(false);
+            this.frameJogador.get(api.getVez()).iniciarRodada();
+        }
+    }
+
+    void acionaSplit() {
+        int idJogador = api.getVez();
     	String numJogadorString = String.format("%d", idJogador+1);
     	int mao = api.quantidadeMaosSplitJogador(idJogador) + 1; // nova mao
     	this.frameJogador.add(new FrameJogador(this, numJogadorString, idJogador, mao)); //cria nova janela para a mao splitada
@@ -42,7 +60,7 @@ public class Controller {
         FrameJogador novoFrame = this.frameJogador.get(ultimo);
 
         novoFrame.iniciarRodada();          //ultima janela precisa ser inicializada
-    	api.distribuiCartasJogador(idJogador, true); //distribui as cartas para o jogador
+    	api.distribuiCartasJogador(true); //distribui as cartas para o jogador
 
         // this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[2]);
     	// this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[3]);
@@ -51,7 +69,21 @@ public class Controller {
     	// this.frameJogador.get(numJogador).substituirCarta(1, cartasJogador[1]);
     }
 
-    
+    public void aumentaAposta(int valor) {
+        if (modo == 0) { this.api.aumentaAposta(valor); }
+    }
+
+    public void diminuiAposta(int valor) {
+        if (modo == 0) { this.api.diminuiAposta(valor); }
+    }
+
+    public void finalizarAposta() {
+        this.api.finalizarAposta();
+        this.api.distribuiCartasJogador(false);
+        this.api.distribuiCartasDealer();
+        modo = 1;
+    }
+
     public void fecharPartida() {
     	int i;
     	int quantidadeJogadores = this.frameJogador.size();
@@ -98,20 +130,18 @@ public class Controller {
         for (int i = 0; i < quantidadeJogadores; i ++) {
             this.api.registraObservador(this.frameJogador.get(i));
         }
+
+        this.modo = 2;
     }
 
     public void iniciarRodada() {
     	int i;
     	int quantidadeJogadores = this.frameJogador.size();
         // distribui as cartas para o dealer
-        api.distribuiCartasDealer();
-        
-        // distribui as cartas para o jogador
-        for(i = 0; i < quantidadeJogadores; i++) {
-        	api.distribuiCartasJogador(i, false);
-        	// this.frameJogador.get(i).adicionarCarta(cartasJogador[0]);
-        	// this.frameJogador.get(i).adicionarCarta(cartasJogador[1]);
-        	this.frameJogador.get(i).iniciarRodada();
-        }
+        // api.distribuiCartasDealer();
+
+        // api.distribuiCartasJogador(false);
+        this.frameJogador.get(0).iniciarRodada();
+        this.modo = 0;
     }
 }

@@ -1,6 +1,7 @@
 package controller.observer;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public interface ObservadoAPI {
     void registraObservador(ObservadorAPI o);   // registra um observador
@@ -15,4 +16,5 @@ public interface ObservadoAPI {
     int getValorJogador(int idJogador, int mao);           // notificacao: JogadorCartas
 
     HashMap<Integer, Integer> getFichasJogador(int idJogador);      // notificacao: JogadorAposta
+    ArrayList<Integer> getApostaJogador(int idJogador);
 }

@@ -34,6 +34,7 @@ class Jogador {
     public List<Ficha> fichas;
     public int dinheiro;
     public int aposta;
+    public List<Ficha> fichasAposta;
 
     private boolean rendido;
     private boolean finalizado;
@@ -84,6 +85,7 @@ class Jogador {
         this.finalizado = false;
         this.quantidadeJogadas = 0;
         this.ultimaJogada = null;
+
     }
     /**
      * Retorna se o jogador possui algum dinheiro para poder apostar
@@ -134,7 +136,7 @@ class Jogador {
     	return true;
     }
     /**
-     * Faz uma aposta
+     * Faz uma aposta a partir do dinheiro (depreciated)
      */
     public void fazAposta(int valor) throws IllegalStateException {
     	if (verificaAposta(valor)) {
@@ -145,6 +147,11 @@ class Jogador {
     		throw new IllegalStateException("O jogador nao pode fazer a aposta com o valor inserido");
     	}
     }
+
+    boolean temFicha(Ficha f) {
+        return this.fichas.contains(f);
+    }
+
     /**
      * Finaliza a aposta atual, e coloca pronto para a partida
      */
@@ -159,9 +166,26 @@ class Jogador {
      * @param f Ficha para aumentar a aposta
      */
     public void aumentarAposta(Ficha f) {
-        this.retirarFicha(f);
-        this.aposta += f.valor;
+        if (temFicha(f)) {
+            this.retirarFicha(f);
+            this.fichasAposta.add(f);
+            this.aposta += f.valor;
+        }
     }
+
+    /**
+     * Diminui a aposta pelo valor da ficha
+     * @param f Ficha para aumentar a posta
+     */
+    public void diminuirAposta(Ficha f) {
+        if (temFicha(f)) {
+            this.adicionarFicha(f);
+            this.fichasAposta.remove(f);
+            this.aposta -= f.valor;
+        }
+    }
+
+
     /**
      * Recebe pagamento caso tenha feito Blackjack
      */

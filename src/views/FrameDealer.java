@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import controller.Controller;
 import controller.observer.*;
@@ -17,7 +19,7 @@ import controller.observer.*;
  * Eh observador da API do model (model.blackjack)
  */
 
-public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI {
+public class FrameDealer extends JFrame implements ActionListener, MouseListener, ObservadorAPI {
     public final int COMPRIMENTO = 700;
     public final int ALTURA = 550;
     private final Image background = Imagem.get("background");      // imagens carregadas
@@ -63,6 +65,9 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         colocarBotoes();
         // cria o label com o valor das cartas
         criaLabelValor();
+
+        getContentPane().addMouseListener(this);
+
         setVisible(true);
     }
 
@@ -127,16 +132,17 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
             labelValorCartas.repaint();
 
         }
-        //desenha as fichas (temporario)
-        int deslocamentoFichaX = 30;
+        //desenha as fichas
+        int deslocamentoFichaX = 90;
+        int inicioX = (COMPRIMENTO - 60 * 9) / 2;
         int deslocamentoFichaY = ALTURA * 4 / 5;
         
-        g2d.drawImage(ficha1, deslocamentoFichaX, deslocamentoFichaY, null);
-        g2d.drawImage(ficha5, 4*deslocamentoFichaX, deslocamentoFichaY, null);
-        g2d.drawImage(ficha10, 7*deslocamentoFichaX, deslocamentoFichaY, null);
-        g2d.drawImage(ficha20, 10*deslocamentoFichaX, deslocamentoFichaY, null);
-        g2d.drawImage(ficha50, 13*deslocamentoFichaX, deslocamentoFichaY, null);
-        g2d.drawImage(ficha100, 16*deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha1, inicioX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha5, inicioX + deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha10, inicioX + 2 * deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha20, inicioX + 3 * deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha50, inicioX + 4 * deslocamentoFichaX, deslocamentoFichaY, null);
+        g2d.drawImage(ficha100, inicioX + 5 *deslocamentoFichaX, deslocamentoFichaY, null);
     }
 
     /**
@@ -158,6 +164,39 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         else { this.controller.salvarPartida(); }
     }
 
+    public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+
+        int inicioX = (COMPRIMENTO - 60 * 9) / 2 - 20; // -20 ??
+        int fichaY = ALTURA * 4 / 5 - 30; // -30 ??
+        int fichaFinal = -1;
+
+        if ((y >= fichaY && y <= fichaY + 60) && (x >= inicioX && x <= inicioX + 60)) {
+            fichaFinal = 1;
+        } else if (y >= fichaY && y <= fichaY + 60 && x >= inicioX+90 && x <= inicioX+150) {
+            fichaFinal = 5;
+        } else if (y >= fichaY && y <= fichaY + 60 && x >= inicioX+180 && x <= inicioX+240) {
+            fichaFinal = 10;
+        } else if (y >= fichaY && y <= fichaY + 60 && x >= inicioX+270 && x <= inicioX+330) {
+            fichaFinal = 20;
+        } else if (y >= fichaY && y <= fichaY + 60 && x >= inicioX+360 && x <= inicioX+420) {
+            fichaFinal = 50;
+        } else if (y >= fichaY && y <= fichaY + 60 && x >= inicioX+450 && x <= inicioX+510) {
+            fichaFinal = 100;
+        }
+
+        System.out.println(x + " " + y + " " + fichaFinal);
+
+        if (fichaFinal != -1) {
+            this.controller.aumentaAposta(fichaFinal);
+        }
+    }
+    public void mousePressed(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+
     /**
      * Cria o label para exibir o valor das cartas.
      */
@@ -166,7 +205,7 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         labelValorCartas.setOpaque(false);
         labelValorCartas.setHorizontalTextPosition(JLabel.CENTER);
         labelValorCartas.setFont(new Font("Serif", Font.BOLD, 18));
-        labelValorCartas.setBounds(COMPRIMENTO / 2 - 10, ALTURA * 7 / 10, 20, 30);
+        labelValorCartas.setBounds(COMPRIMENTO / 2 - 10, ALTURA / 2 - 60 , 20, 20);
 
         labelValorCartas.setVisible(false);
         getContentPane().add(labelValorCartas);
@@ -195,13 +234,6 @@ public class FrameDealer extends JFrame implements ActionListener, ObservadorAPI
         getContentPane().add(botaoEncerrar);
         getContentPane().add(botaoNovaRodada);
         getContentPane().add(botaoSalvar);
-    }
-
-    /**
-     * Coloca as fichas nas posicoes corretas
-     */
-    void colocarFichas() {
-    	// TODO
     }
 
     /**

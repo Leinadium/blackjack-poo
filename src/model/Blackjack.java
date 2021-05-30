@@ -5,7 +5,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +21,8 @@ public class Blackjack implements ObservadoAPI {
 	Baralho baralho;
 	Dealer dealer;
 	List<Jogador> jogadores;
+	protected int vez;
+	protected boolean jogadoresFinalizados;
 
 
     public Blackjack(int quantidadeJogadores){
@@ -32,7 +33,23 @@ public class Blackjack implements ObservadoAPI {
     	for (i = 0; i < quantidadeJogadores; i++) {
     		jogadores.add(new Jogador(i));
     	}
+    	vez = 0;
+    	jogadoresFinalizados = false;
     }
+
+	public int getVez() {
+		return vez;
+	}
+	public boolean getJogadoresFinalizados() {
+    	return jogadoresFinalizados;
+	}
+
+	public void passaVez() {
+    	vez++;
+    	if (vez == jogadores.size()) {
+    		jogadoresFinalizados = true;
+		}
+	}
 
 	/**
 	 * Exibe o baralho inteiro no sdout (para testes da implementacao)
@@ -40,6 +57,35 @@ public class Blackjack implements ObservadoAPI {
 	public void exibirBaralho() {
         this.baralho.exibirTodos();
     }
+
+	/**
+	 * Aumenta o valor da aposta do jogador de acordo com o que clicou
+	 * @param valor valor da ficha
+	 */
+	public void aumentaAposta(int valor) {
+		Jogador jog = this.jogadores.get(vez);
+		Ficha f = new Ficha(valor);
+		jog.aumentarAposta(f);
+		notificarTodos(NotificacaoAPI.JogadorAposta);
+	}
+
+	/**
+	 * Diminui o valor da aposta do jogador de acordo com o que clicou
+	 */
+	public void diminuiAposta(int valor) {
+		Jogador jog = this.jogadores.get(vez);
+		Ficha f = new Ficha(valor);
+		jog.diminuirAposta(f);
+		notificarTodos(NotificacaoAPI.JogadorAposta);
+	}
+
+	/**
+	 * Finaliza a aposta e entra no modo normal
+	 */
+	public void finalizarAposta() {
+		this.jogadores.get(vez).finalizarAposta();
+	}
+
 
 	/**
 	 * Distribui duas cartas para o Dealer
@@ -54,7 +100,8 @@ public class Blackjack implements ObservadoAPI {
 	/**
 	 * Distribui duas cartas para um jogador.
 	 */
-	public void distribuiCartasJogador(int numJogador, boolean split) {
+	public void distribuiCartasJogador(boolean split) {
+		int numJogador = vez;
 		List<Carta> cartas = this.jogadores.get(numJogador).mao.cartas;
 		if (split) {
 			try {
@@ -71,7 +118,8 @@ public class Blackjack implements ObservadoAPI {
 		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
 
-	public void fazerHitJogador(int numJogador, int mao) {
+	public void fazerHitJogador(int mao) {
+		int numJogador = vez;
 		Jogador jog = this.jogadores.get(numJogador);
 		if (mao == 0) {
 			jog.fazerHit(baralho);
@@ -83,11 +131,11 @@ public class Blackjack implements ObservadoAPI {
 
 	/**
 	 * Retorna o valor de pontos de uma mão do jogador
-	 * @param numJogador = número do Jogador (entre 0 a 3)
 	 * @param numMao = 0 se mao normal, 1 se primeira mao do split, 2 se segunda mao do split
 	 * @return String = com o total de pontos da mao
 	 */
-	public String retornaValorPontosJogador(int numJogador, int numMao) {
+	public String retornaValorPontosJogador(int numMao) {
+		int numJogador = vez;
 		if (numMao == 0) {
 			return String.format("%d", this.jogadores.get(numJogador).mao.soma);
 		}
@@ -139,6 +187,8 @@ public class Blackjack implements ObservadoAPI {
     public void registraObservador(ObservadorAPI o) {
     	if (listaObservadores == null) { listaObservadores = new ArrayList<>(); }
 		listaObservadores.add(o);
+    	// assim que eh registrado, ele precisa enviar as fichas no inicio
+		notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
     public void removeObservador(ObservadorAPI o) {
     	listaObservadores.remove(o);
@@ -183,6 +233,16 @@ public class Blackjack implements ObservadoAPI {
 			} else {
 				ret.put(f.valor, 1);
 			}
+		}
+		return ret;
+	}
+	public ArrayList<Integer> getApostaJogador(int idJogador) {
+		ArrayList<Integer> ret = new ArrayList<>();
+		if (this.jogadores.get(idJogador).fichasAposta == null) {
+			return ret;
+		}
+		for (Ficha f: this.jogadores.get(idJogador).fichasAposta) {
+			ret.add(f.valor);
 		}
 		return ret;
 	}
