@@ -118,7 +118,7 @@ public class Controller {
         this.frameInicial.fechar();
 
         // inicia o jogo
-        api = new Blackjack(quantidadeJogadores);
+        api = Blackjack.getAPI(quantidadeJogadores);
 
         // inicia os frames dos jogadores
         this.frameJogador = new ArrayList<>();

@@ -17,19 +17,38 @@ public class Blackjack implements ObservadoAPI {
 	ArrayList<ObservadorAPI> listaObservadores;
 	NotificacaoAPI notificacaoAPI;
 
+	// implementacao do singleton
+	private static Blackjack bj = null;
+
 	// Objetos essenciais
 	Baralho baralho;
 	Dealer dealer;
 	List<Jogador> jogadores;
+	int qtdJogadores;
 	protected int vez;
 	protected boolean jogadoresFinalizados;
 
+    /**
+     * Implementacao do padrao singleton.
+     * Retorna uma instancia de blackjack para aquela quantidade de jogadores
+     * Se havia uma instancia com uma quantidade diferente de jogadores, sera sobreescrita
+     * @param quantidadeJogadores quantidade de Jogadores
+     * @return instancia da api (objeto Blackjack)
+     */
+    public static Blackjack getAPI(int quantidadeJogadores) {
+        if (bj == null || bj.qtdJogadores != quantidadeJogadores) {
+            bj = new Blackjack(quantidadeJogadores);
+        }
+        return bj;
+    }
 
-    public Blackjack(int quantidadeJogadores){
+
+    private Blackjack(int quantidadeJogadores){
     	int i;
     	this.baralho = new Baralho(4);
     	this.dealer = new Dealer();
     	this.jogadores = new ArrayList<>();
+    	this.qtdJogadores = quantidadeJogadores;
     	for (i = 0; i < quantidadeJogadores; i++) {
     		jogadores.add(new Jogador(i));
     	}
