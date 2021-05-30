@@ -37,19 +37,37 @@ public class Blackjack implements ObservadoAPI {
     	jogadoresFinalizados = false;
     }
 
-    public void reiniciarJogadores() {
+	/**
+	 * Reinicia os jogadores para mais uma rodada
+	 * (o dinheiro nao eh alterado)
+	 */
+	public void reiniciarJogadores() {
     	for (Jogador jog: this.jogadores) {
     		jog.iniciaJogada();
 		}
 	}
 
+	/**
+	 * Pega de qual jogador eh a vez
+	 * @return
+	 */
 	public int getVez() {
 		return vez;
 	}
+
+	/**
+	 * Retorna se todos os jogadores ja jogaram
+	 * Para poder descobrir quem ganhou e perdeu
+	 * @return
+	 */
 	public boolean getJogadoresFinalizados() {
     	return jogadoresFinalizados;
 	}
 
+	/**
+	 * Passa a vez para o proximo jogador.
+	 * Se todos jogaram, define jogadoresFinalizados como true
+	 */
 	public void passaVez() {
     	vez++;
     	if (vez == jogadores.size()) {

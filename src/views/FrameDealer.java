@@ -18,7 +18,6 @@ import controller.observer.*;
  *
  * Eh observador da API do model (model.blackjack)
  */
-
 public class FrameDealer extends JFrame implements ActionListener, MouseListener, ObservadorAPI {
     public final int COMPRIMENTO = 700;
     public final int ALTURA = 550;
@@ -66,6 +65,7 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         // cria o label com o valor das cartas
         criaLabelValor();
 
+        // adiciona ele mesmo para implementar o pressionamento de mouse
         getContentPane().addMouseListener(this);
 
         setVisible(true);
@@ -164,6 +164,12 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         else { this.controller.salvarPartida(); }
     }
 
+    /**
+     * Implemlentacao de pressionamento de mouse para poder aumentar a aposta.
+     * Chama o controller caso tenha clicado em alguma ficha, pedindo para
+     * aumentar a aposta
+     * @param e
+     */
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
@@ -192,6 +198,8 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
             this.controller.aumentaAposta(fichaFinal);
         }
     }
+
+    /* Implementacao vazias para poder usar MouseListener */
     public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
