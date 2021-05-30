@@ -159,7 +159,7 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         if (obj.equals(botaoEncerrar)) { this.controller.fecharPartida(); }
         else if (obj.equals(botaoNovaRodada)) {
             this.botaoNovaRodada.setEnabled(false);
-            this.controller.iniciarRodada();
+            this.controller.iniciarAposta();
         }
         else { this.controller.salvarPartida(); }
     }
@@ -186,7 +186,7 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
             fichaFinal = 100;
         }
 
-        System.out.println(x + " " + y + " " + fichaFinal);
+        System.out.println("pos: " + x + ", " + y + " --> ficha: " + fichaFinal);
 
         if (fichaFinal != -1) {
             this.controller.aumentaAposta(fichaFinal);

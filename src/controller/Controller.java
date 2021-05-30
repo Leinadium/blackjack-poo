@@ -70,15 +70,21 @@ public class Controller {
     }
 
     public void aumentaAposta(int valor) {
-        if (modo == 0) { this.api.aumentaAposta(valor); }
+        if (modo == 0) {
+            System.out.println("aumentando a aposta em " + valor);
+            this.api.aumentaAposta(valor); }
     }
 
     public void diminuiAposta(int valor) {
-        if (modo == 0) { this.api.diminuiAposta(valor); }
+        if (modo == 0) {
+            System.out.println("diminuindo a aposta em " + valor);
+            this.api.diminuiAposta(valor);
+        }
     }
 
     public void finalizarAposta() {
         this.api.finalizarAposta();
+        this.frameJogador.get(api.getVez()).iniciarRodada();
         this.api.distribuiCartasJogador(false);
         this.api.distribuiCartasDealer();
         modo = 1;
@@ -134,6 +140,12 @@ public class Controller {
         this.modo = 2;
     }
 
+    public void iniciarAposta() {
+        this.api.reiniciarJogadores();
+        this.frameJogador.get(this.api.getVez()).iniciarAposta();
+        this.modo = 0;
+    }
+
     public void iniciarRodada() {
     	int i;
     	int quantidadeJogadores = this.frameJogador.size();
@@ -142,6 +154,6 @@ public class Controller {
 
         // api.distribuiCartasJogador(false);
         this.frameJogador.get(0).iniciarRodada();
-        this.modo = 0;
+        this.modo = 1;
     }
 }

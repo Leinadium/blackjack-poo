@@ -126,9 +126,13 @@ class Ficha {
     	
     	return lista;
     }
-    
-    
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || this.getClass() != o.getClass()) { return false; }
+        Ficha f = (Ficha) o;
+        return (this.valor == f.valor);
+    }
     
 }
 

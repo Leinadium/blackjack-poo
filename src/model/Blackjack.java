@@ -37,6 +37,12 @@ public class Blackjack implements ObservadoAPI {
     	jogadoresFinalizados = false;
     }
 
+    public void reiniciarJogadores() {
+    	for (Jogador jog: this.jogadores) {
+    		jog.iniciaJogada();
+		}
+	}
+
 	public int getVez() {
 		return vez;
 	}
@@ -245,5 +251,11 @@ public class Blackjack implements ObservadoAPI {
 			ret.add(f.valor);
 		}
 		return ret;
+	}
+	public int getDinheiroJogador(int idJogador) {
+    	return this.jogadores.get(idJogador).dinheiro;
+	}
+	public int getValorApostaJogador(int idJogador) {
+    	return this.jogadores.get(idJogador).aposta;
 	}
 }

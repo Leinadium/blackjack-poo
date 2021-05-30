@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +19,7 @@ import controller.observer.*;
  * e mão do jogador.
  */
 
-public class FrameJogador extends JFrame implements ActionListener, ObservadorAPI {
+public class FrameJogador extends JFrame implements ActionListener, ObservadorAPI, MouseListener {
     public final int COMPRIMENTO = 700;
     public final int ALTURA = 550;
     private final Image background = Imagem.get("background");
@@ -67,10 +69,12 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         String titulo = String.format("Jogador nº %s [BLACKJACK]", numJogador);
         setTitle(titulo);
         getContentPane().setLayout(null);
+        addMouseListener(this);
 
         // colocando os botoes
         colocarBotoes();
         mudarEstadoBotoes(false);
+        botaoFinalizarAposta.setVisible(false);
 
         criaLabels();
 
@@ -79,6 +83,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
 
     public void reiniciarJogador() {
         listaCartas = null;
+        labelValorCartas.setVisible(false);
+        labelAposta.setVisible(false);
         repaint();
     }
 
@@ -97,8 +103,14 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         botaoSplit.repaint();
         botaoFinalizarAposta.repaint();
 
+        int posicaoApostaX = COMPRIMENTO / 2 - sizeFicha / 2;       // default para modo de aposta
+        int posicaoApostaY = ALTURA / 2 - sizeFicha + 3 * listaAposta.size();
+
         // desenha as cartas do jogador
         if (listaCartas != null) {
+            posicaoApostaX = 50;
+            posicaoApostaY -= 10;
+
             int deslocamentoPorCarta = 20;
             int inicio = (COMPRIMENTO - deslocamentoPorCarta * listaCartas.length) / 2 - 50;
             int y = ALTURA / 2 - 50;
@@ -113,20 +125,22 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
             labelValorCartas.setText(Integer.toString(this.valorCartas));
             labelValorCartas.repaint();
         }
-        else {
-            // modo de aposta
-            int x = COMPRIMENTO / 2 - sizeFicha / 2;
-            int y = ALTURA / 2 - sizeFicha;
-            int valor;
-            if (listaAposta.size() > 0) {
-                for (int i = 0; i < listaAposta.size(); i++) {
-                    valor = listaAposta.get(i);
-                    Image img = Imagem.get("ficha" + valor);
-                    g2d.drawImage(img, x + 5 * i, y, null);
-                }
+
+        // fichas da aposta
+        int valor;
+        if (listaAposta.size() > 0) {
+            for (int i = 0; i < listaAposta.size(); i++) {
+                valor = listaAposta.get(i);
+                Image img = Imagem.get("ficha" + valor);
+                g2d.drawImage(img, posicaoApostaX, posicaoApostaY - 6 * i, null);
             }
-            labelAposta.setText("Aposta: " + valorAposta);
         }
+
+        labelAposta.setText("Aposta: " + valorAposta);
+        labelDinheiro.setText("Dinheiro: $" + valorDinheiro + ".00");
+        labelAposta.repaint();
+        labelDinheiro.repaint();
+
 
         // desenha as fichas do jogador
         int v, q;
@@ -146,9 +160,9 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      * Cria todas as labels
      */
     void criaLabels() {
-        labelValorCartas = criaLabel(valorCartas, COMPRIMENTO / 2 - 50, ALTURA / 2 + 30);
-        labelAposta = criaLabel(valorAposta, 30, ALTURA / 2 - 10);
-        labelDinheiro = criaLabel(valorDinheiro, COMPRIMENTO / 2 - 50, ALTURA - 30);
+        labelValorCartas = criaLabel(valorCartas, COMPRIMENTO / 2 - 50, ALTURA / 2 + 30, 20);
+        labelAposta = criaLabel(valorAposta, 30, ALTURA / 2 - 10, 100);
+        labelDinheiro = criaLabel(valorDinheiro, COMPRIMENTO / 2 - 50, ALTURA - 30, 150);
     }
 
     /**
@@ -158,13 +172,13 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      * @param posicaoY posicao y do label no frame
      * @return um componente JLabel ja posicionado e adicionado ao JFrame
      */
-    JLabel criaLabel(int nome, int posicaoX, int posicaoY) {
+    JLabel criaLabel(int nome, int posicaoX, int posicaoY, int largura) {
         JLabel jl = new JLabel(Integer.toString(nome));
         jl.setOpaque(false);
         jl.setHorizontalTextPosition(JLabel.CENTER);
         jl.setFont(new Font("Serif", Font.BOLD, 18));
-        jl.setBounds(posicaoX, posicaoY , 20, 20);
-        jl.setVisible(false);
+        jl.setBounds(posicaoX, posicaoY , largura, 20);
+        jl.setVisible(true);
         getContentPane().add(jl);
         return jl;
     }
@@ -238,6 +252,16 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     
     public void iniciarRodada() {
     	mudarEstadoBotoes(true);
+        botaoFinalizarAposta.setVisible(false);
+        labelValorCartas.setVisible(true);
+    }
+
+    /**
+     * Prepara para fazer as apostas.
+     */
+    public void iniciarAposta() {
+        labelAposta.setVisible(true);
+        botaoFinalizarAposta.setVisible(true);
     }
 
     /**
@@ -253,15 +277,15 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
             case JogadorCartas: {
                 listaCartas = o.getCartasJogador(idJogador, idMao);
                 valorCartas = o.getValorJogador(idJogador, idMao);
-                labelValorCartas.setVisible(true);
-                botaoFinalizarAposta.setVisible(false);
+
                 // TODO: precisa verificar os botoes (se pode acionar ou nao)
                 repaint();
             }
             case JogadorAposta: {
                 mapaFichas = o.getFichasJogador(idJogador);
                 listaAposta = o.getApostaJogador(idJogador);
-                botaoFinalizarAposta.setVisible(true);
+                valorDinheiro = o.getDinheiroJogador(idJogador);
+                valorAposta = o.getValorApostaJogador(idJogador);
                 repaint();
             }
             default: {}     // outras notificacoes sao ignoradas
@@ -286,5 +310,26 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         }
         return ret;
     }
+
+    public void mouseClicked(MouseEvent e) {
+        if (botaoFinalizarAposta.isVisible() && listaAposta.size() > 0) {
+            int x = e.getX();
+            int y = e.getY();
+
+            int posicaoApostaX = COMPRIMENTO / 2 - sizeFicha / 2;       // posicao das fichas
+            int posicaoApostaY = ALTURA / 2 - sizeFicha + 3 * listaAposta.size();
+
+            if (x >= posicaoApostaX && x <= posicaoApostaX + 60 &&
+                y >= posicaoApostaY - 6 * listaAposta.size() && y <= posicaoApostaY + 60) {
+                // passa o ultimo da lista (poderia ser uma pilha...)
+                this.controller.diminuiAposta(listaAposta.get(listaAposta.size() - 1));
+            }
+
+        }
+    }
+    public void mousePressed(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
 
 }

@@ -17,4 +17,6 @@ public interface ObservadoAPI {
 
     HashMap<Integer, Integer> getFichasJogador(int idJogador);      // notificacao: JogadorAposta
     ArrayList<Integer> getApostaJogador(int idJogador);
+    int getDinheiroJogador(int idJogador);
+    int getValorApostaJogador(int idJogador);
 }

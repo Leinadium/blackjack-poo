@@ -47,6 +47,7 @@ class Jogador {
         this.numero = numJogador;
         this.mao = new Mao();
         this.maosSplit = new ArrayList<>();
+        this.fichasAposta = new ArrayList<>();
         this.dinheiro = 500;
         this.aposta = 0;
         this.rendido = false;
@@ -80,6 +81,7 @@ class Jogador {
     public void iniciaJogada() {
         this.mao = new Mao();
         this.maosSplit = new ArrayList<>();
+        this.fichasAposta = new ArrayList<>();
         this.aposta = 0;
         this.rendido = false;
         this.finalizado = false;
@@ -178,11 +180,10 @@ class Jogador {
      * @param f Ficha para aumentar a posta
      */
     public void diminuirAposta(Ficha f) {
-        if (temFicha(f)) {
-            this.adicionarFicha(f);
-            this.fichasAposta.remove(f);
-            this.aposta -= f.valor;
-        }
+        this.adicionarFicha(f);
+        this.fichasAposta.remove(f);
+        this.aposta -= f.valor;
+
     }
 
 
