@@ -81,10 +81,10 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         colocarBotoes();
         mudarEstadoBotoes(false);
         botaoFinalizarAposta.setVisible(false);
-        labelDinheiro.setVisible(true);
 
         // criando e posicionando os labels
         criaLabels();
+        labelDinheiro.setVisible(true);
 
         // iniciado
         setVisible(true);
@@ -154,7 +154,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
             }
         }
 
-        labelAposta.setText("Aposta: " + valorAposta);
+        labelAposta.setText("Aposta: $" + valorAposta + ".00");
         labelDinheiro.setText("Dinheiro: $" + valorDinheiro + ".00");
         labelAposta.repaint();
         labelDinheiro.repaint();
@@ -182,8 +182,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      */
     void criaLabels() {
         labelValorCartas = criaLabel(valorCartas, COMPRIMENTO / 2 - 50, ALTURA / 2 + 30, 20);
-        labelAposta = criaLabel(valorAposta, 30, ALTURA / 2 - 10, 100);
-        labelDinheiro = criaLabel(valorDinheiro, COMPRIMENTO / 2 - 50, ALTURA - 30, 150);
+        labelAposta = criaLabel(valorAposta, 30, ALTURA / 2 - 10, 150);
+        labelDinheiro = criaLabel(valorDinheiro, COMPRIMENTO / 2 - 75, ALTURA - 60, 150);
     }
 
     /**
