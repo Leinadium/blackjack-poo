@@ -356,7 +356,7 @@ public class Blackjack implements ObservadoAPI {
 		try {
 			jog.fazerSplit(baralho);
 		} catch (Exception e) {
-			return; // se der excecao nao faz o split
+			// se der excecao nao faz o split
 		}
 	}
 
@@ -364,19 +364,19 @@ public class Blackjack implements ObservadoAPI {
     	int numJogador = vez;
     	Jogador jog = this.jogadores.get(numJogador);
     	notificarTodos(NotificacaoAPI.JogadorAcao);
-    	if (acao == "STAND") {
+    	if (acao.equals("STAND")) {
 			fazerStandJogador(jog, 0);
     	}
-    	else if (acao == "HIT") {
+    	else if (acao.equals("HIT")) {
     		fazerHitJogador(jog, 0);
     	}
-    	else if (acao == "DOUBLE") {
+    	else if (acao.equals("DOUBLE")) {
     		fazerDoubleJogador(jog);
     	}
-    	else if (acao == "SURRENDER") {
+    	else if (acao.equals("SURRENDER")) {
     		fazerSurrenderJogador(jog);
     	}
-    	else if (acao == "SPLIT") {
+    	else if (acao.equals("SPLIT")) {
     		fazerSplitJogador(jog);
     	}
     	else {
@@ -385,6 +385,9 @@ public class Blackjack implements ObservadoAPI {
     	notificarTodos(NotificacaoAPI.JogadorAcao);
     }
 
+    public boolean jogadorEhFinalizado() {
+    	return this.jogadores.get(this.vez).finalizado;
+	}
     /* ==== FUNCOES DO OBSERVADOR ==== */
 
     public void registraObservador(ObservadorAPI o) {

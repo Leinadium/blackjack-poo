@@ -51,12 +51,12 @@ public class Controller {
     
     public void fazerJogada(String acao, boolean mao_splitada) {
     	this.api.fazerJogada(acao);
-    	if (acao == "STAND") {
-    		passaVez();
-    	}
-    	else if (acao == "SPLIT") {
+    	if (acao.equals("SPLIT")) {
     		acionaSplit();
     	}
+    	if (api.jogadorEhFinalizado()) {
+    	    passaVez();
+        }
     }
 
     public void aumentaAposta(int valor) {

@@ -34,9 +34,9 @@ class Jogador {
     public int dinheiro;
     public int aposta;
     public List<Ficha> fichasAposta;
+    public boolean finalizado;
 
     private boolean rendido;
-    private boolean finalizado;
     private Jogada ultimaJogada;
     private int quantidadeJogadas;
     private int quantidadeSplits;
@@ -249,6 +249,7 @@ class Jogador {
         m.ganharCarta(c);
         this.quantidadeJogadas += 1;
         this.ultimaJogada = Jogada.HIT;
+        this.finalizado = verificaFinalizadoGeral();
     }
     public void fazerHit(Baralho baralho) { this.fazerHit(baralho, this.mao); }
 
@@ -293,6 +294,7 @@ class Jogador {
             this.fazerStand(m);
             this.quantidadeJogadas -= 1;  // Hit e Stand adicionaram +2. Retirando 1 para ficar com +1 jogada
             this.ultimaJogada = Jogada.DOUBLE;
+            this.finalizado = this.verificaFinalizadoGeral();
         }
         catch (Exception e) {
         	throw new Exception("O jogador nao possui dinheiro para fazer double");
