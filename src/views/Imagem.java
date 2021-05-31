@@ -83,7 +83,7 @@ public class Imagem {
             d.put("vermelho", ImageIO.read(new File(f+"deck2.gif")));
         }
         catch (IOException e) {
-            System.out.println("Erro carregando arquivo de imagens" + e.toString());
+            System.out.println("Erro carregando arquivo de imagens " + e.toString());
             System.exit(-1);
         }
     }

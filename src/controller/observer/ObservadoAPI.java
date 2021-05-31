@@ -20,4 +20,10 @@ public interface ObservadoAPI {
     int getDinheiroJogador(int idJogador);
     int getValorApostaJogador(int idJogador);
     boolean getPodeApostaJogador(int idJogador);
+    
+    boolean getPodeStand(boolean mao_splitada);
+    boolean getPodeHit(boolean mao_splitada);
+    boolean getPodeDouble(boolean mao_splitada);
+    boolean getPodeSurrender(boolean mao_splitada);
+    boolean getPodeSplit(boolean mao_splitada);
 }

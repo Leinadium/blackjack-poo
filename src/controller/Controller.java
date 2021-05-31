@@ -19,26 +19,6 @@ public class Controller {
         this.frameInicial.abrir();
     }
     
-    public void fazerJogada(String acao) {
-    	switch (acao) {
-            case "STAND": {
-                // por enquanto so passa a vez
-                passaVez();
-                break;
-            }
-            case "HIT": {
-                this.api.fazerHitJogador(0); // por enquanto so na primeira mao
-                break;
-            }
-            case "DOUBLE": System.out.println("Ainda nao implementado");break;
-            case "SURRENDER": System.out.println("Ainda nao implementado");break;
-            case "SPLIT": {
-                acionaSplit();
-                break;
-            }
-    	}
-    }
-
     public void passaVez() {
         api.passaVez();
 
@@ -52,17 +32,31 @@ public class Controller {
             this.frameJogador.get(api.getVez()).iniciarRodada();
         }
     }
-
-    void acionaSplit() {
+    
+    private void acionaSplit() {
         int idJogador = api.getVez();
     	String numJogadorString = String.format("%d", idJogador+1);
-    	int mao = api.quantidadeMaosSplitJogador(idJogador) + 1; // nova mao
-    	this.frameJogador.add(new FrameJogador(this, numJogadorString, idJogador, mao)); //cria nova janela para a mao splitada
+    	
+    	// cria nova janela
+    	int mao = this.api.quantidadeMaosSplitJogador(idJogador) - 1; // nova mao
+    	this.frameJogador.add(new FrameJogador(this, numJogadorString, idJogador, mao));
+
+        // inicializa ultima janela
         int ultimo = this.frameJogador.size() - 1;
         FrameJogador novoFrame = this.frameJogador.get(ultimo);
-
-        novoFrame.iniciarRodada();          //ultima janela precisa ser inicializada
-    	api.distribuiCartasJogador(true); //distribui as cartas para o jogador
+        novoFrame.iniciarRodada();
+        this.api.registraObservador(this.frameJogador.get(ultimo));
+        this.api.distribuiCartasJogador(true);
+    }
+    
+    public void fazerJogada(String acao, boolean mao_splitada) {
+    	this.api.fazerJogada(acao);
+    	if (acao == "STAND") {
+    		passaVez();
+    	}
+    	else if (acao == "SPLIT") {
+    		acionaSplit();
+    	}
     }
 
     public void aumentaAposta(int valor) {
@@ -146,12 +140,18 @@ public class Controller {
     public void iniciarRodada() {
     	int i;
     	int quantidadeJogadores = this.frameJogador.size();
-        // distribui as cartas para o dealer
+    	// distribui as cartas para o dealer
         // api.distribuiCartasDealer();
-
         // api.distribuiCartasJogador(false);
+    	
         this.frameJogador.get(0).iniciarRodada();
         this.modo = Modo.JOGANDO;
+        
+        this.api.iniciarRodada();
+    }
+    
+    public void finalizarRodada() {
+    	this.frameDealer.reiniciarDealer();
     }
 }
 

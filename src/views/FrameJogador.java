@@ -21,8 +21,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     public final int COMPRIMENTO = 700;
     public final int ALTURA = 550;
     private final Image background = Imagem.get("background");
-    private final Image cartaAzul = Imagem.get("azul");
-    private final Image cartaVermelha = Imagem.get("vermelho");
+    // private final Image cartaAzul = Imagem.get("azul");
+    // private final Image cartaVermelha = Imagem.get("vermelho");
 
     private final int sizeFicha = 60;
 
@@ -61,7 +61,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      * @param idMao id da mao do jogador, na lista do controlador.
      */
     public FrameJogador(Controller controller, String numJogador, int idJogador, int idMao) {
-        this.controller = controller;
+    	this.controller = controller;
         this.numJogador = numJogador;
         this.idMao = idMao;
         this.idJogador = idJogador;
@@ -208,26 +208,66 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      * Fecha a tela do jogador
      */
     public void fechar() { setVisible(false);}
-
+    
+    /**
+     * Verifica se a mao que o jogador esta fazendo a acao eh um split ou nao. 
+     * @return true - caso seja a segunda mão de um split; false - caso contrario 
+     */
+    private boolean retornaMaoSplitada() {
+    	if (this.idMao >= 1) {
+    		return (true);
+    	}
+    	return (false);
+    }
+    
+    public void verificaBotoes() {
+    }
+    
+    
+    /**
+     * Desativa o botao de uma acao
+     * @param acao
+     */
+    private void alteraEstadoBotao(String acao, boolean estado) {
+    	if (acao == "STAND") {
+    		this.botaoStand.setEnabled(estado);
+    	}
+    	else if (acao == "HIT") {
+    		this.botaoHit.setEnabled(estado);
+    	}
+    	else if (acao == "DOUBLE") {
+    		this.botaoDouble.setEnabled(estado);
+    	}
+    	else if (acao == "SURRENDER") {
+    		this.botaoSurrender.setEnabled(estado);
+    	}
+    	else if (acao == "SPLIT") {
+    		this.botaoSplit.setEnabled(estado);
+    	}
+    }
+    
+    
     /**
      * Detecta os pressionamentos dos botoes.
      * @param e ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();  // pega de onde veio o evento (qual botao)
+        boolean mao_splitada = this.retornaMaoSplitada();
         if (obj.equals(botaoStand)) {
-        	this.controller.fazerJogada("STAND");
-        	mudarEstadoBotoes(false);   // temporario. deve ser implementado nas notificacoes?
+        	this.controller.fazerJogada("STAND", mao_splitada);
+        	// mudarEstadoBotoes(false);   // temporario. deve ser implementado nas notificacoes?
         } else if (obj.equals(botaoHit)) {
-        	this.controller.fazerJogada("HIT");
+        	this.controller.fazerJogada("HIT", mao_splitada);
         } else if (obj.equals(botaoDouble)) {
-        	this.controller.fazerJogada("DOUBLE");
+        	this.controller.fazerJogada("DOUBLE", mao_splitada);
         } else if (obj.equals(botaoSplit)) {
-        	this.controller.fazerJogada("SPLIT");
+        	this.controller.fazerJogada("SPLIT", mao_splitada);
         } else if (obj.equals(botaoSurrender)) {
-        	this.controller.fazerJogada("SURRENDER");
+        	this.controller.fazerJogada("SURRENDER", mao_splitada);
         } else if (obj.equals(botaoFinalizarAposta)) {
             this.controller.finalizarAposta();
+            this.controller.iniciarRodada();
         } else {
             System.out.println("AINDA NAO IMPLEMENTADO");
         }
@@ -306,28 +346,38 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      * Notificacoes consideradas:
      *  - JogadorCartas
      *  - JogadorAposta
+     *  - JogadorAcao
      *
      * @param o Api do blackjack
      */
     public void notificar(ObservadoAPI o) {
-        switch (o.getNotificacao()) {
-            case JogadorCartas: {
-                listaCartas = o.getCartasJogador(idJogador, idMao);
-                valorCartas = o.getValorJogador(idJogador, idMao);
-
-                // TODO: precisa verificar os botoes (se pode acionar ou nao)
-                repaint();
-            }
-            case JogadorAposta: {
-                listaAposta = o.getApostaJogador(idJogador);
-                valorDinheiro = o.getDinheiroJogador(idJogador);
-                valorAposta = o.getValorApostaJogador(idJogador);
-
-                botaoFinalizarAposta.setEnabled(o.getPodeApostaJogador(idJogador));
-                repaint();
-            }
-            default: {}     // outras notificacoes sao ignoradas
-        }
+    	boolean mao_splitada;
+    	//se quiser, pode fazer o switch case. mas nao sei pq do jeito que tava ele tava aceitando todos os casos que estavam embaixo.
+    	//por ex: no switch case, se a acao era JogadorAposta, caia em JogadorCartas e JogadorAcao tambem
+    	if (o.getNotificacao() == NotificacaoAPI.JogadorAposta) {
+            listaAposta = o.getApostaJogador(idJogador);
+            valorDinheiro = o.getDinheiroJogador(idJogador);
+            valorAposta = o.getValorApostaJogador(idJogador);
+            botaoFinalizarAposta.setEnabled(o.getPodeApostaJogador(idJogador));
+            repaint();
+    	}
+    	else if (o.getNotificacao() == NotificacaoAPI.JogadorCartas) {
+            listaCartas = o.getCartasJogador(idJogador, idMao);
+            valorCartas = o.getValorJogador(idJogador, idMao);
+            repaint();
+    	}
+    	else if (o.getNotificacao() == NotificacaoAPI.JogadorAcao) {
+        	mao_splitada = this.retornaMaoSplitada();
+        	this.alteraEstadoBotao("STAND", o.getPodeStand(mao_splitada));
+        	this.alteraEstadoBotao("HIT", o.getPodeHit(mao_splitada));
+        	this.alteraEstadoBotao("DOUBLE", o.getPodeDouble(mao_splitada));
+        	this.alteraEstadoBotao("SURRENDER", o.getPodeSurrender(mao_splitada));
+        	this.alteraEstadoBotao("SPLIT", o.getPodeSplit(mao_splitada));
+        	repaint(); // eu nao tenho certeza se precisa chamar o repaint aqui nao
+    	}
+    	else {
+    		return;
+    	}
     }
 
     /**
@@ -375,6 +425,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         }
     }
     /* metodos vazios mas necessarios para implementar MouseListener */
+    
     public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}

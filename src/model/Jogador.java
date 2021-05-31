@@ -61,8 +61,11 @@ class Jogador {
      * Prepara o jogador para uma nova rodada
      */
     public void iniciaJogada() {
+    	int i;
         this.mao = new Mao();
         this.maosSplit = new ArrayList<>();
+        // criando as maos split nulas
+        for (i = 0; i < 2; i ++) {maosSplit.add(null);}
         this.fichasAposta = new ArrayList<>();
         this.aposta = 0;
         this.rendido = false;
@@ -211,6 +214,7 @@ class Jogador {
     public boolean podeSplit(Mao m) {
         return (this.quantidadeSplits < 2 && m.podeSplit());
     }
+    
     public boolean podeSplit() { return podeSplit(this.mao);}
     
     public boolean podeSurrender(Mao m) {
@@ -312,10 +316,9 @@ class Jogador {
     public void fazerSplit(Mao m, Baralho b) throws Exception{
         // achando a mao proxima mao aberta
         int pos, pos2;
-        if (maosSplit.get(0) == null) {pos = 0; pos2 = 1;}
-        else if (maosSplit.get(1) == null) {pos = 1; pos2 = 0;}
+        if (this.maosSplit.get(0) == null) {pos = 0; pos2 = 1;}
+        else if (this.maosSplit.get(1) == null) {pos = 1; pos2 = 0;}
         else { throw new Exception("Todas as maos estao em uso"); }
-
         Mao nova_mao = m.fazerSplit();  // criando a nova mao
         this.maosSplit.set(pos, nova_mao); // salvando a mao na lista de maos
         this.maosSplit.set(pos2, m);

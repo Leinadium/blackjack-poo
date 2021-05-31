@@ -157,29 +157,14 @@ public class Blackjack implements ObservadoAPI {
 	 */
 	public void distribuiCartasJogador(boolean split) {
 		int numJogador = vez;
-		List<Carta> cartas = this.jogadores.get(numJogador).mao.cartas;
-		if (split) {
-			try {
-				this.jogadores.get(numJogador).fazerSplit(this.jogadores.get(numJogador).mao, baralho);
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-		}
-		else {
+		if (!split) {
 	    	this.jogadores.get(numJogador).mao.ganharCarta(baralho.pop());
 			this.jogadores.get(numJogador).mao.ganharCarta(baralho.pop());
-
 		}
-		notificarTodos(NotificacaoAPI.JogadorCartas);
-	}
-
-	public void fazerHitJogador(int mao) {
-		int numJogador = vez;
-		Jogador jog = this.jogadores.get(numJogador);
-		if (mao == 0) {
-			jog.fazerHit(baralho);
-		} else {
-			jog.fazerHit(baralho, jog.maosSplit.get(mao-1));
+		else {
+			notificarTodos(NotificacaoAPI.JogadorAcao); 
+			// Apos as cartas serem distribuidas no split, as condicoes de acao do jogador que fez split sao alteradas
+			// Isso ja foi feito para o frame do jogador que fez a acao, porem nao pro frame da mao splitada, ja que ela nao havia sido registrada ainda
 		}
 		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
@@ -203,8 +188,6 @@ public class Blackjack implements ObservadoAPI {
 	}
 
 	public int quantidadeMaosSplitJogador(int numJogador) { return this.jogadores.get(numJogador).maosSplit.size();}
-
-
     /**
      * Retorna o resultado de uma partida entre um jogador e um dealer
      * @param jog - Jogador.
@@ -235,7 +218,172 @@ public class Blackjack implements ObservadoAPI {
     	}
     	return Resultado.PUSH;
     }
+    
+    /* ==== FUNCOES DE ACESSO PARA A VIEWS SOBRE FUNCIONALIDADE DO JOGADOR ==== */
+    
+    
+    public void iniciarRodada() {
+    	notificarTodos(NotificacaoAPI.JogadorAcao);
+    }
+    
+    /**
+     * Retorna um booleano que diz se o jogador pode fazer um stand
+     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @return booleano que diz se aquela mao do jogador pode fazer um stand
+     */
+    public boolean getPodeStand(boolean mao_splitada) {
+    	boolean resultado;
+    	int numJogador = vez;
+    	Jogador jog = this.jogadores.get(numJogador);
+    	if (mao_splitada) {
+    		resultado = jog.podeStand(jog.maosSplit.get(1));
+    	}
+    	else {
+    		resultado = jog.podeStand();
+    	}
+    	return (resultado);
+    }
+    
+    /**
+     * Retorna um booleano que diz se o jogador pode fazer um hit
+     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @return booleano que diz se aquela mao do jogador pode fazer um hit
+     */
+    public boolean getPodeHit(boolean mao_splitada) {
+    	boolean resultado;
+    	int numJogador = vez;
+    	Jogador jog = this.jogadores.get(numJogador);
+    	if (mao_splitada) {
+    		resultado = jog.podeHit(jog.maosSplit.get(1));
+    	}
+    	else {
+    		resultado = jog.podeHit();
+    	}
+    	return (resultado);
+    }
+    
+    /**
+     * Retorna um booleano que diz se o jogador pode fazer um double
+     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @return booleano que diz se aquela mao do jogador pode fazer um double
+     */
+    public boolean getPodeDouble(boolean mao_splitada) {
+    	boolean resultado;
+    	int numJogador = vez;
+    	Jogador jog = this.jogadores.get(numJogador);
+    	if (mao_splitada) {
+    		resultado = false;
+    	}
+    	else {
+    		resultado = jog.podeDouble();
+    	}
+    	return (resultado);
+    }
+    
+    /**
+     * Retorna um booleano que diz se o jogador pode fazer um surrender
+     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @return booleano que diz se aquela mao do jogador pode fazer um surrender
+     */
+    public boolean getPodeSurrender(boolean mao_splitada) {
+    	boolean resultado;
+    	int numJogador = vez;
+    	Jogador jog = this.jogadores.get(numJogador);
+    	if (mao_splitada) {
+    		resultado = jog.podeSurrender(jog.maosSplit.get(1));
+    	}
+    	else {
+    		resultado = jog.podeSurrender();
+    	}
+    	return (resultado);
+    }
+    
+    /**
+     * Retorna um booleano que diz se o jogador pode fazer um split
+     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @return booleano que diz se aquela mao do jogador pode fazer um split
+     */
+    
+    public boolean getPodeSplit(boolean mao_splitada) {
+    	boolean resultado;
+    	int numJogador = vez;
+    	Jogador jog = this.jogadores.get(numJogador);
+    	if (mao_splitada) {
+    		resultado = false;
+    	}
+    	else {
+    		resultado = jog.podeSplit();
+    	}
+    	return (resultado);
+    }
+    
+    /* ==== FUNCOES QUE IMPLEMENTAM FUNCIONALIDADE DO JOGADOR ==== */
+    
+    private void fazerStandJogador(Jogador jog, int mao) {
+    	if (mao == 0) {
+    		jog.fazerStand();
+    	}
+    	else {
+    		jog.fazerStand(jog.maosSplit.get(mao-1));
+    	}
+    }
+    
+	private void fazerHitJogador(Jogador jog, int mao) {
+		if (mao == 0) {
+			jog.fazerHit(baralho);
+		} else {
+			jog.fazerHit(baralho, jog.maosSplit.get(mao-1));
+		}
+		notificarTodos(NotificacaoAPI.JogadorCartas);
+	}
+	
+	private void fazerDoubleJogador(Jogador jog) {
+		try {
+			jog.fazerDouble(baralho);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		notificarTodos(NotificacaoAPI.JogadorCartas); // recebe mais uma carta por causa do hit
+		notificarTodos(NotificacaoAPI.JogadorAposta);
+	}
+	
+	private void fazerSurrenderJogador(Jogador jog) {
+		jog.fazerSurrender();
+		notificarTodos(NotificacaoAPI.JogadorAposta);
+	}
+	
+	private void fazerSplitJogador(Jogador jog) {
+		try {
+			jog.fazerSplit(baralho);
+		} catch (Exception e) {
+			return; // se der excecao nao faz o split
+		}
+	}
 
+    public void fazerJogada(String acao) {
+    	int numJogador = vez;
+    	Jogador jog = this.jogadores.get(numJogador);
+    	notificarTodos(NotificacaoAPI.JogadorAcao);
+    	if (acao == "STAND") {
+			fazerStandJogador(jog, 0);
+    	}
+    	else if (acao == "HIT") {
+    		fazerHitJogador(jog, 0);
+    	}
+    	else if (acao == "DOUBLE") {
+    		fazerDoubleJogador(jog);
+    	}
+    	else if (acao == "SURRENDER") {
+    		fazerSurrenderJogador(jog);
+    	}
+    	else if (acao == "SPLIT") {
+    		fazerSplitJogador(jog);
+    	}
+    	else {
+    		System.out.println("Houve algum problema"); //vou mudar depois
+    	}
+    	notificarTodos(NotificacaoAPI.JogadorAcao);
+    }
 
     /* ==== FUNCOES DO OBSERVADOR ==== */
 
