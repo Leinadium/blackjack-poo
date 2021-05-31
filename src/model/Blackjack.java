@@ -5,7 +5,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import controller.observer.*;
@@ -68,7 +67,7 @@ public class Blackjack implements ObservadoAPI {
 
 	/**
 	 * Pega de qual jogador eh a vez
-	 * @return
+	 * @return o indice do jogador
 	 */
 	public int getVez() {
 		return vez;
@@ -77,7 +76,7 @@ public class Blackjack implements ObservadoAPI {
 	/**
 	 * Retorna se todos os jogadores ja jogaram
 	 * Para poder descobrir quem ganhou e perdeu
-	 * @return
+	 * @return a quantidade de jogadores finalizados
 	 */
 	public boolean getJogadoresFinalizados() {
     	return jogadoresFinalizados;
@@ -266,19 +265,6 @@ public class Blackjack implements ObservadoAPI {
 		}
 	}
 
-	public HashMap<Integer, Integer> getFichasJogador(int idJogador) {
-    	Jogador jog = this.jogadores.get(idJogador);
-		HashMap<Integer, Integer> ret = new HashMap<>();
-
-		for (Ficha f: jog.fichas) {
-			if (ret.containsKey(f.valor)) {
-				ret.put(f.valor, ret.get(f.valor) + 1);
-			} else {
-				ret.put(f.valor, 1);
-			}
-		}
-		return ret;
-	}
 	public ArrayList<Integer> getApostaJogador(int idJogador) {
 		ArrayList<Integer> ret = new ArrayList<>();
 		if (this.jogadores.get(idJogador).fichasAposta == null) {

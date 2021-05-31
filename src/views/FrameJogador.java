@@ -7,8 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import controller.Controller;
 import controller.observer.*;
@@ -41,7 +40,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     protected JLabel labelValorCartas;
     protected int valorCartas;
     // para as fichas do jogador
-    protected HashMap<Integer, Integer> mapaFichas;
     protected int valorDinheiro;
     protected JLabel labelDinheiro;
     // para a aposta do jogador
@@ -69,7 +67,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         this.idJogador = idJogador;
 
         // inicia as fichas
-        mapaFichas = new HashMap<>();
         listaAposta = new ArrayList<>();
 
         // iniciando o frame
@@ -84,6 +81,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         colocarBotoes();
         mudarEstadoBotoes(false);
         botaoFinalizarAposta.setVisible(false);
+        labelDinheiro.setVisible(true);
 
         // criando e posicionando os labels
         criaLabels();
@@ -163,6 +161,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
 
 
         // desenha as fichas do jogador
+        // removido (aula 31-05)
+        /*
         int v, q;
         Integer[] xy;
         Image img;
@@ -175,6 +175,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
                 g2d.drawImage(img, xy[0], xy[1] - 5*(i+1), null);
             }
         }
+        */
     }
     /**
      * Cria todas as labels
@@ -210,7 +211,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
 
     /**
      * Detecta os pressionamentos dos botoes.
-     * @param e
+     * @param e ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();  // pega de onde veio o evento (qual botao)
@@ -318,7 +319,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
                 repaint();
             }
             case JogadorAposta: {
-                mapaFichas = o.getFichasJogador(idJogador);
                 listaAposta = o.getApostaJogador(idJogador);
                 valorDinheiro = o.getDinheiroJogador(idJogador);
                 valorAposta = o.getValorApostaJogador(idJogador);
@@ -351,7 +351,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
 
     /**
      * Implementacao de clique de mouse para detectar se o jogador deseja diminuir a aposta
-     * @param e
+     * @param e MouseEvent
      */
     public void mouseClicked(MouseEvent e) {
         // se estiver na hora da aposta, e tiver alguma ficha para retirar

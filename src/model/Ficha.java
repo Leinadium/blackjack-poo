@@ -37,6 +37,7 @@ class Ficha {
     }
 
     /**
+     * (depreciated)
      * Calcula uma combina��o de fichas que mais aproxima ao dinheiro desejado
      * @param dinheiro Dinheiro a ser tranformado em fichas
      * @param listaPossiveis Lista de fichas disponiveis
@@ -87,6 +88,7 @@ class Ficha {
     
     
     /**
+     * (depreciated)
      * Calcula uma combina��o de fichas a partir de um dinheiro
      * @param dinheiro Dinheiro a ser tranformado em fichas
      * @return Lista de fichas relativas ao dinheiro

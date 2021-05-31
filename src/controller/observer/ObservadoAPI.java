@@ -15,8 +15,7 @@ public interface ObservadoAPI {
     String[] getCartasJogador(int idJogador, int mao);     // notificacao: JogadorCartas
     int getValorJogador(int idJogador, int mao);           // notificacao: JogadorCartas
 
-    HashMap<Integer, Integer> getFichasJogador(int idJogador);      // notificacao: JogadorAposta
-    ArrayList<Integer> getApostaJogador(int idJogador);
+    ArrayList<Integer> getApostaJogador(int idJogador);    // notificacao: JogadorAposta
     int getDinheiroJogador(int idJogador);
     int getValorApostaJogador(int idJogador);
     boolean getPodeApostaJogador(int idJogador);

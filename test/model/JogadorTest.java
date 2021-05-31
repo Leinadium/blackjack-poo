@@ -8,8 +8,6 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import model.cartas.*;
 
 public class JogadorTest {
@@ -117,50 +115,6 @@ public class JogadorTest {
 		int saldo_antigo = actual.dinheiro;
 		actual.aumentarAposta(f);
 		assertEquals("A aposta foi aumentada", saldo_antigo, actual.dinheiro+valor_ficha);
-	}
-
-	@Test
-	public void testAdicionarFicha() {
-		Jogador actual = new Jogador(1);
-		Ficha f = new Ficha(100);
-		actual.adicionarFicha(f);
-		assertEquals("A ficha nao foi adicionada", f, actual.fichas.get(actual.fichas.size()-1));
-	}
-
-	@Test
-	public void testRetirarFichaTamanhoReduzido() {
-		Jogador actual = new Jogador(1);
-		Ficha f = new Ficha(100);
-		int tamanho_esperado = actual.fichas.size()-1;
-		actual.retirarFicha(f);
-		assertEquals("A ficha nao foi retirada", tamanho_esperado, actual.fichas.size());
-	}
-
-	@Test (expected = IllegalStateException.class)
-	public void testRetirarFichaValorIgual() {
-		Jogador actual = new Jogador(1);
-		Ficha f1 = new Ficha(100);
-		actual.retirarFicha(f1);
-		actual.retirarFicha(f1);
-		actual.retirarFicha(f1); //terceira ocorrencia, o jogador nao pode ter mais
-
-	}
-
-	@Test (expected = IllegalStateException.class)
-	public void testRetirarFichaListaVazia() {
-		Jogador actual = new Jogador(1);
-		actual.fichas = new ArrayList<>();
-        actual.retirarFicha(new Ficha(100));
-	}
-
-	@Test (expected = IllegalStateException.class)
-	public void testRetirarFichaInexistente() {
-		Jogador actual = new Jogador(1);
-		Ficha f1 = new Ficha(100);
-		Ficha f2 = new Ficha(50);
-		actual.fichas = null;
-		actual.adicionarFicha(f1);
-		actual.retirarFicha(f2);
 	}
 
 	@Test
