@@ -38,6 +38,7 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
 
     protected String[] cartas;          // cartas do dealer. Sao coletadas atraves da api
     protected int valorCartas;          // valor das cartas do dealer. Sao coletadas atraves da api
+    protected boolean ehFinalizado;     // para saber se exibe o total das cartas, ou so o verso das cartas
 
     protected Controller controller;
 
@@ -119,18 +120,27 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
             Image imagemCarta = Imagem.get(carta[0], carta[1]);
             g2d.drawImage(imagemCarta, inicio, y, null);
 
-            // coloca as outras cartas viradas para baixo
-            for (int i = 1; i < this.cartas.length; i ++) {
-                carta = this.cartas[i].split("-");
-                if (carta[1].equals("ESPADAS") || carta[1].equals("PAUS")) {
-                    imagemCarta = cartaAzul;
-                } else { imagemCarta = cartaVermelha; }
-                g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
+            if (!this.ehFinalizado) {   // exibe as cartas viradas se nao finalizou
+                // coloca as outras cartas viradas para baixo
+                for (int i = 1; i < this.cartas.length; i++) {
+                    carta = this.cartas[i].split("-");
+                    if (carta[1].equals("ESPADAS") || carta[1].equals("PAUS")) {
+                        imagemCarta = cartaAzul;
+                    } else {
+                        imagemCarta = cartaVermelha;
+                    }
+                    g2d.drawImage(imagemCarta, inicio + deslocamentoPorCarta * i, y, null);
+                }
+            } else {    // desenha o label e as cartas viradas pra cima
+                for (int i = 1; i < this.cartas.length; i++) {
+                    carta = this.cartas[i].split("-");
+                    Image img = Imagem.get(carta[0], carta[1]);
+                    g2d.drawImage(img, inicio + deslocamentoPorCarta * i, y, null);
+                }
+                // desenha o label
+                labelValorCartas.setText(Integer.toString(this.valorCartas));
+                labelValorCartas.repaint();
             }
-            // desenha o label
-            labelValorCartas.setText(Integer.toString(this.valorCartas));
-            labelValorCartas.repaint();
-
         }
         //desenha as fichas
         int deslocamentoFichaX = 90;
@@ -215,7 +225,6 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         labelValorCartas.setFont(new Font("Serif", Font.BOLD, 18));
         labelValorCartas.setBounds(COMPRIMENTO / 2 - 10, ALTURA / 2 - 60 , 20, 20);
 
-        labelValorCartas.setVisible(false);
         getContentPane().add(labelValorCartas);
     }
 
@@ -255,10 +264,11 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
     public void notificar(ObservadoAPI o) {
         switch (o.getNotificacao()) {   // pega a notificacao
             case DealerCartas: {
-                labelValorCartas.setVisible(true);          // mostra o label
-                this.cartas = o.getCartasDealer();          // atualiza as cartas
-                this.valorCartas = o.getValorDealer();      // pega a soma das cartas
-                repaint();                                  // atualiza a tela inteira
+                this.cartas = o.getCartasDealer();              // atualiza as cartas
+                this.valorCartas = o.getValorDealer();          // pega a soma das cartas
+                this.ehFinalizado = o.getFinalizadoDealer();    // verifica se o dealer jogou
+                labelValorCartas.setVisible(this.ehFinalizado);
+                repaint();                                      // atualiza a tela inteira
             }
             case DealerAposta: {
                 // TODO

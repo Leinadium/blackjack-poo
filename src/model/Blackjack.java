@@ -31,29 +31,35 @@ public class Blackjack implements ObservadoAPI {
      * Implementacao do padrao singleton.
      * Retorna uma instancia de blackjack para aquela quantidade de jogadores
      * Se havia uma instancia com uma quantidade diferente de jogadores, sera sobreescrita
-     * @param quantidadeJogadores quantidade de Jogadores
      * @return instancia da api (objeto Blackjack)
      */
-    public static Blackjack getAPI(int quantidadeJogadores) {
-        if (bj == null || bj.qtdJogadores != quantidadeJogadores) {
-            bj = new Blackjack(quantidadeJogadores);
+    public static Blackjack getAPI() {
+        if (bj == null) {
+            bj = new Blackjack();
         }
         return bj;
     }
 
 
-    private Blackjack(int quantidadeJogadores){
-    	int i;
-    	this.baralho = new Baralho(4);
-    	this.dealer = new Dealer();
-    	this.jogadores = new ArrayList<>();
-    	this.qtdJogadores = quantidadeJogadores;
-    	for (i = 0; i < quantidadeJogadores; i++) {
-    		jogadores.add(new Jogador(i));
-    	}
-    	vez = 0;
-    	jogadoresFinalizados = false;
+    private Blackjack(){
     }
+
+	/**
+	 * Inicia a API com todas as configuracoes
+	 * @param quantidadeJogadores quantidade de jogadores para a partida
+	 */
+	public void iniciarBlackjack(int quantidadeJogadores) {
+		int i;
+		this.baralho = new Baralho(4);
+		this.dealer = new Dealer();
+		this.jogadores = new ArrayList<>();
+		this.qtdJogadores = quantidadeJogadores;
+		for (i = 0; i < quantidadeJogadores; i++) {
+			jogadores.add(new Jogador(i));
+		}
+		vez = 0;
+		jogadoresFinalizados = false;
+	}
 
 	/**
 	 * Reinicia os jogadores para mais uma rodada
@@ -128,6 +134,13 @@ public class Blackjack implements ObservadoAPI {
 		this.jogadores.get(vez).finalizarAposta();
 	}
 
+	public void fazerJogadaDealer() {
+		while (this.dealer.podeHit()) {
+			this.dealer.fazerHit(this.baralho);
+		}
+		this.dealer.fazerStand();
+		notificarTodos(NotificacaoAPI.DealerCartas);
+	}
 
 	/**
 	 * Distribui duas cartas para o Dealer
@@ -249,6 +262,7 @@ public class Blackjack implements ObservadoAPI {
 	public int getValorDealer() {
     	return this.dealer.mao.soma;
 	}
+	public boolean getFinalizadoDealer() { return this.dealer.verificaFinalizadoGeral(); }
 
 	public String[] getCartasJogador(int idJogador, int mao) {
     	if (mao==0) {

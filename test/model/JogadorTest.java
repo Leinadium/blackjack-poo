@@ -124,6 +124,13 @@ public class JogadorTest {
 		assertEquals("O dinheiro nao foi retirado", actual.dinheiro, 100);
 	}
 
+	@Test
+	public void testRecebeDinheiro() {
+		Jogador jog = new Jogador(1);
+		jog.recebeDinheiro(1234);
+		assertEquals("O dinheiro nao foi recebido", 1234+500, jog.dinheiro);
+	}
+
 	@Test (expected = Exception.class)
 	public void testRetirarDinheiroSemDinheiro() throws Exception {
 		Jogador actual = new Jogador(1);

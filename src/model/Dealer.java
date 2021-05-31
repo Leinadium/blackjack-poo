@@ -41,7 +41,7 @@ class Dealer {
         return (!this.mao.finalizado && !podeHit() && !this.mao.blackjack);
     }
     /**
-     * Funcao privada para verificar todas as maos se foram finalizadas
+     * Funcao para verificar se foi finalizado
      * @return true se a mao tiver sido finalizada
      */
     public boolean verificaFinalizadoGeral() {

@@ -10,7 +10,7 @@ public class Controller {
     FrameDealer frameDealer;
     ArrayList<FrameJogador> frameJogador;
     Blackjack api;
-    int modo;   // 0 para aposta, 1 para partida, 2 para esperando
+    Modo modo;
 
     public Controller() {
         // carrega as imagens
@@ -44,7 +44,9 @@ public class Controller {
 
         if (api.getJogadoresFinalizados()) {
             System.out.println("TODOS OS JOGADORES JOGARAM");
-            // TODO
+            this.modo = Modo.FINAL;
+            this.api.fazerJogadaDealer();
+
         } else {
             api.distribuiCartasJogador(false);
             this.frameJogador.get(api.getVez()).iniciarRodada();
@@ -61,22 +63,16 @@ public class Controller {
 
         novoFrame.iniciarRodada();          //ultima janela precisa ser inicializada
     	api.distribuiCartasJogador(true); //distribui as cartas para o jogador
-
-        // this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[2]);
-    	// this.frameJogador.get(ultimo).adicionarCarta(cartasJogador[3]);
-    	// this.frameJogador.get(ultimo).iniciarRodada();
-    	// this.frameJogador.get(numJogador).substituirCarta(0,  cartasJogador[0]);
-    	// this.frameJogador.get(numJogador).substituirCarta(1, cartasJogador[1]);
     }
 
     public void aumentaAposta(int valor) {
-        if (modo == 0) {
+        if (modo == Modo.APOSTA) {
             System.out.println("aumentando a aposta em " + valor);
             this.api.aumentaAposta(valor); }
     }
 
     public void diminuiAposta(int valor) {
-        if (modo == 0) {
+        if (modo == Modo.APOSTA) {
             System.out.println("diminuindo a aposta em " + valor);
             this.api.diminuiAposta(valor);
         }
@@ -87,7 +83,7 @@ public class Controller {
         this.frameJogador.get(api.getVez()).iniciarRodada();
         this.api.distribuiCartasJogador(false);
         this.api.distribuiCartasDealer();
-        modo = 1;
+        this.modo = Modo.JOGANDO;
     }
 
     public void fecharPartida() {
@@ -118,7 +114,8 @@ public class Controller {
         this.frameInicial.fechar();
 
         // inicia o jogo
-        api = Blackjack.getAPI(quantidadeJogadores);
+        this.api = Blackjack.getAPI();
+        this.api.iniciarBlackjack(quantidadeJogadores);
 
         // inicia os frames dos jogadores
         this.frameJogador = new ArrayList<>();
@@ -137,13 +134,13 @@ public class Controller {
             this.api.registraObservador(this.frameJogador.get(i));
         }
 
-        this.modo = 2;
+        this.modo = Modo.INICIO;
     }
 
     public void iniciarAposta() {
         this.api.reiniciarJogadores();
         this.frameJogador.get(this.api.getVez()).iniciarAposta();
-        this.modo = 0;
+        this.modo = Modo.APOSTA;
     }
 
     public void iniciarRodada() {
@@ -154,6 +151,13 @@ public class Controller {
 
         // api.distribuiCartasJogador(false);
         this.frameJogador.get(0).iniciarRodada();
-        this.modo = 1;
+        this.modo = Modo.JOGANDO;
     }
+}
+
+enum Modo {
+    INICIO,     // esperando ele clicar em inicar rodada
+    APOSTA,     // os jogadores apostando
+    JOGANDO,    // os jogadores jogando
+    FINAL       // final da rodada, distribuindo o dinheiro
 }
