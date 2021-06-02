@@ -290,6 +290,12 @@ class Jogador {
         aposta += aposta;
         try {
         	this.retirarDinheiro(this.aposta);
+
+        	// foi criada uma lista temporaria, pois addAll eh perigoso
+            // se a lista muda enquanto isso
+        	ArrayList<Ficha> temp = new ArrayList<>(this.fichasAposta);
+        	this.fichasAposta.addAll(temp);
+
             this.fazerHit(b, m);
             this.fazerStand(m);
             this.quantidadeJogadas -= 1;  // Hit e Stand adicionaram +2. Retirando 1 para ficar com +1 jogada
