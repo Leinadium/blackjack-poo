@@ -226,22 +226,23 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     
     /**
      * Desativa o botao de uma acao
-     * @param acao
+     * @param acao Nome da jogada do jogador
+     * @param estado true para ligar o botão
      */
     private void alteraEstadoBotao(String acao, boolean estado) {
-    	if (acao == "STAND") {
+    	if (acao.equals("STAND")) {
     		this.botaoStand.setEnabled(estado);
     	}
-    	else if (acao == "HIT") {
+    	else if (acao.equals("HIT")) {
     		this.botaoHit.setEnabled(estado);
     	}
-    	else if (acao == "DOUBLE") {
+    	else if (acao.equals("DOUBLE")) {
     		this.botaoDouble.setEnabled(estado);
     	}
-    	else if (acao == "SURRENDER") {
+    	else if (acao.equals("SURRENDER")) {
     		this.botaoSurrender.setEnabled(estado);
     	}
-    	else if (acao == "SPLIT") {
+    	else if (acao.equals("SPLIT")) {
     		this.botaoSplit.setEnabled(estado);
     	}
     }
@@ -267,7 +268,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         	this.controller.fazerJogada("SURRENDER", mao_splitada);
         } else if (obj.equals(botaoFinalizarAposta)) {
             this.controller.finalizarAposta();
-            this.controller.iniciarRodada();
+            botaoFinalizarAposta.setVisible(false);
         } else {
             System.out.println("AINDA NAO IMPLEMENTADO");
         }
@@ -329,7 +330,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      */
     public void iniciarRodada() {
     	mudarEstadoBotoes(true);
-        botaoFinalizarAposta.setVisible(false);
         labelValorCartas.setVisible(true);
     }
 
@@ -375,9 +375,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         	this.alteraEstadoBotao("SPLIT", o.getPodeSplit(mao_splitada));
         	repaint(); // eu nao tenho certeza se precisa chamar o repaint aqui nao
     	}
-    	else {
-    		return;
-    	}
+
     }
 
     /**

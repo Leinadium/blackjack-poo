@@ -74,10 +74,17 @@ public class Controller {
 
     public void finalizarAposta() {
         this.api.finalizarAposta();
-        this.frameJogador.get(api.getVez()).iniciarRodada();
-        this.api.distribuiCartasJogador(false);
-        this.api.distribuiCartasDealer();
-        this.modo = Modo.JOGANDO;
+        this.api.passaVez();
+
+        if (this.api.getJogadoresFinalizados()) {   // se todos apostaram
+            this.api.resetVez();        // reseta a vez para comecar tudo
+            this.frameJogador.get(api.getVez()).iniciarRodada();  // inicia o primeiro
+            this.api.distribuiCartasJogador(false);
+            this.api.distribuiCartasDealer();
+            this.modo = Modo.JOGANDO;
+        } else {
+            this.frameJogador.get(this.api.getVez()).iniciarAposta();
+        }
     }
 
     public void fecharPartida() {
@@ -127,7 +134,6 @@ public class Controller {
         for (int i = 0; i < quantidadeJogadores; i ++) {
             this.api.registraObservador(this.frameJogador.get(i));
         }
-
         this.modo = Modo.INICIO;
     }
 
@@ -140,9 +146,6 @@ public class Controller {
     public void iniciarRodada() {
     	int i;
     	int quantidadeJogadores = this.frameJogador.size();
-    	// distribui as cartas para o dealer
-        // api.distribuiCartasDealer();
-        // api.distribuiCartasJogador(false);
     	
         this.frameJogador.get(0).iniciarRodada();
         this.modo = Modo.JOGANDO;

@@ -99,6 +99,15 @@ public class Blackjack implements ObservadoAPI {
 		}
 	}
 
+    /**
+     * Reseta a vez e os jogadoresFinalizados
+     */
+	public void resetVez() {
+	    this.vez = 0;
+	    this.jogadoresFinalizados = false;
+    }
+
+
 	/**
 	 * Exibe o baralho inteiro no sdout (para testes da implementacao)
 	 */
