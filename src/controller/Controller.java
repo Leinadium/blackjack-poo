@@ -28,8 +28,8 @@ public class Controller {
             this.api.fazerJogadaDealer();
 
         } else {
-            api.distribuiCartasJogador(false);
             this.frameJogador.get(api.getVez()).iniciarRodada();
+            this.api.distribuiCartasJogador(false);
         }
     }
     

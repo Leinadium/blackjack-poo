@@ -171,10 +171,10 @@ public class Blackjack implements ObservadoAPI {
 			this.jogadores.get(numJogador).mao.ganharCarta(baralho.pop());
 		}
 		else {
-			notificarTodos(NotificacaoAPI.JogadorAcao); 
 			// Apos as cartas serem distribuidas no split, as condicoes de acao do jogador que fez split sao alteradas
 			// Isso ja foi feito para o frame do jogador que fez a acao, porem nao pro frame da mao splitada, ja que ela nao havia sido registrada ainda
 		}
+		notificarTodos(NotificacaoAPI.JogadorAcao);
 		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
 
