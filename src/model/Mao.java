@@ -122,7 +122,10 @@ class Mao {
 	}
 
 	public boolean podeSplit() {
-		return (this.cartas.size() == 2 && this.cartas.get(0).equals(this.cartas.get(1))); //seriam duas funcoes de podeSplit mesmo?
+		return (this.cartas.size() == 2 &&
+				this.cartas.get(0).equals(this.cartas.get(1)) &&
+				!this.finalizado
+		);
 	}
 
 	public String[] toArray() {

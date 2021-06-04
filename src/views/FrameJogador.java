@@ -46,6 +46,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     protected ArrayList<Integer> listaAposta;
     protected JLabel labelAposta;
     protected int valorAposta;
+    // para o resultado
+    protected JLabel labelResultado;
 
 
     protected Controller controller;
@@ -184,6 +186,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         labelValorCartas = criaLabel(valorCartas, COMPRIMENTO / 2 - 50, ALTURA / 2 + 30, 20);
         labelAposta = criaLabel(valorAposta, 30, ALTURA / 2 - 10, 150);
         labelDinheiro = criaLabel(valorDinheiro, COMPRIMENTO / 2 - 75, ALTURA - 60, 150);
+        labelResultado = criaLabel(0, COMPRIMENTO / 2 - 75, ALTURA - 100, 150);
     }
 
     /**
@@ -354,27 +357,35 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     	boolean mao_splitada;
     	//se quiser, pode fazer o switch case. mas nao sei pq do jeito que tava ele tava aceitando todos os casos que estavam embaixo.
     	//por ex: no switch case, se a acao era JogadorAposta, caia em JogadorCartas e JogadorAcao tambem
-    	if (o.getNotificacao() == NotificacaoAPI.JogadorAposta) {
+    	NotificacaoAPI not = o.getNotificacao();
+        if (not == NotificacaoAPI.JogadorAposta) {
             listaAposta = o.getApostaJogador(idJogador);
             valorDinheiro = o.getDinheiroJogador(idJogador);
             valorAposta = o.getValorApostaJogador(idJogador);
             botaoFinalizarAposta.setEnabled(o.getPodeApostaJogador(idJogador));
             repaint();
     	}
-    	else if (o.getNotificacao() == NotificacaoAPI.JogadorCartas) {
+    	else if (not == NotificacaoAPI.JogadorCartas) {
             listaCartas = o.getCartasJogador(idJogador, idMao);
             valorCartas = o.getValorJogador(idJogador, idMao);
             repaint();
     	}
-    	else if (o.getNotificacao() == NotificacaoAPI.JogadorAcao) {
+    	else if (not == NotificacaoAPI.JogadorAcao) {
         	mao_splitada = this.retornaMaoSplitada();
-        	this.alteraEstadoBotao("STAND", o.getPodeStand(mao_splitada));
-        	this.alteraEstadoBotao("HIT", o.getPodeHit(mao_splitada));
-        	this.alteraEstadoBotao("DOUBLE", o.getPodeDouble(mao_splitada));
-        	this.alteraEstadoBotao("SURRENDER", o.getPodeSurrender(mao_splitada));
-        	this.alteraEstadoBotao("SPLIT", o.getPodeSplit(mao_splitada));
+        	this.alteraEstadoBotao("STAND", o.getPodeStand(idJogador, mao_splitada));
+        	this.alteraEstadoBotao("HIT", o.getPodeHit(idJogador, mao_splitada));
+        	this.alteraEstadoBotao("DOUBLE", o.getPodeDouble(idJogador, mao_splitada));
+        	this.alteraEstadoBotao("SURRENDER", o.getPodeSurrender(idJogador, mao_splitada));
+        	this.alteraEstadoBotao("SPLIT", o.getPodeSplit(idJogador, mao_splitada));
         	repaint(); // eu nao tenho certeza se precisa chamar o repaint aqui nao
     	}
+    	else if (not == NotificacaoAPI.JogadorResultado) {
+    	    String resultado = o.getResultado(idJogador);
+    	    labelResultado.setText("Vencedor: " + resultado);
+    	    labelResultado.setEnabled(true);
+    	    System.out.println(idJogador + ": " + resultado);
+    	    repaint();
+        }
 
     }
 

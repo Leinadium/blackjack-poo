@@ -30,6 +30,11 @@ public class Controller {
         } else {
             this.frameJogador.get(api.getVez()).iniciarRodada();
             this.api.distribuiCartasJogador(false);
+            // caso o jogador faça um blackjack,
+            if (api.jogadorEhFinalizado()) {
+                passaVez();
+            }
+
         }
     }
     

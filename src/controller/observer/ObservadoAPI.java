@@ -1,6 +1,5 @@
 package controller.observer;
 
-import java.util.HashMap;
 import java.util.ArrayList;
 
 public interface ObservadoAPI {
@@ -13,17 +12,19 @@ public interface ObservadoAPI {
     int getValorDealer();                       // notificacao: DealerCartas
     boolean getFinalizadoDealer();              // notificacao: DealerCartas
 
-    String[] getCartasJogador(int idJogador, int mao);     // notificacao: JogadorCartas
-    int getValorJogador(int idJogador, int mao);           // notificacao: JogadorCartas
+    String[] getCartasJogador(int idJogador, int mao);      // notificacao: JogadorCartas
+    int getValorJogador(int idJogador, int mao);            // notificacao: JogadorCartas
 
-    ArrayList<Integer> getApostaJogador(int idJogador);    // notificacao: JogadorAposta
-    int getDinheiroJogador(int idJogador);
-    int getValorApostaJogador(int idJogador);
-    boolean getPodeApostaJogador(int idJogador);
+    ArrayList<Integer> getApostaJogador(int idJogador);     // notificacao: JogadorAposta
+    int getDinheiroJogador(int idJogador);                  // notificacao: JogadorAposta
+    int getValorApostaJogador(int idJogador);               // notificacao: JogadorAposta
+    boolean getPodeApostaJogador(int idJogador);            // notificacao: JogadorAposta
     
-    boolean getPodeStand(boolean mao_splitada);
-    boolean getPodeHit(boolean mao_splitada);
-    boolean getPodeDouble(boolean mao_splitada);
-    boolean getPodeSurrender(boolean mao_splitada);
-    boolean getPodeSplit(boolean mao_splitada);
+    boolean getPodeStand(int idJogador, boolean mao_splitada);          // notificacao: JogadorAcao
+    boolean getPodeHit(int idJogador, boolean mao_splitada);            // notificacao: JogadorAcao
+    boolean getPodeDouble(int idJogador, boolean mao_splitada);         // notificacao: JogadorAcao
+    boolean getPodeSurrender(int idJogador, boolean mao_splitada);      // notificacao: JogadorAcao
+    boolean getPodeSplit(int idJogador, boolean mao_splitada);          // notificacao: JogadorAcao
+
+    String getResultado(int idJogador);           // notificacao: JogadorResultado
 }

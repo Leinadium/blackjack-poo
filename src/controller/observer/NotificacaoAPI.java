@@ -5,5 +5,6 @@ public enum NotificacaoAPI {
     JogadorCartas,      // Algum jogador recebeu alguma carta
     DealerAposta,       // A aposta padrao foi modificada
     JogadorAposta,      // A aposta de algum jogador foi modificada
-    JogadorAcao, // A condicao de alguma acao do jogador foi modificada
+    JogadorAcao,        // A condicao de alguma acao do jogador foi modificada
+    JogadorResultado,   // O resultado do jogador (se ganhou, perdeu, empatou)
 }

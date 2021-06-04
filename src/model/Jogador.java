@@ -90,7 +90,6 @@ class Jogador {
         return this.aposta >= 20 && this.aposta <= 100;
     }
 
-
     /**
      * Verifica se o jogador ja tinha apostado naquela jogada
      * @return true se tiver apostado
@@ -112,7 +111,6 @@ class Jogador {
     public void alteraJogadaFinalizada(boolean estado) {
     	this.finalizado = estado;
     }
-    
 
     /**
      * Verifica se o jogador faliu e nao pode mais jogar
@@ -225,11 +223,26 @@ class Jogador {
     public boolean validaSurrender(Dealer d) {
     	return (!d.mao.blackjack);
     }
-    
+
+    /**
+     * Faz surrender, porem nao eh valido
+     * @param m mao do jogador
+     * @param invalido true se nao foi valido
+     */
+    public void fazerSurrender(Mao m, boolean invalido) {
+        if (!invalido) { fazerSurrender(m); }
+        else {
+            this.rendido = true;
+            this.finalizado = true;
+            this.ultimaJogada = Jogada.SURRENDER;
+        }
+    }
+
     public void fazerSurrender(Mao m) {
     	this.rendido = true;
     	this.finalizado = true;
     	this.aposta = this.aposta/2;
+    	this.dinheiro += this.aposta/2;     // ganha metade do dinheiro de volta
     	this.ultimaJogada = Jogada.SURRENDER;
     }
     public void fazerSurrender() { fazerSurrender(this.mao); }

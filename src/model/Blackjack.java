@@ -144,11 +144,14 @@ public class Blackjack implements ObservadoAPI {
 	}
 
 	public void fazerJogadaDealer() {
+		// AI do dealer
 		while (this.dealer.podeHit()) {
 			this.dealer.fazerHit(this.baralho);
 		}
 		this.dealer.fazerStand();
+
 		notificarTodos(NotificacaoAPI.DealerCartas);
+		notificarTodos(NotificacaoAPI.JogadorResultado);
 	}
 
 	/**
@@ -167,8 +170,11 @@ public class Blackjack implements ObservadoAPI {
 	public void distribuiCartasJogador(boolean split) {
 		int numJogador = vez;
 		if (!split) {
-	    	this.jogadores.get(numJogador).mao.ganharCarta(baralho.pop());
-			this.jogadores.get(numJogador).mao.ganharCarta(baralho.pop());
+			Jogador jog = this.jogadores.get(numJogador);
+	    	jog.mao.ganharCarta(baralho.pop());
+			jog.mao.ganharCarta(baralho.pop());
+			// vejo se fez um blackjack
+			jog.mao.atualizaBlackjack();
 		}
 		else {
 			// Apos as cartas serem distribuidas no split, as condicoes de acao do jogador que fez split sao alteradas
@@ -197,6 +203,7 @@ public class Blackjack implements ObservadoAPI {
 	}
 
 	public int quantidadeMaosSplitJogador(int numJogador) { return this.jogadores.get(numJogador).maosSplit.size();}
+
     /**
      * Retorna o resultado de uma partida entre um jogador e um dealer
      * @param jog - Jogador.
@@ -240,17 +247,15 @@ public class Blackjack implements ObservadoAPI {
      * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
      * @return booleano que diz se aquela mao do jogador pode fazer um stand
      */
-    public boolean getPodeStand(boolean mao_splitada) {
+    public boolean getPodeStand(int idJogador, boolean mao_splitada) {
     	boolean resultado;
-    	int numJogador = vez;
-    	Jogador jog = this.jogadores.get(numJogador);
+    	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
-    		resultado = jog.podeStand(jog.maosSplit.get(1));
+    		return jog.podeStand(jog.maosSplit.get(1));
     	}
     	else {
-    		resultado = jog.podeStand();
+    		return jog.podeStand();
     	}
-    	return (resultado);
     }
     
     /**
@@ -258,10 +263,9 @@ public class Blackjack implements ObservadoAPI {
      * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
      * @return booleano que diz se aquela mao do jogador pode fazer um hit
      */
-    public boolean getPodeHit(boolean mao_splitada) {
+    public boolean getPodeHit(int idJogador, boolean mao_splitada) {
     	boolean resultado;
-    	int numJogador = vez;
-    	Jogador jog = this.jogadores.get(numJogador);
+    	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
     		resultado = jog.podeHit(jog.maosSplit.get(1));
     	}
@@ -276,10 +280,9 @@ public class Blackjack implements ObservadoAPI {
      * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
      * @return booleano que diz se aquela mao do jogador pode fazer um double
      */
-    public boolean getPodeDouble(boolean mao_splitada) {
+    public boolean getPodeDouble(int idJogador, boolean mao_splitada) {
     	boolean resultado;
-    	int numJogador = vez;
-    	Jogador jog = this.jogadores.get(numJogador);
+    	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
     		resultado = false;
     	}
@@ -294,10 +297,9 @@ public class Blackjack implements ObservadoAPI {
      * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
      * @return booleano que diz se aquela mao do jogador pode fazer um surrender
      */
-    public boolean getPodeSurrender(boolean mao_splitada) {
+    public boolean getPodeSurrender(int idJogador, boolean mao_splitada) {
     	boolean resultado;
-    	int numJogador = vez;
-    	Jogador jog = this.jogadores.get(numJogador);
+    	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
     		resultado = jog.podeSurrender(jog.maosSplit.get(1));
     	}
@@ -313,10 +315,9 @@ public class Blackjack implements ObservadoAPI {
      * @return booleano que diz se aquela mao do jogador pode fazer um split
      */
     
-    public boolean getPodeSplit(boolean mao_splitada) {
+    public boolean getPodeSplit(int idJogador, boolean mao_splitada) {
     	boolean resultado;
-    	int numJogador = vez;
-    	Jogador jog = this.jogadores.get(numJogador);
+    	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
     		resultado = false;
     	}
@@ -357,7 +358,7 @@ public class Blackjack implements ObservadoAPI {
 	}
 	
 	private void fazerSurrenderJogador(Jogador jog) {
-		jog.fazerSurrender();
+    	jog.fazerSurrender(jog.mao, !jog.validaSurrender(this.dealer));
 		notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
 	
@@ -372,7 +373,7 @@ public class Blackjack implements ObservadoAPI {
     public void fazerJogada(String acao) {
     	int numJogador = vez;
     	Jogador jog = this.jogadores.get(numJogador);
-    	notificarTodos(NotificacaoAPI.JogadorAcao);
+    	// notificarTodos(NotificacaoAPI.JogadorAcao);
     	if (acao.equals("STAND")) {
 			fazerStandJogador(jog, 0);
     	}
@@ -456,4 +457,9 @@ public class Blackjack implements ObservadoAPI {
     	return this.jogadores.get(idJogador).aposta;
 	}
 	public boolean getPodeApostaJogador(int idJogador) { return this.jogadores.get(idJogador).apostaValida(); }
+
+	public String getResultado(int idJogador) {
+    	Jogador jog = this.jogadores.get(idJogador);
+    	return verificaGanhador(jog, this.dealer).toString();
+	}
 }
