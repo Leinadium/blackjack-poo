@@ -26,10 +26,9 @@ class Mao {
 	public int soma;
 	public boolean quebrado = false;
 	public boolean finalizado = false;
+	public boolean podeBlackjack = true;
 
-	/* o blackjack sera falsificado se a mao nova for splitada, ou
-	* ao ter duas cartas e a soma nao for 21. */
-	public boolean blackjack = true;
+	public boolean blackjack = false;
 	
 	Mao() {
 		this.cartas = new ArrayList<>();
@@ -63,11 +62,13 @@ class Mao {
 	private boolean verificaQuebrado(){
 		return (this.soma > 21);
 	}
+
 	/**
 	 * Verifica se tem blackjack
+	 * Nao considera que a mao pode ser de um split
 	 */
 	private boolean verificaBlackjack(){
-		return (this.soma == 21);
+		return (this.cartas.size() == 2 && this.soma == 21);
 	}
 	/**
 	 * Atualiza as variaveis se a mao quebrou
@@ -82,7 +83,7 @@ class Mao {
 	 * Atualiza as variaveis se a mao tem blackjack
 	 */
 	public void atualizaBlackjack(){
-		if (this.verificaBlackjack()){
+		if (this.verificaBlackjack() && this.podeBlackjack){
 			this.finalizado = true;
 			this.blackjack = true;
 		}
@@ -95,9 +96,6 @@ class Mao {
 		cartas.add(c);
 		this.calcularValor();
 
-		if (this.cartas.size() == 2 && this.soma != 21) {
-			this.blackjack = false;
-		}
 		atualizaQuebrado(); //tem que ver isso tambem porque se quebrar mas pegar as cartas pelo baralho.pop vai dar problema
 		atualizaBlackjack();
 	}
@@ -113,8 +111,8 @@ class Mao {
 		//} -- essa parte est� apenas comentada para testar a views
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
-		m.blackjack = false;   // inicia a mao split como nao tendo um blackjack (apenas 1 carta)
-		this.blackjack = false;
+		m.podeBlackjack = false;   // inicia a mao split como nao tendo um blackjack (apenas 1 carta)
+		this.podeBlackjack = false;
 
 		this.cartas.remove(1);
 		
@@ -123,7 +121,7 @@ class Mao {
 
 	public boolean podeSplit() {
 		return (this.cartas.size() == 2 &&
-				this.cartas.get(0).equals(this.cartas.get(1)) &&
+				this.cartas.get(0).valor() == this.cartas.get(1).valor() &&
 				!this.finalizado
 		);
 	}

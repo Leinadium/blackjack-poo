@@ -171,10 +171,15 @@ public class Blackjack implements ObservadoAPI {
 		int numJogador = vez;
 		if (!split) {
 			Jogador jog = this.jogadores.get(numJogador);
-	    	jog.mao.ganharCarta(baralho.pop());
-			jog.mao.ganharCarta(baralho.pop());
+	    	// jog.mao.ganharCarta(baralho.pop());
+			// jog.mao.ganharCarta(baralho.pop());
+
+			// para forcar alguma carta, de teste
+			jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.COPAS));
+			jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.OUROS));
+
 			// vejo se fez um blackjack
-			jog.mao.atualizaBlackjack();
+			jog.finalizado = jog.mao.finalizado;
 		}
 		else {
 			// Apos as cartas serem distribuidas no split, as condicoes de acao do jogador que fez split sao alteradas
@@ -193,17 +198,10 @@ public class Blackjack implements ObservadoAPI {
 		int numJogador = vez;
 		if (numMao == 0) {
 			return String.format("%d", this.jogadores.get(numJogador).mao.soma);
-		}
-		else if (numMao == 1){
-			return String.format("%d", this.jogadores.get(numJogador).maosSplit.get(0).soma);
-		}
-		else {
-			return String.format("%d", this.jogadores.get(numJogador).maosSplit.get(1).soma);
+		} else {
+			return String.format("%d", this.jogadores.get(numJogador).maoSplit.soma);
 		}
 	}
-
-	public int quantidadeMaosSplitJogador(int numJogador) { return this.jogadores.get(numJogador).maosSplit.size();}
-
     /**
      * Retorna o resultado de uma partida entre um jogador e um dealer
      * @param jog - Jogador.
@@ -251,7 +249,7 @@ public class Blackjack implements ObservadoAPI {
     	boolean resultado;
     	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
-    		return jog.podeStand(jog.maosSplit.get(1));
+    		return jog.podeStand(jog.maoSplit);
     	}
     	else {
     		return jog.podeStand();
@@ -267,7 +265,7 @@ public class Blackjack implements ObservadoAPI {
     	boolean resultado;
     	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
-    		resultado = jog.podeHit(jog.maosSplit.get(1));
+    		resultado = jog.podeHit(jog.maoSplit);
     	}
     	else {
     		resultado = jog.podeHit();
@@ -301,7 +299,7 @@ public class Blackjack implements ObservadoAPI {
     	boolean resultado;
     	Jogador jog = this.jogadores.get(idJogador);
     	if (mao_splitada) {
-    		resultado = jog.podeSurrender(jog.maosSplit.get(1));
+    		resultado = jog.podeSurrender(jog.maoSplit);
     	}
     	else {
     		resultado = jog.podeSurrender();
@@ -334,7 +332,7 @@ public class Blackjack implements ObservadoAPI {
     		jog.fazerStand();
     	}
     	else {
-    		jog.fazerStand(jog.maosSplit.get(mao-1));
+    		jog.fazerStand(jog.maoSplit);
     	}
     }
     
@@ -342,7 +340,7 @@ public class Blackjack implements ObservadoAPI {
 		if (mao == 0) {
 			jog.fazerHit(baralho);
 		} else {
-			jog.fazerHit(baralho, jog.maosSplit.get(mao-1));
+			jog.fazerHit(baralho, jog.maoSplit);
 		}
 		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
@@ -370,15 +368,18 @@ public class Blackjack implements ObservadoAPI {
 		}
 	}
 
-    public void fazerJogada(String acao) {
+    public void fazerJogada(String acao, boolean mao_splitada) {
     	int numJogador = vez;
     	Jogador jog = this.jogadores.get(numJogador);
+    	int mao = 0;
+    	if (mao_splitada) {mao = 1;}
+
     	// notificarTodos(NotificacaoAPI.JogadorAcao);
     	if (acao.equals("STAND")) {
-			fazerStandJogador(jog, 0);
+			fazerStandJogador(jog, mao);
     	}
     	else if (acao.equals("HIT")) {
-    		fazerHitJogador(jog, 0);
+    		fazerHitJogador(jog, mao);
     	}
     	else if (acao.equals("DOUBLE")) {
     		fazerDoubleJogador(jog);
@@ -429,14 +430,14 @@ public class Blackjack implements ObservadoAPI {
     	if (mao==0) {
     		return this.jogadores.get(idJogador).mao.toArray();
 		} else {
-    		return this.jogadores.get(idJogador).maosSplit.get(mao - 1).toArray();
+    		return this.jogadores.get(idJogador).maoSplit.toArray();
 		}
 	}
 	public int getValorJogador(int idJogador, int mao) {
     	if (mao==0) {
     		return this.jogadores.get(idJogador).mao.soma;
 		} else {
-    		return this.jogadores.get(idJogador).maosSplit.get(mao -1).soma;
+    		return this.jogadores.get(idJogador).maoSplit.soma;
 		}
 	}
 

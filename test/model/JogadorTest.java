@@ -258,22 +258,4 @@ public class JogadorTest {
 		criaSplit(jog.mao);
 		jog.fazerSplit(baralho);
 	}
-	
-	private Mao decideMelhorMao(Jogador jog){
-		Mao m1 = jog.maosSplit.get(0);
-		Mao m2 = jog.maosSplit.get(1);
-		if (m1.soma >= m2.soma) {
-			return m1;
-		}
-		return m2;
-	}	
-	
-	@Test
-	public void testCalculaMelhorValorMaosComSplit() throws Exception{
-		Jogador actual = new Jogador(1);
-		exemploCalculaMelhorValorSplit(actual);
-		Mao expected_mao = decideMelhorMao(actual);
-		assertEquals("O total de pontos da mao nao foi como esperado", expected_mao.soma, actual.calculaMelhorValor());
-	}
-
 }

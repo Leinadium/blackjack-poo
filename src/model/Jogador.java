@@ -30,7 +30,7 @@ import java.lang.IllegalStateException;
 class Jogador {
     public int numero;
     public Mao mao;
-    public List<Mao> maosSplit;
+    public Mao maoSplit;
     public int dinheiro;
     public int aposta;
     public List<Ficha> fichasAposta;
@@ -45,7 +45,7 @@ class Jogador {
         int i;
         this.numero = numJogador;
         this.mao = new Mao();
-        this.maosSplit = new ArrayList<>();
+        this.maoSplit = null;
         this.fichasAposta = new ArrayList<>();
         this.dinheiro = 500;
         this.aposta = 0;
@@ -55,7 +55,7 @@ class Jogador {
         this.ultimaJogada = null;
 
         // criando as maos split nulas
-        for (i = 0; i < 2; i ++) {maosSplit.add(null);}
+        // for (i = 0; i < 2; i ++) {maosSplit.add(null);}
     }
     /**
      * Prepara o jogador para uma nova rodada
@@ -63,16 +63,13 @@ class Jogador {
     public void iniciaJogada() {
     	int i;
         this.mao = new Mao();
-        this.maosSplit = new ArrayList<>();
-        // criando as maos split nulas
-        for (i = 0; i < 2; i ++) {maosSplit.add(null);}
+        this.maoSplit = null;
         this.fichasAposta = new ArrayList<>();
         this.aposta = 0;
         this.rendido = false;
         this.finalizado = false;
         this.quantidadeJogadas = 0;
         this.ultimaJogada = null;
-
     }
     /**
      * Retorna se o jogador possui algum dinheiro para poder apostar
@@ -203,15 +200,13 @@ class Jogador {
     public boolean podeStand() { return podeStand(this.mao);}
 
     public boolean podeDouble(Mao m) {
-        return(!m.finalizado &&
+        return  (!m.finalizado &&
                 (this.quantidadeJogadas == 0 || this.ultimaJogada == Jogada.SPLIT) &&
                 this.dinheiro > this.aposta);
     }
     public boolean podeDouble() { return podeDouble(this.mao);}
 
-    public boolean podeSplit(Mao m) {
-        return (this.quantidadeSplits < 2 && m.podeSplit());
-    }
+    public boolean podeSplit(Mao m) { return (this.maoSplit == null && m.podeSplit()); }
     
     public boolean podeSplit() { return podeSplit(this.mao);}
     
@@ -285,12 +280,18 @@ class Jogador {
      */
     private boolean verificaFinalizadoGeral() {
         boolean ret = this.mao.finalizado;
-	    for (Mao m: this.maosSplit) {
-	    	if (m != null) {
-	    		ret = ret && m.finalizado;
-	    	}
-	    } //aqui teoricamente o finalizado do jogador viraria verdadeiro?
+        if (this.maoSplit != null) {
+            ret = ret && this.maoSplit.finalizado;
+        }
+
         return ret;
+    }
+
+    private void dobrarAposta() {
+        // foi criada uma lista temporaria, pois addAll eh perigoso
+        // se a lista muda enquanto isso
+        ArrayList<Ficha> temp = new ArrayList<>(this.fichasAposta);
+        this.fichasAposta.addAll(temp);
     }
 
     /**
@@ -303,11 +304,7 @@ class Jogador {
         aposta += aposta;
         try {
         	this.retirarDinheiro(this.aposta);
-
-        	// foi criada uma lista temporaria, pois addAll eh perigoso
-            // se a lista muda enquanto isso
-        	ArrayList<Ficha> temp = new ArrayList<>(this.fichasAposta);
-        	this.fichasAposta.addAll(temp);
+            dobrarAposta();
 
             this.fazerHit(b, m);
             this.fazerStand(m);
@@ -336,13 +333,7 @@ class Jogador {
      */
     public void fazerSplit(Mao m, Baralho b) throws Exception{
         // achando a mao proxima mao aberta
-        int pos, pos2;
-        if (this.maosSplit.get(0) == null) {pos = 0; pos2 = 1;}
-        else if (this.maosSplit.get(1) == null) {pos = 1; pos2 = 0;}
-        else { throw new Exception("Todas as maos estao em uso"); }
-        Mao nova_mao = m.fazerSplit();  // criando a nova mao
-        this.maosSplit.set(pos, nova_mao); // salvando a mao na lista de maos
-        this.maosSplit.set(pos2, m);
+        this.maoSplit = m.fazerSplit();  // criando a nova mao
         this.aposta += this.aposta;    // aumentando a aposta
         try {
         	this.retirarDinheiro(this.aposta);  // retirando o dinheiro da aposta do jogador
@@ -352,7 +343,7 @@ class Jogador {
         }
 
         this.fazerHit(b, m);   // adicionando uma carta em cada mao
-        this.fazerHit(b, nova_mao);
+        this.fazerHit(b, this.maoSplit);
 
         this.quantidadeJogadas -= 1; // os hits aumentaram +2 na quantidade. Retirando 1
         this.ultimaJogada = Jogada.SPLIT;
@@ -364,24 +355,10 @@ class Jogador {
 	 * @return soma de pontos da mão que indica a possibilidade para o jogador
 	 */
 	public int calculaMelhorValor() {
-		Mao mao1 = maosSplit.get(0);
-		Mao mao2 = maosSplit.get(1);
-		if (mao1 != null && mao2 != null) {
-			if (mao1.quebrado && mao2.quebrado) {
-				return mao1.soma;
-			}
-			else if (mao1.quebrado) {
-				return mao2.soma;
-			}
-			else if (mao2.quebrado) {
-				return mao1.soma;
-			}
-			else if ((21 - mao1.soma) <= (21 - mao2.soma)) {
-				return mao1.soma;
-			}
-			return mao2.soma;
-		}
-		return (this.mao.soma);
+        if (this.maoSplit == null) {
+            return this.mao.soma;
+        } else return Math.min(this.mao.soma, this.maoSplit.soma);
+
 	}
 
 }

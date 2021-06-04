@@ -43,8 +43,7 @@ public class Controller {
     	String numJogadorString = String.format("%d", idJogador+1);
     	
     	// cria nova janela
-    	int mao = this.api.quantidadeMaosSplitJogador(idJogador) - 1; // nova mao
-    	this.frameJogador.add(new FrameJogador(this, numJogadorString, idJogador, mao));
+    	this.frameJogador.add(new FrameJogador(this, numJogadorString, idJogador, 1));
 
         // inicializa ultima janela
         int ultimo = this.frameJogador.size() - 1;
@@ -55,7 +54,7 @@ public class Controller {
     }
     
     public void fazerJogada(String acao, boolean mao_splitada) {
-    	this.api.fazerJogada(acao);
+    	this.api.fazerJogada(acao, mao_splitada);
     	if (acao.equals("SPLIT")) {
     		acionaSplit();
     	}
@@ -82,11 +81,8 @@ public class Controller {
         this.api.passaVez();
 
         if (this.api.getJogadoresFinalizados()) {   // se todos apostaram
-            this.api.resetVez();        // reseta a vez para comecar tudo
-            this.frameJogador.get(api.getVez()).iniciarRodada();  // inicia o primeiro
-            this.api.distribuiCartasJogador(false);
-            this.api.distribuiCartasDealer();
-            this.modo = Modo.JOGANDO;
+            this.iniciarRodada();
+
         } else {
             this.frameJogador.get(this.api.getVez()).iniciarAposta();
         }
@@ -96,8 +92,10 @@ public class Controller {
     	int i;
     	int quantidadeJogadores = this.frameJogador.size();
     	for (i=0; i<quantidadeJogadores;i++) {
+    	    this.api.removeObservador(this.frameJogador.get(i));
     		this.frameJogador.get(i).fechar();
     	}
+    	this.api.removeObservador(this.frameDealer);
         this.frameDealer.fechar();
         this.frameDealer = null;
         
@@ -150,12 +148,19 @@ public class Controller {
 
     public void iniciarRodada() {
     	int i;
-    	int quantidadeJogadores = this.frameJogador.size();
-    	
-        this.frameJogador.get(0).iniciarRodada();
+    	// int quantidadeJogadores = this.frameJogador.size();
+
+        this.api.resetVez();        // reseta a vez para comecar tudo
+        this.frameJogador.get(api.getVez()).iniciarRodada();  // inicia o primeiro
         this.modo = Modo.JOGANDO;
         
         this.api.iniciarRodada();
+        this.api.distribuiCartasDealer();
+        this.api.distribuiCartasJogador(false);
+
+        if (this.api.jogadorEhFinalizado()) {   // caso ele tenha um blackjack
+            passaVez();
+        }
     }
     
     public void finalizarRodada() {
