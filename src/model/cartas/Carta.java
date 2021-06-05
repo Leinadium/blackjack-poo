@@ -36,6 +36,15 @@ public class Carta {
         }
         return ret;
     }
+    
+    public static Cor retornaCor(Naipe n) {
+    	if (n == Naipe.COPAS || n == Naipe.OUROS) {
+    		return (Cor.VERMELHO);
+    	}
+    	else {
+    		return (Cor.PRETO);
+    	} 
+    }
 
     public void print() {
         System.out.println("Carta " + this.nome + " de " + this.naipe);
@@ -51,4 +60,44 @@ public class Carta {
     public String toString() {
         return nome.toString() + "-" + naipe.toString();
     }
+    
+    public static Naipe toNaipe(String naipe) throws IllegalStateException{
+    	if (naipe.equals("COPAS")) {
+    		return Naipe.COPAS;
+    	}
+    	else if (naipe.equals("OUROS")) {
+    		return Naipe.OUROS;
+    	}
+    	else if (naipe.equals("ESPADAS")) {
+    		return Naipe.ESPADAS;
+    	}
+    	else if (naipe.equals("PAUS")) {
+    		return Naipe.PAUS;
+    	}
+    	else {
+    		throw new IllegalStateException("Não existe tal naipe");
+    	}
+    }
+    
+    public static Nome toNome(String nome) {
+    	Nome ret;
+        switch (nome) {
+            case "AS": ret = Nome.AS; break;
+            case "DOIS": ret = Nome.DOIS; break;
+            case "TRES": ret = Nome.TRES; break;
+            case "QUATRO": ret = Nome.QUATRO; break;
+            case "CINCO": ret = Nome.CINCO; break;
+            case "SEIS": ret = Nome.SEIS; break;
+            case "SETE": ret = Nome.SETE; break;
+            case "OITO": ret = Nome.OITO; break;
+            case "NOVE": ret = Nome.NOVE; break;
+            case "VALETE": ret = Nome.VALETE; break;
+            case "REI": ret = Nome.REI; break;
+            case "DAMA": ret = Nome.DAMA; break;
+            case "DEZ": ret = Nome.DEZ; break;
+            default: ret = null; break;
+        }
+        return ret;
+    }
+    
 }

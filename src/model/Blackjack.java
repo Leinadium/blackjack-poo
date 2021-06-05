@@ -186,6 +186,16 @@ public class Blackjack implements ObservadoAPI {
 
 		notificarTodos(NotificacaoAPI.DealerCartas);
 	}
+	
+	/**
+	 * Distribui uma cartas específica para o dealer.
+	 */
+	public void distribuiCartaDealer(String nome_string, String naipe_string) {
+		Naipe naipe_carta = Carta.toNaipe(naipe_string);
+		Nome nome_carta = Carta.toNome(nome_string);
+		this.dealer.mao.ganharCarta(new Carta(Carta.retornaCor(naipe_carta), nome_carta, naipe_carta));
+		notificarTodos(NotificacaoAPI.DealerCartas);
+	}
 
 	/**
 	 * Distribui duas cartas para um jogador.
@@ -209,6 +219,23 @@ public class Blackjack implements ObservadoAPI {
 			// Isso ja foi feito para o frame do jogador que fez a acao, porem nao pro frame da mao splitada, ja que ela nao havia sido registrada ainda
 		}
 		notificarTodos(NotificacaoAPI.JogadorAcao);
+		notificarTodos(NotificacaoAPI.JogadorCartas);
+	}
+	
+	/**
+	 * Distribui uma cartas específica para um jogador.
+	 */
+	public void distribuiCartaJogador(int idJogador, String nome_string, String naipe_string) {
+		Jogador jog = this.jogadores.get(idJogador);
+		Naipe naipe_carta = Carta.toNaipe(naipe_string);
+		Nome nome_carta = Carta.toNome(nome_string);
+		Carta carta = new Carta(Carta.retornaCor(naipe_carta), nome_carta, naipe_carta);
+		jog.mao.ganharCarta(carta);
+		
+		// ve se fez um blackjack
+		jog.finalizado = jog.mao.finalizado;
+		
+		notificarTodos(NotificacaoAPI.JogadorAcao); // as cartas acabam influenciando em quais acoes estao disponiveis
 		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
 

@@ -1,9 +1,9 @@
 2
 0
 30
-Carta;0;Dealer;AS-PAUS 
-Carta;1;Dealer;CINCO-COPAS
-Carta;2;Dealer;DOIS-OUROS
+Carta;0;4;AS-PAUS 
+Carta;1;4;CINCO-COPAS
+Carta;2;4;DOIS-OUROS
 Dinheiro;0;470
 Carta;0;0;TRES-OUROS
 Carta;1;0;TRES-PAUS

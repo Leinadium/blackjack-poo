@@ -110,9 +110,10 @@ public class Controller {
     }
 
     public void carregarPartida() {
-    	int i, j, quantidadeJogadores, quantidadeCartas, vez, indice_cartas;
+    	int i, j, quantidadeJogadores, vez;
     	int idJogador, dinheiro;
     	int aposta;
+    	String naipe, nome;
     	try {
 			ArrayList<String> partida_salva = controller.Load.main(null);
 			quantidadeJogadores = Integer.parseInt(partida_salva.get(0));
@@ -132,11 +133,23 @@ public class Controller {
 	        	this.frameJogador.get(i).finalizarAposta();
 	        }
 	        for (j = 3; j < partida_salva.size(); j++) {
+	        	// nao consegui pensar em um nome melhor do que lista_elementos
 	        	String[] lista_elementos = partida_salva.get(j).split(";");
 	        	if ((lista_elementos[0]).equals("Dinheiro")) {
 	        		idJogador = Integer.parseInt(lista_elementos[1]);
 	        		dinheiro = Integer.parseInt(lista_elementos[2]);
 	        		this.api.defineDinheiro(idJogador, dinheiro);
+	        	}
+	        	if ((lista_elementos[0]).equals("Carta")) {
+	        		idJogador = Integer.parseInt(lista_elementos[2]);
+	        		nome = (lista_elementos[3].split("-"))[0];
+	        		naipe = (lista_elementos[3].split("-"))[1];
+	        		if (idJogador > 3) { // entao eh o dealer
+	        			this.api.distribuiCartaDealer(nome, naipe);
+	        		}
+	        		else {
+	        			this.api.distribuiCartaJogador(idJogador, nome, naipe);
+	        		}
 	        	}
 	        }
 			
