@@ -372,6 +372,13 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     	}
     	else if (not == NotificacaoAPI.JogadorAcao) {
         	mao_splitada = this.retornaMaoSplitada();
+        	System.out.println("----- NOVO FRAME ----");
+        	System.out.println("Id do Jogador");
+        	System.out.println(idJogador);
+        	System.out.println("Mao Splitada");
+        	System.out.println(mao_splitada);
+        	System.out.println("Pode Double");
+        	System.out.println(o.getPodeDouble(idJogador, mao_splitada));
         	this.alteraEstadoBotao("STAND", o.getPodeStand(idJogador, mao_splitada));
         	this.alteraEstadoBotao("HIT", o.getPodeHit(idJogador, mao_splitada));
         	this.alteraEstadoBotao("DOUBLE", o.getPodeDouble(idJogador, mao_splitada));

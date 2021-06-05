@@ -279,15 +279,9 @@ public class Blackjack implements ObservadoAPI {
      * @return booleano que diz se aquela mao do jogador pode fazer um double
      */
     public boolean getPodeDouble(int idJogador, boolean mao_splitada) {
-    	boolean resultado;
     	Jogador jog = this.jogadores.get(idJogador);
-    	if (mao_splitada) {
-    		resultado = false;
-    	}
-    	else {
-    		resultado = jog.podeDouble();
-    	}
-    	return (resultado);
+    	// nesse caso nao faz diferenca se a mao eh splitada ou nao, o jogador pode fazer double depois de um split)*/
+    	return (jog.podeDouble());
     }
     
     /**
@@ -399,6 +393,7 @@ public class Blackjack implements ObservadoAPI {
     public boolean jogadorEhFinalizado() {
     	return this.jogadores.get(this.vez).finalizado;
 	}
+    
     /* ==== FUNCOES DO OBSERVADOR ==== */
 
     public void registraObservador(ObservadorAPI o) {
