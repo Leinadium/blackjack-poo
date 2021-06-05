@@ -332,9 +332,8 @@ class Jogador {
      * @throws Exception Error se todas as maos estiverem em uso
      */
     public void fazerSplit(Mao m, Baralho b) throws Exception{
-        // achando a mao proxima mao aberta
         this.maoSplit = m.fazerSplit();  // criando a nova mao
-        this.aposta += this.aposta;    // aumentando a aposta
+        // this.aposta += this.aposta;    // aumentando a aposta
         try {
         	this.retirarDinheiro(this.aposta);  // retirando o dinheiro da aposta do jogador
         }
