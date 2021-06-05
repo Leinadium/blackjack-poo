@@ -107,6 +107,14 @@ public class Blackjack implements ObservadoAPI {
 	    this.jogadoresFinalizados = false;
     }
 
+	
+    /**
+     * Define a vez de um jogador
+     * @param vez a ser definida
+     */
+	public void defineVez(int vez) {
+	    this.vez = vez;
+    }
 
 	/**
 	 * Exibe o baralho inteiro no sdout (para testes da implementacao)
@@ -115,6 +123,21 @@ public class Blackjack implements ObservadoAPI {
         this.baralho.exibirTodos();
     }
 
+	
+	public void defineAposta(int valor) {
+		int i;
+		List<Ficha> lista_fichas = Ficha.calculaFicha(valor);
+		for (i = 0; i < lista_fichas.size(); i++) {
+			this.aumentaAposta(lista_fichas.get(i).valor);
+		}
+	}
+	
+	public void defineDinheiro(int numJogador, int dinheiro) {
+		Jogador jog = this.jogadores.get(numJogador);
+		jog.dinheiro = dinheiro;
+		notificarTodos(NotificacaoAPI.JogadorAposta);
+	}
+	
 	/**
 	 * Aumenta o valor da aposta do jogador de acordo com o que clicou
 	 * @param valor valor da ficha

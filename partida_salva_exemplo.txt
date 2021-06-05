@@ -1,0 +1,18 @@
+2 //quantos jogadores têm
+0 //jogador da vez  
+30.00 //aposta do jogador da vez
+Quantidade Cartas Dealer - 3 //quantas cartas o dealer tem
+Carta Dealer - AS-PAUS 
+Carta Dealer - CINCO-COPAS
+DOIS-OUROS
+470.00 // dinheiro do novo jogador 
+2 // quantas cartas o novo jogador tem
+CINCO-OUROS
+CINCO-PAUS
+false // se ele tem split (eu acho que nem pode ter)
+430.00 //dinheiro do proximo jogador
+2 //quantas cartas ele tem
+QUATRO-OUROS
+QUATRO-PAUS
+false
+

@@ -1,0 +1,14 @@
+2
+0
+30
+Carta;0;Dealer;AS-PAUS 
+Carta;1;Dealer;CINCO-COPAS
+Carta;2;Dealer;DOIS-OUROS
+Dinheiro;0;470
+Carta;0;0;TRES-OUROS
+Carta;1;0;TRES-PAUS
+Split;1;false
+Dinheiro;1;430
+Carta;1;1;QUATRO-OUROS
+Carta;0;1;QUATRO-PAUS
+Split;1;false

@@ -270,8 +270,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         } else if (obj.equals(botaoSurrender)) {
         	this.controller.fazerJogada("SURRENDER", mao_splitada);
         } else if (obj.equals(botaoFinalizarAposta)) {
-            this.controller.finalizarAposta();
-            botaoFinalizarAposta.setVisible(false);
+        	this.finalizarAposta();
         } else {
             System.out.println("AINDA NAO IMPLEMENTADO");
         }
@@ -342,6 +341,15 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     public void iniciarAposta() {
         labelAposta.setVisible(true);
         botaoFinalizarAposta.setVisible(true);
+    }
+    
+    /**
+     * Quando um jogador terminar de fazer sua aposta.
+     */
+    public void finalizarAposta() {
+    	//this.controller.finalizarAposta();
+    	botaoFinalizarAposta.setVisible(false);
+    	//repaint();
     }
 
     /**
