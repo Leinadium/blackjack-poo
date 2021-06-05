@@ -69,6 +69,14 @@ public class Blackjack implements ObservadoAPI {
     	for (Jogador jog: this.jogadores) {
     		jog.iniciaJogada();
 		}
+    	notificarTodos(NotificacaoAPI.JogadorAposta);
+	}
+
+	/**
+	 * Reinicia o dealer para mais uma rodada
+	 */
+	public void reiniciarDealer() {
+		this.dealer.iniciaDealer();
 	}
 
 	/**
@@ -258,31 +266,90 @@ public class Blackjack implements ObservadoAPI {
      * @param d - Dealer.
      * @return Resultado entre os dois (DEALER, JOGADOR ou PUSH)
      */
-    public Resultado verificaGanhador(Jogador jog, Dealer d) {
+    public Resultado verificaGanhador(Jogador jog, int idMao, Dealer d) {
+    	Mao m;
+    	if (idMao == 0) { m = jog.mao; }
+    	else { m = jog.maoSplit; }
+
     	if (d.mao.blackjack) {
     		return Resultado.DEALER;
     	}
-    	else if (jog.mao.blackjack) {
-    		jog.recebePagamentoBlackjack();
+    	else if (m.blackjack) {
+    		// jog.recebePagamentoBlackjack();
     		return Resultado.JOGADOR;
     	}
-    	else if (jog.mao.quebrado) {
+    	else if (m.quebrado) {
     		return Resultado.DEALER;
     	}
     	else if (d.mao.quebrado) {
-    		jog.dinheiro += jog.aposta;
     		return Resultado.JOGADOR;
     	}
-    	else if ((21-jog.calculaMelhorValor()) < (21-d.mao.soma)) {
-    		jog.dinheiro += jog.aposta;
+    	else if ((21-m.soma) < (21-d.mao.soma)) {
     		return Resultado.JOGADOR;
     	}
-    	else if ((21-jog.calculaMelhorValor()) > (21-d.mao.soma)) {
+    	else if ((21-m.soma) > (21-d.mao.soma)) {
     		return Resultado.DEALER;
     	}
     	return Resultado.PUSH;
     }
-    
+    /** overload para quando a mao nao for especificada */
+    public Resultado verificaGanhador(Jogador jog, Dealer d) { return verificaGanhador(jog, 0, d); }
+
+	/**
+	 * De acordo com o resultado (se ganhou, perdeu, empate), distribui o dinheiro
+	 * @param jog Jogador a receber o dinheiro
+	 * @param res Resultado do jogador
+	 * @param idMao Id da mao do jogador
+	 */
+	private void distribuiDinheiro(Jogador jog, Resultado res, int idMao) {
+    	Mao m;
+		if (idMao == 0) { m = jog.mao ;}
+		else {m = jog.maoSplit; }
+
+		switch (res) {
+			case JOGADOR: {
+				if (m.blackjack) {
+					// recebe o pagamento do blackjack
+					jog.recebePagamentoBlackjack();
+				} else if (jog.retornaUltimaJogada() == Jogada.DOUBLE) {
+					// pega seu dinheiro de volta + a aposta com 200%
+					jog.recebeDinheiro(jog.aposta + jog.aposta * 2);
+				} else {
+					// pega seu dinheiro de volta + a aposta
+					jog.recebeDinheiro(jog.aposta + jog.aposta);
+				}
+				break;
+			}
+			case DEALER: {
+				if (jog.retornaUltimaJogada() == Jogada.SURRENDER) {
+					// recebe metade da aposta de volta
+					jog.recebeDinheiro(jog.aposta / 2);
+				}
+				// qualquer outra coisa, ele nao ganha mais nada
+				break;
+			}
+			case PUSH: {
+				// ganha seu dinheiro de volta
+				jog.recebeDinheiro(jog.aposta);
+				break;
+			}
+		}
+	}
+	/** overload para quando a mao nao for especificada */
+	private void distribuiDinheiro(Jogador jog, Resultado res) { distribuiDinheiro(jog, res, 0); }
+
+	public void distribuiDinheiroJogadores() {
+		for (Jogador jog: this.jogadores) {
+			// distribui para o resultado dele
+			distribuiDinheiro(jog, verificaGanhador(jog, this.dealer));
+			// distribui para a segunda mao, caso tenha
+			if (jog.maoSplit != null) {
+				distribuiDinheiro(jog, verificaGanhador(jog, 1, this.dealer), 1);
+			}
+		}
+		notificarTodos(NotificacaoAPI.JogadorAposta);
+	}
+
     /* ==== FUNCOES DE ACESSO PARA A VIEWS SOBRE FUNCIONALIDADE DO JOGADOR ==== */
     
     
@@ -504,8 +571,8 @@ public class Blackjack implements ObservadoAPI {
 	}
 	public boolean getPodeApostaJogador(int idJogador) { return this.jogadores.get(idJogador).apostaValida(); }
 
-	public String getResultado(int idJogador) {
+	public String getResultado(int idJogador, int idMao) {
     	Jogador jog = this.jogadores.get(idJogador);
-    	return verificaGanhador(jog, this.dealer).toString();
+    	return verificaGanhador(jog, idMao, this.dealer).toString();
 	}
 }

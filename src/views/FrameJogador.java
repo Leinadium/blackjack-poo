@@ -51,9 +51,9 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
 
 
     protected Controller controller;
-    protected String numJogador;
-    protected int idJogador;
-    protected int idMao;
+    public String numJogador;
+    public int idJogador;
+    public int idMao;
 
     /**
      * Cria um novo jogador, configurando os itens básicos dele
@@ -87,6 +87,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         // criando e posicionando os labels
         criaLabels();
         labelDinheiro.setVisible(true);
+        labelResultado.setVisible(false);
 
         // iniciado
         setVisible(true);
@@ -97,6 +98,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      */
     public void reiniciarJogador() {
         listaCartas = null;
+        mudarEstadoBotoes(false);
+        labelResultado.setVisible(false);
         labelValorCartas.setVisible(false);
         labelAposta.setVisible(false);
         repaint();
@@ -161,6 +164,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         labelAposta.repaint();
         labelDinheiro.repaint();
 
+        labelResultado.repaint();
 
         // desenha as fichas do jogador
         // removido (aula 31-05)
@@ -186,7 +190,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         labelValorCartas = criaLabel(valorCartas, COMPRIMENTO / 2 - 50, ALTURA / 2 + 30, 20);
         labelAposta = criaLabel(valorAposta, 30, ALTURA / 2 - 10, 150);
         labelDinheiro = criaLabel(valorDinheiro, COMPRIMENTO / 2 - 75, ALTURA - 60, 150);
-        labelResultado = criaLabel(0, COMPRIMENTO / 2 - 75, ALTURA - 100, 150);
+        labelResultado = criaLabel(123, COMPRIMENTO / 2 - 100, ALTURA - 100, 200);
     }
 
     /**
@@ -222,10 +226,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     	}
     	return (false);
     }
-    
-    public void verificaBotoes() {
-    }
-    
     
     /**
      * Desativa o botao de uma acao
@@ -270,6 +270,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         } else if (obj.equals(botaoSurrender)) {
         	this.controller.fazerJogada("SURRENDER", mao_splitada);
         } else if (obj.equals(botaoFinalizarAposta)) {
+            this.controller.finalizarAposta();
         	this.finalizarAposta();
         } else {
             System.out.println("AINDA NAO IMPLEMENTADO");
@@ -395,10 +396,11 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         	repaint(); // eu nao tenho certeza se precisa chamar o repaint aqui nao
     	}
     	else if (not == NotificacaoAPI.JogadorResultado) {
-    	    String resultado = o.getResultado(idJogador);
+    	    String resultado = o.getResultado(idJogador, idMao);
+    	    valorDinheiro = o.getDinheiroJogador(idJogador);
     	    labelResultado.setText("Vencedor: " + resultado);
-    	    labelResultado.setEnabled(true);
-    	    System.out.println(idJogador + ": " + resultado);
+    	    labelResultado.setVisible(true);
+    	    System.out.println(idJogador + "[" + idMao + "]: " + resultado);
     	    repaint();
         }
 

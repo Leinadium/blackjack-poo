@@ -26,5 +26,5 @@ public interface ObservadoAPI {
     boolean getPodeSurrender(int idJogador, boolean mao_splitada);      // notificacao: JogadorAcao
     boolean getPodeSplit(int idJogador, boolean mao_splitada);          // notificacao: JogadorAcao
 
-    String getResultado(int idJogador);           // notificacao: JogadorResultado
+    String getResultado(int idJogador, int idMao);           // notificacao: JogadorResultado
 }

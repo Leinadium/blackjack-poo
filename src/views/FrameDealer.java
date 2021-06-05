@@ -76,12 +76,10 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
      * Reinicia as propriedades do Dealer:
      * - Exclui as cartas da mao dele
      * - Esconde o label
-     * - Libera o botao de Nova Rodada
      */
     public void reiniciarDealer() {
         cartas = null;
         labelValorCartas.setVisible(false);
-        this.botaoNovaRodada.setEnabled(true);
         repaint();
     }
 
@@ -269,10 +267,19 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
                 this.ehFinalizado = o.getFinalizadoDealer();    // verifica se o dealer jogou
                 labelValorCartas.setVisible(this.ehFinalizado);
                 repaint();                                      // atualiza a tela inteira
+                break;
             }
             case DealerAposta: {
-                // TODO
+                // ignorado
+                break;
             }
+            case JogadorResultado: {
+                // significa que o jogo finalizou
+                this.botaoNovaRodada.setEnabled(true);
+                repaint();
+                break;
+            }
+
             default: {}     // outras notificacoes sao ignoradas
         }
     }

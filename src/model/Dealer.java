@@ -22,6 +22,15 @@ class Dealer {
         this.finalizado = false;
 
     }
+
+    /**
+     * Reinicia a mao do dealer e se esta finalizado, para uma nova rodada
+     */
+    public void iniciaDealer() {
+        this.mao = new Mao();
+        this.finalizado = false;
+    }
+
     /** 
     * Verifica se o dealer pode fazer um HIT
     * @return True se o dealer pode fazer HIT

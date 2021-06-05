@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,9 +25,7 @@ public class Controller {
         api.passaVez();
 
         if (api.getJogadoresFinalizados()) {
-            System.out.println("TODOS OS JOGADORES JOGARAM");
-            this.modo = Modo.FINAL;
-            this.api.fazerJogadaDealer();
+            finalizarRodada();
 
         } else {
             this.frameJogador.get(api.getVez()).iniciarRodada();
@@ -188,6 +187,10 @@ public class Controller {
     }
 
     public void iniciarAposta() {
+        if (this.modo == Modo.FINAL) {
+            this.reiniciarRodada();
+        }
+
         this.api.reiniciarJogadores();
         this.frameJogador.get(this.api.getVez()).iniciarAposta();
         this.modo = Modo.APOSTA;
@@ -209,9 +212,35 @@ public class Controller {
             passaVez();
         }
     }
+
+    public void reiniciarRodada() {
+        ArrayList<FrameJogador> copia = new ArrayList<>(frameJogador);
+
+        // desliga as maos de split, e nao copia as maos de split para a copia
+        for (FrameJogador fj: this.frameJogador) {
+            if (fj.idMao != 0) {
+                fj.fechar();    // fecha a janela
+            } else {
+                fj.reiniciarJogador();  // reinicia as propriedades
+                copia.add(fj);
+            }
+        }
+
+        // reescrevendo a lista de frameJogadores, agora as maos split sumiram
+        this.frameJogador = copia;
+
+        this.api.reiniciarDealer();
+        this.frameDealer.reiniciarDealer();
+        this.api.resetVez();
+    }
     
     public void finalizarRodada() {
-    	this.frameDealer.reiniciarDealer();
+        System.out.println("TODOS OS JOGADORES JOGARAM");
+        this.modo = Modo.FINAL;
+        this.api.fazerJogadaDealer();   // faz a jogada e notifica o(s) resultado(s)
+
+        // distribui o dinheiro
+        this.api.distribuiDinheiroJogadores();
     }
 }
 
