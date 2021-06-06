@@ -220,6 +220,7 @@ public class Controller {
         for (FrameJogador fj: this.frameJogador) {
             if (fj.idMao != 0) {
                 fj.fechar();    // fecha a janela
+                this.api.removeObservador(fj);
             } else {
                 fj.reiniciarJogador();  // reinicia as propriedades
                 copia.add(fj);
