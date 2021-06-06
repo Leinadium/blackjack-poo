@@ -165,23 +165,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         labelDinheiro.repaint();
 
         labelResultado.repaint();
-
-        // desenha as fichas do jogador
-        // removido (aula 31-05)
-        /*
-        int v, q;
-        Integer[] xy;
-        Image img;
-        for (Map.Entry<Integer, Integer> entry : mapaFichas.entrySet()) {
-            v = entry.getKey();
-            q = entry.getValue();
-            xy = posicaoFicha(v);
-            img = Imagem.get("ficha" + v);
-            for (int i = 0; i < q; i ++) {
-                g2d.drawImage(img, xy[0], xy[1] - 5*(i+1), null);
-            }
-        }
-        */
     }
     /**
      * Cria todas as labels
@@ -221,10 +204,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      * @return true - caso seja a segunda mão de um split; false - caso contrario 
      */
     private boolean retornaMaoSplitada() {
-    	if (this.idMao >= 1) {
-    		return (true);
-    	}
-    	return (false);
+        return this.idMao >= 1;
     }
     
     /**
