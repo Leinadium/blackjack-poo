@@ -48,7 +48,7 @@ public class Controller {
         // inicializa ultima janela
         int ultimo = this.frameJogador.size() - 1;
         FrameJogador novoFrame = this.frameJogador.get(ultimo);
-        novoFrame.iniciarRodada();
+        // novoFrame.iniciarRodada();   // so inicia depois que a outra mao finalizar
         this.api.registraObservador(this.frameJogador.get(ultimo));
         this.api.distribuiCartasJogador(true);
     }
@@ -60,6 +60,16 @@ public class Controller {
     	}
     	if (api.jogadorEhFinalizado()) {
     	    passaVez();
+        }
+    	// vendo se ele pode comecar a outra mao do split
+    	if (acao.equals("STAND") && !mao_splitada) {
+    	    // procurando a outra mao
+            for (FrameJogador fj: this.frameJogador) {
+                // procura por um framejogador com mao diferente de 0
+                if (fj.idMao != 0 && fj.idJogador == api.getVez()) {
+                    fj.iniciarRodada();     // libera os botoes para jogada
+                }
+            }
         }
     }
 
