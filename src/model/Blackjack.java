@@ -64,12 +64,14 @@ public class Blackjack implements ObservadoAPI {
 	/**
 	 * Reinicia os jogadores para mais uma rodada
 	 * (o dinheiro nao eh alterado)
+	 * Também embaralha o baralho se precisar
 	 */
 	public void reiniciarJogadores() {
     	for (Jogador jog: this.jogadores) {
     		jog.iniciaJogada();
 		}
     	notificarTodos(NotificacaoAPI.JogadorAposta);
+    	if (baralho.precisaEmbaralhar()) { baralho.embaralhar(); }
 	}
 
 	/**

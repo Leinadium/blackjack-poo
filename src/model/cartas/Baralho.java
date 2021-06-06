@@ -51,12 +51,12 @@ public class Baralho {
 		else {
 			Carta c = cartas.get(0);
 			cartas.remove(0);
-	
-			// checando se o baralho precisa ser reiniciado
-			if (this.cartas.size() <= 9 * this.quantidade * 52 / 10) {this.embaralhar();}
-	
 			return c;
 		}
+	}
+
+	public boolean precisaEmbaralhar() {
+		return this.cartas.size() <= 9 * this.quantidade * 52 / 10;
 	}
 
 	public void embaralhar() {
