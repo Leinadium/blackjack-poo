@@ -190,7 +190,7 @@ class Jogador {
 
 
     public boolean podeHit(Mao m) {
-        return (!m.finalizado && this.ultimaJogada != Jogada.DOUBLE && !this.mao.blackjack); //duvida em relacao as maos do split
+        return (!m.finalizado && !this.mao.blackjack);
     }
     public boolean podeHit() { return podeHit(this.mao); }
 
@@ -327,6 +327,11 @@ class Jogador {
 
     /**
      * Faz a jogada de SPLIT para aquela mao
+     *
+     * OBS: a nova implementação força com que só possa um split, então teoricamente
+     * não precisaria receber a mão que seria splitada. Mas foi deixada para não alterar
+     * a implementação em outros lugares
+     *
      * @param m Mao a ser dividida
      * @param b Baralho para pegar as novas cartas
      * @throws Exception Error se todas as maos estiverem em uso
@@ -343,6 +348,12 @@ class Jogador {
 
         this.fazerHit(b, m);   // adicionando uma carta em cada mao
         this.fazerHit(b, this.maoSplit);
+
+        // caso especial, se ele splitou um par de ases
+        if (m.cartas.get(0).equals(new Carta(Cor.VERMELHO, Nome.AS, Naipe.OUROS))) {
+            this.fazerStand(m);
+            this.fazerStand(maoSplit);
+        }
 
         this.quantidadeJogadas -= 1; // os hits aumentaram +2 na quantidade. Retirando 1
         this.ultimaJogada = Jogada.SPLIT;
