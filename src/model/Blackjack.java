@@ -39,8 +39,6 @@ public class Blackjack implements ObservadoAPI {
         }
         return bj;
     }
-
-
     private Blackjack(){
     }
 
@@ -140,7 +138,7 @@ public class Blackjack implements ObservadoAPI {
 	}
 	
 	/**
-	 * Aumenta o valor da aposta do jogador de acordo com o que clicou
+	 * Aumenta o valor da aposta do jogador atual de acordo com o que clicou.
 	 * @param valor valor da ficha
 	 */
 	public void aumentaAposta(int valor) {
@@ -496,6 +494,7 @@ public class Blackjack implements ObservadoAPI {
 		return notificacaoAPI;
 	}
 	public void notificarTodos(NotificacaoAPI n) {
+    	if (listaObservadores == null) { return; }
     	this.notificacaoAPI = n;
     	for (ObservadorAPI o: listaObservadores) { o.notificar(this); }
     }

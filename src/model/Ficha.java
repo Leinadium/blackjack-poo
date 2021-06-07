@@ -88,8 +88,12 @@ class Ficha {
     
     
     /**
-     * (depreciated)
-     * Calcula uma combina��o de fichas a partir de um dinheiro
+     * Calcula uma combinação de fichas a partir de um dinheiro.
+     *
+     * O algoritmo favorece a maior quantidade de fichas para as maiores fichas.
+     * Ele aloca a maior quantidade de fichas da maior ficha, depois para a segunda maior ficha,
+     * e repete até nao for possivel
+     *
      * @param dinheiro Dinheiro a ser tranformado em fichas
      * @return Lista de fichas relativas ao dinheiro
      */

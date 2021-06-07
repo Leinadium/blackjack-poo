@@ -179,7 +179,7 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
      * Implemlentacao de pressionamento de mouse para poder aumentar a aposta.
      * Chama o controller caso tenha clicado em alguma ficha, pedindo para
      * aumentar a aposta
-     * @param e
+     * @param e MouseEvent
      */
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();

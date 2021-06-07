@@ -15,6 +15,12 @@ import model.cartas.Nome;
 
 public class BlackjackTest {
 
+	/*
+	Nem todas os metodos foram testados, pois alteram alguma propriedade
+	durante uma partida, que ficaria complexo de testar, e poderia cobrir poucos
+	casos, logo necessitaria muitos testes diferentes.
+	 */
+
 	private void adicionaCartaMao(Mao m,  Cor cor, Nome nome, Naipe naipe) {
 		Carta c = new Carta(cor, nome, naipe);
 		m.ganharCarta(c);
@@ -45,7 +51,72 @@ public class BlackjackTest {
 		adicionaCartaMao(m, Cor.PRETO, Nome.VALETE, Naipe.PAUS);
 		adicionaCartaMao(m, Cor.PRETO, Nome.QUATRO, Naipe.PAUS);
 	}
-	
+
+	private Blackjack apiGenerica(int n) {
+		Blackjack r = Blackjack.getAPI();
+		r.iniciarBlackjack(n);
+		return r;
+	}
+
+	@Test
+	public final void testSingleton() {
+		Blackjack api = Blackjack.getAPI();
+		Blackjack api2 = Blackjack.getAPI();
+		assertEquals("As APIs sao diferentes", api, api2);
+	}
+
+	@Test
+	public final void testIniciarAPI() {
+		Blackjack api = apiGenerica(3);
+		assertEquals("A api nao foi iniciada corretamente", 3, api.qtdJogadores);
+	}
+
+	@Test
+	public final void testPassarVez() {
+		Blackjack api = apiGenerica(2);
+		api.passaVez();
+		assertEquals("A vez nao foi passada corretamente", 1, api.getVez());
+	}
+
+	@Test
+	public final void testJogadoresFinalizados() {
+		Blackjack api = apiGenerica(2);
+		api.passaVez();
+		api.passaVez();
+		assertTrue("Os jogadores nao foram finalizados", api.getJogadoresFinalizados());
+	}
+
+	@Test
+	public final void testResetVez() {
+		Blackjack api = apiGenerica(2);
+		api.passaVez();
+		api.resetVez();
+		assertEquals("A vez nao foi reiniciada", 0, api.getVez());
+	}
+
+	@Test
+	public final void testDefineVez() {
+		Blackjack api = apiGenerica(2);
+		api.passaVez();
+		api.defineAposta(0);
+		assertEquals("A vez nao foi definida corretamente", 0, api.getVez());
+	}
+
+	@Test
+	public final void testDefineAposta() {
+		Blackjack api = apiGenerica(1);
+		api.defineAposta(30);
+		assertEquals("A aposta nao foi definida corretamente", 30, api.getValorApostaJogador(api.getVez(), 0));
+	}
+
+	@Test
+	public final void testAumentaAposta() {
+		Blackjack api = apiGenerica(1);
+		api.aumentaAposta(20);
+		assertEquals("A aposta nao foi aumentada corretamente",
+				20, api.getValorApostaJogador(api.getVez(), 0));
+	}
+
 	@Test
 	public final void testJogadorGanhandoComBlackjack() {
 		Blackjack actual = Blackjack.getAPI();

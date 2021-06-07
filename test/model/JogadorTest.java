@@ -252,10 +252,4 @@ public class JogadorTest {
 		actual.fazerSurrender(actual.mao);
 		assertEquals("O jogador nao fez um surrender", Jogada.SURRENDER, actual.retornaUltimaJogada());
 	}
-	
-	private void exemploCalculaMelhorValorSplit(Jogador jog) throws Exception{
-		Baralho baralho = new Baralho(4);
-		criaSplit(jog.mao);
-		jog.fazerSplit(baralho);
-	}
 }
