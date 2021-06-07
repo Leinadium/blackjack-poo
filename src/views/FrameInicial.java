@@ -92,7 +92,7 @@ public class FrameInicial extends JFrame implements ActionListener {
         Object obj = e.getSource();
 
         if (obj.equals(botaoNovaPartida)) {  // apertou o botao de nova partida
-            this.controller.iniciarPartida(quantidadeJogadores);
+            this.controller.iniciarEscolhaNomes(quantidadeJogadores);
 
         } else if (obj.equals(botaoCarregarPartida)) {  // apertou o botao de carregar partida
             this.controller.carregarPartida();

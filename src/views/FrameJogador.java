@@ -21,8 +21,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     public final int COMPRIMENTO = 700;
     public final int ALTURA = 550;
     private final Image background = Imagem.get("background");
-    // private final Image cartaAzul = Imagem.get("azul");
-    // private final Image cartaVermelha = Imagem.get("vermelho");
 
     private final int sizeFicha = 60;
 
@@ -51,22 +49,20 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
 
 
     protected Controller controller;
-    public String numJogador;
+    public String nomeJogador;
     public int idJogador;
     public int idMao;
 
     /**
      * Cria um novo jogador, configurando os itens básicos dele
      * @param controller instacia do Controlador do jogo
-     * @param numJogador nome do jogagdor, opcional
+     * @param nomeJogador nome do jogagdor,
      * @param idJogador id do jogador, na lista do controlador. Eh o identificador dele
      * @param idMao id da mao do jogador, na lista do controlador.
      */
-    public FrameJogador(Controller controller, String numJogador, int idJogador, int idMao) {
-    	System.out.println("Novo frame");
-    	System.out.printf("Jogador [%d], mao [%d]%n", idJogador,  idMao);
+    public FrameJogador(Controller controller, String nomeJogador, int idJogador, int idMao) {
         this.controller = controller;
-        this.numJogador = numJogador;
+        this.nomeJogador = nomeJogador;
         this.idMao = idMao;
         this.idJogador = idJogador;
 
@@ -76,7 +72,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         // iniciando o frame
         setBounds(0, 0, COMPRIMENTO, ALTURA);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        String titulo = String.format("Jogador nº %s [BLACKJACK]", numJogador);
+        String titulo = String.format("%s [BLACKJACK]", nomeJogador);
         setTitle(titulo);
         getContentPane().setLayout(null);
         addMouseListener(this);

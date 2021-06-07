@@ -9,6 +9,7 @@ import model.Blackjack;
 public class Controller {
     FrameInicial frameInicial;
     FrameDealer frameDealer;
+    FrameNomes frameNomes;
     ArrayList<FrameJogador> frameJogador;
     Blackjack api;
     Modo modo;
@@ -176,9 +177,19 @@ public class Controller {
         // TODO
     }
 
-    public void iniciarPartida(int quantidadeJogadores) {
+    /**
+     * Inicia uma partida:
+     *
+     * Fecha os frames do menu e começa a api.
+     * Cria os frames dos jogadores e do dealer.
+     * Registra os frames na api como observadores.
+     * Coloca o modo do jogo como INICIO
+     * @param quantidadeJogadores Quantidade de jogadores para a partida
+     * @param nomes Array contendo o nome dos jogadores. null para nomes genericos.
+     */
+    public void iniciarPartida(int quantidadeJogadores, String[] nomes) {
         // fecha o menu
-        this.frameInicial.fechar();
+        this.frameNomes.fechar();
 
         // inicia o jogo
         this.api = Blackjack.getAPI();
@@ -187,8 +198,13 @@ public class Controller {
         // inicia os frames dos jogadores
         this.frameJogador = new ArrayList<>();
         for (int i = 0; i < quantidadeJogadores; i++) {
-        	String numJogador = String.format("%d", i+1);
-            this.frameJogador.add(new FrameJogador(this, numJogador, i, 0));
+            String nomeJogador;
+            if (nomes != null) {
+                nomeJogador = nomes[i];
+            } else {
+                nomeJogador = String.format("Jogador %d", i + 1);
+            }
+            this.frameJogador.add(new FrameJogador(this, nomeJogador, i, 0));
         }
         // inicia o frame do dealer
         this.frameDealer = new FrameDealer(this);
@@ -201,6 +217,14 @@ public class Controller {
             this.api.registraObservador(this.frameJogador.get(i));
         }
         this.modo = Modo.INICIO;
+    }
+
+    /**
+     * Overload de iniciarPartida para quando os nomes nao estao definidos
+     * @param quantidadeJogadores quantidade de jogadores para a partida
+     */
+    public void iniciarPartida(int quantidadeJogadores) {
+        iniciarPartida(quantidadeJogadores, null);
     }
 
     public void iniciarAposta() {
@@ -259,6 +283,12 @@ public class Controller {
 
         // distribui o dinheiro
         this.api.distribuiDinheiroJogadores();
+    }
+
+    public void iniciarEscolhaNomes(int quantidadeJogadores) {
+        this.frameInicial.fechar();
+        this.frameNomes = new FrameNomes(this, quantidadeJogadores);
+        this.frameNomes.abrir();
     }
 }
 
