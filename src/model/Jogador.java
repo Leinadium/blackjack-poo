@@ -120,7 +120,6 @@ class Jogador {
         return (this.finalizado && this.dinheiro <= 0); //acho que aqui eh menor ou igual porque se ele finalizou entao ele nao pode apostar mais pq faliu
     }
     /**
-     * (depreciated)
      * Verifica se uma aposta pode ser feita
      * @return true se o jogador pode fazer a aposta
      */
@@ -173,6 +172,11 @@ class Jogador {
 
     }
 
+    /**
+     * Retira o dinheiro da conta do jogador
+     * @param valor Total de dinheiro a ser retirado
+     * @throws Exception caso nao tenha o dinheiro necessario
+     */
     public void retirarDinheiro(int valor) throws Exception {
         if (valor > this.dinheiro) {
             throw new Exception("O jogador nao pode retirar esse dinheiro");
@@ -180,6 +184,10 @@ class Jogador {
         this.dinheiro -= valor;
     }
 
+    /**
+     * Recebe o dinheiro e adiciona na conta do jogador
+     * @param valor valor a ser adicionado
+     */
     public void recebeDinheiro(int valor) {
         this.dinheiro += valor;
     }
@@ -204,6 +212,50 @@ class Jogador {
     	this.dinheiro += (this.mao.aposta * 3 / 2);
     }
 
+    public Jogada retornaUltimaJogada() {
+        return (this.ultimaJogada);
+    }
+
+    /**
+     * Retorna uma lista de fichas dobrada.
+     *
+     * Essa funcao pois teria que ter uma lista de fichas em cada mao.
+     * Em vez disso, o jogador possui uma lista de fichas, e caso ele splita e
+     * peça double, o valor sera alterado da mão, mas a lista de fichas não.
+     * Porém, se a parte gráfica pedir a lista de mãos, será retornada uma copia duplicada do jogador
+     * @return lista com as fichas das apostas dobradas
+     */
+    public ArrayList<Ficha> getFichasApostaDouble() {
+        // foi criada uma lista temporaria, pois addAll eh perigoso
+        // se a lista muda enquanto o addAll roda.
+        ArrayList<Ficha> temp = new ArrayList<>(this.fichasAposta);
+        temp.addAll(this.fichasAposta);
+        return temp;
+    }
+
+    /**
+     * Funcao privada para verificar todas as maos se foram finalizadas
+     * @return true se todas as maos estiverem finalizadas
+     */
+    private boolean verificaFinalizadoGeral() {
+        boolean ret = this.mao.finalizado;
+        if (this.maoSplit != null) {
+            ret = ret && this.maoSplit.finalizado;
+        }
+        if (this.maoSplit2 != null) {
+            ret = ret && this.maoSplit2.finalizado;
+        }
+        return ret;
+    }
+
+    /*
+    Os métodos a seguir sao respectivos as jogadas que o jogador pode fazer
+    Para cada jogada, ha quatro métodos:
+        podeJogada(Mao) -> diz se aquela jogada para aquela mao eh valida
+        podeJogada() -> overload de podeJogada(Mao), passando a mao normal
+        fazerJogada(Mao) -> faz aquela jogada para aquela mao
+        fazerJogada() -> overload de fazerJogada(Mao), passando a mao normal
+    */
 
     public boolean podeHit(Mao m) {
         return (!m.finalizado && !this.mao.blackjack);
@@ -232,37 +284,29 @@ class Jogador {
     	return (!m.finalizado && this.ultimaJogada == null && this.mao.cartas.size() == 2);
     }
     public boolean podeSurrender() { return podeSurrender(this.mao);}
-    
+
+    /**
+     * Retorna se o Surrender eh valido, de acordo com a mao do dealer
+     * @param d Dealer do jogo.
+     * @return true se for valido.
+     */
     public boolean validaSurrender(Dealer d) {
     	return (!d.mao.blackjack);
     }
 
     /**
-     * Faz surrender, porem nao eh valido
-     * @param m mao do jogador
-     * @param invalido true se nao foi valido
+     * Faz o surrender:
+     * finaliza o jogador, coloca como rendido
+     * e diz a ultima jogada
+     * @param m Mao do jogador a se render (a principio, so pode a mao normal)
      */
-    public void fazerSurrender(Mao m, boolean invalido) {
-        if (!invalido) { fazerSurrender(m); }
-        else {
-            this.rendido = true;
-            this.finalizado = true;
-            this.ultimaJogada = Jogada.SURRENDER;
-        }
-    }
-
     public void fazerSurrender(Mao m) {
     	this.rendido = true;
+    	this.mao.finalizado = true;
     	this.finalizado = true;
-    	// this.aposta = this.aposta/2;
-    	this.dinheiro += this.mao.aposta/2;     // ganha metade do dinheiro de volta
     	this.ultimaJogada = Jogada.SURRENDER;
     }
     public void fazerSurrender() { fazerSurrender(this.mao); }
-    
-    public Jogada retornaUltimaJogada() {
-    	return (this.ultimaJogada);
-    }
 
     /**
      * Faz a jogada de HIT para aquela mao.
@@ -291,38 +335,6 @@ class Jogador {
         this.finalizado = this.verificaFinalizadoGeral();
     }
     public void fazerStand() { fazerStand(this.mao); }
-
-    /**
-     * Funcao privada para verificar todas as maos se foram finalizadas
-     * @return true se todas as maos estiverem finalizadas
-     */
-    private boolean verificaFinalizadoGeral() {
-        boolean ret = this.mao.finalizado;
-        if (this.maoSplit != null) {
-            ret = ret && this.maoSplit.finalizado;
-        }
-        if (this.maoSplit2 != null) {
-            ret = ret && this.maoSplit2.finalizado;
-        }
-        return ret;
-    }
-
-    /**
-     * Retorna uma lista de fichas dobrada.
-     *
-     * Essa funcao pois teria que ter uma lista de fichas em cada mao.
-     * Em vez disso, o jogador possui uma lista de fichas, e caso ele splita e
-     * peça double, o valor sera alterado da mão, mas a lista de fichas não.
-     * Porém, se a parte gráfica pedir a lista de mãos, será retornada uma copia duplicada do jogador
-     * @return lista com as fichas das apostas dobradas
-     */
-    public ArrayList<Ficha> getFichasApostaDouble() {
-        // foi criada uma lista temporaria, pois addAll eh perigoso
-        // se a lista muda enquanto o addAll roda.
-        ArrayList<Ficha> temp = new ArrayList<>(this.fichasAposta);
-        temp.addAll(this.fichasAposta);
-        return temp;
-    }
 
     /**
      * Faz a jogada de DOUBLE para aquela mao
@@ -398,7 +410,11 @@ class Jogador {
     }
     public void fazerSplit(Baralho b) throws Exception { this.fazerSplit(this.mao, b); }
 
-
+    /**
+     * Funcao de acesso às maos do jogador
+     * @param id 0 (mao normal), 1 ou 2 (maos split)
+     * @return a mao do jogador.
+     */
     public Mao getMaoFromId(int id) {
         switch (id) {
             case 1: return this.maoSplit;

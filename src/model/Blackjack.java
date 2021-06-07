@@ -265,6 +265,10 @@ public class Blackjack implements ObservadoAPI {
     	if (idMao == 0) { m = jog.mao; }
     	else { m = jog.maoSplit; }
 
+    	if (jog.retornaUltimaJogada() == Jogada.SURRENDER) {
+    		return Resultado.DEALER;
+		}
+
     	if (d.mao.blackjack) {
     		return Resultado.DEALER;
     	}
@@ -313,8 +317,8 @@ public class Blackjack implements ObservadoAPI {
 				break;
 			}
 			case DEALER: {
-				if (jog.retornaUltimaJogada() == Jogada.SURRENDER) {
-					// recebe metade da aposta de volta
+				// verifica quando for surrender (tem que ser valido)
+				if (jog.retornaUltimaJogada() == Jogada.SURRENDER && jog.validaSurrender(dealer)) {
 					jog.recebeDinheiro(m.aposta / 2);
 				}
 				// qualquer outra coisa, ele nao ganha mais nada
@@ -434,8 +438,8 @@ public class Blackjack implements ObservadoAPI {
 	}
 	
 	private void fazerSurrenderJogador(Jogador jog) {
-    	jog.fazerSurrender(jog.mao, !jog.validaSurrender(this.dealer));
-		notificarTodos(NotificacaoAPI.JogadorAposta);
+    	jog.fazerSurrender(jog.mao);
+    	notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
 	
 	private void fazerSplitJogador(Jogador jog, int mao) {
@@ -468,7 +472,8 @@ public class Blackjack implements ObservadoAPI {
     		fazerSplitJogador(jog, idMao);
     	}
     	else {
-    		System.out.println("Houve algum problema"); //vou mudar depois
+    		System.out.println("Houve algum problema");
+    		System.exit(-1);
     	}
     	notificarTodos(NotificacaoAPI.JogadorAcao);
     }
@@ -482,6 +487,7 @@ public class Blackjack implements ObservadoAPI {
 	public int nivelSplitJogador() { return this.jogadores.get(this.vez).nivelSplit(); }
 
     /* ==== FUNCOES DO OBSERVADOR ==== */
+	/* as respectivas documentacoes estao no codigo da interface*/
 
     public void registraObservador(ObservadorAPI o) {
     	if (listaObservadores == null) { listaObservadores = new ArrayList<>(); }

@@ -8,23 +8,28 @@ public interface ObservadoAPI {
     void notificarTodos(NotificacaoAPI n);      // seta a notificacao, e notifica todos
     NotificacaoAPI getNotificacao();            // metodo de acessoa a notificacao
 
-    String[] getCartasDealer();                 // notificacao: DealerCartas
-    int getValorDealer();                       // notificacao: DealerCartas
-    boolean getFinalizadoDealer();              // notificacao: DealerCartas
+    /* NOTIFICACAO [DealerCartas] */
+    String[] getCartasDealer();                 // retorna uma lista contendo as cartas do dealer
+    int getValorDealer();                       // retorna a soma das cartas do dealer
+    boolean getFinalizadoDealer();              // retorna se o dealer finalizou ou nao
 
-    String[] getCartasJogador(int idJogador, int mao);      // notificacao: JogadorCartas
-    int getValorJogador(int idJogador, int mao);            // notificacao: JogadorCartas
+    /* NOTIFICACAO [JogadorCartas] */
+    String[] getCartasJogador(int idJogador, int mao);      // retorna uma lista com as cartas do jogador
+    int getValorJogador(int idJogador, int mao);            // retorna a soma das cartas do jogador
 
-    ArrayList<Integer> getApostaJogador(int idJogador, int mao);    // notificacao: JogadorAposta
-    int getDinheiroJogador(int idJogador);                          // notificacao: JogadorAposta
-    int getValorApostaJogador(int idJogador, int mao);              // notificacao: JogadorAposta
-    boolean getPodeApostaJogador(int idJogador);                    // notificacao: JogadorAposta
-    
-    boolean getPodeStand(int idJogador, int mao);          // notificacao: JogadorAcao
-    boolean getPodeHit(int idJogador, int mao);            // notificacao: JogadorAcao
-    boolean getPodeDouble(int idJogador, int mao);         // notificacao: JogadorAcao
-    boolean getPodeSurrender(int idJogador, int mao);      // notificacao: JogadorAcao
-    boolean getPodeSplit(int idJogador, int mao);          // notificacao: JogadorAcao
+    /* NOTIFICACAO [JogadorAposta] */
+    ArrayList<Integer> getApostaJogador(int idJogador, int mao);    // retorna a lista de fichas da aposta
+    int getDinheiroJogador(int idJogador);                          // retorna o dinheiro do jogador
+    int getValorApostaJogador(int idJogador, int mao);              // retorna o valor total da aposta atual
+    boolean getPodeApostaJogador(int idJogador);                    // retorna se o jogador ainda pode apostar
 
-    String getResultado(int idJogador, int idMao);           // notificacao: JogadorResultado
+    /* NOTIFICACAO [JogadorAcao] */
+    boolean getPodeStand(int idJogador, int mao);          // retorna se o jogador pode fazer Stand
+    boolean getPodeHit(int idJogador, int mao);            // retorna se o jogador pode fazer Hit
+    boolean getPodeDouble(int idJogador, int mao);         // retorna se o jogador pode fazer Double
+    boolean getPodeSurrender(int idJogador, int mao);      // retorna se o jogador pode fazer Surrender
+    boolean getPodeSplit(int idJogador, int mao);          // retorna se o jogador pode fazer Split
+
+    /* NOTIFICACAO [JogadorResultado] */
+    String getResultado(int idJogador, int idMao);           // retorna quem ganhou (Dealer, Jogador ou Push)
 }
