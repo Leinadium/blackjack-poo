@@ -50,6 +50,10 @@ public class Carta {
         System.out.println("Carta " + this.nome + " de " + this.naipe);
     }
     
+
+    /**
+     * Diz se o objeto eh um carta e possui o mesmo valor (nome) da carta
+     */
     @Override
     public boolean equals(Object o) {
     	if (o == null || this.getClass() != o.getClass()) { return false;}
@@ -57,10 +61,22 @@ public class Carta {
     	return (this.nome == c.nome);
     }
 
+    /**
+     * Ao contrario do equals, diz se a carta eh totalmente igual a outra
+     * @param c Carta para comparar
+     * @return true se for totalmente igual
+     */
+    public boolean fullEquals(Carta c) {
+        return (this.nome == c.nome &&
+                this.naipe == c.naipe &&
+                this.cor == c.cor
+        );
+    }
+
     public String toString() {
         return nome.toString() + "-" + naipe.toString();
     }
-    
+
     public static Naipe toNaipe(String naipe) throws IllegalStateException{
     	if (naipe.equals("COPAS")) {
     		return Naipe.COPAS;
