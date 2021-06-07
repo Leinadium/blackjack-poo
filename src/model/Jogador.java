@@ -217,16 +217,13 @@ class Jogador {
 
     public boolean podeDouble(Mao m) {
         return  (!m.finalizado &&
-                (this.quantidadeJogadas == 0 || this.ultimaJogada == Jogada.SPLIT) &&
-                this.dinheiro > m.aposta);
+                (m.cartas.size() == 2) &&
+                this.dinheiro >= m.aposta);
     }
     public boolean podeDouble() { return podeDouble(this.mao);}
 
     public boolean podeSplit(Mao m) {
-        return (
-                (this.maoSplit == null || this.maoSplit2 == null) &&
-                m.podeSplit()
-        );
+        return ((this.maoSplit == null || this.maoSplit2 == null) && m.podeSplit());
     }
     
     public boolean podeSplit() { return podeSplit(this.mao);}
@@ -317,7 +314,7 @@ class Jogador {
      * Em vez disso, o jogador possui uma lista de fichas, e caso ele splita e
      * peça double, o valor sera alterado da mão, mas a lista de fichas não.
      * Porém, se a parte gráfica pedir a lista de mãos, será retornada uma copia duplicada do jogador
-     * @return
+     * @return lista com as fichas das apostas dobradas
      */
     public ArrayList<Ficha> getFichasApostaDouble() {
         // foi criada uma lista temporaria, pois addAll eh perigoso
@@ -380,8 +377,7 @@ class Jogador {
         }
 
         // this.fazerHit(b, m);   // adicionando uma carta em cada mao
-        m.ganharCarta(new Carta(Cor.PRETO, Nome.REI, Naipe.PAUS));
-
+        m.ganharCarta(new Carta(Cor.PRETO, Nome.REI, Naipe.ESPADAS));
         this.fazerHit(b, novaMao);
 
         // caso especial, se ele splitou um par de ases

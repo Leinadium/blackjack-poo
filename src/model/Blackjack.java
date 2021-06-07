@@ -218,6 +218,7 @@ public class Blackjack implements ObservadoAPI {
 		else {
 			// Apos as cartas serem distribuidas no split, as condicoes de acao do jogador que fez split sao alteradas
 			// Isso ja foi feito para o frame do jogador que fez a acao, porem nao pro frame da mao splitada, ja que ela nao havia sido registrada ainda
+			notificarTodos(NotificacaoAPI.JogadorAposta);
 		}
 		notificarTodos(NotificacaoAPI.JogadorAcao);
 		notificarTodos(NotificacaoAPI.JogadorCartas);
@@ -380,8 +381,9 @@ public class Blackjack implements ObservadoAPI {
      */
     public boolean getPodeDouble(int idJogador, int mao) {
     	Jogador jog = this.jogadores.get(idJogador);
-    	// nesse caso nao faz diferenca se a mao eh splitada ou nao, o jogador pode fazer double depois de um split)*/
-    	return (jog.podeDouble());
+    	Mao m = jog.getMaoFromId(mao);
+
+    	return jog.podeDouble(m);
     }
     
     /**
@@ -404,7 +406,7 @@ public class Blackjack implements ObservadoAPI {
     public boolean getPodeSplit(int idJogador, int mao) {
     	Jogador jog = this.jogadores.get(idJogador);
 		Mao m = jog.getMaoFromId(mao);
-		return m.podeSplit();
+		return jog.podeSplit(m);
     }
     
     /* ==== FUNCOES QUE IMPLEMENTAM FUNCIONALIDADE DO JOGADOR ==== */
