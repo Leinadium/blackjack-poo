@@ -63,7 +63,9 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      * @param idMao id da mao do jogador, na lista do controlador.
      */
     public FrameJogador(Controller controller, String numJogador, int idJogador, int idMao) {
-    	this.controller = controller;
+    	System.out.println("Novo frame");
+    	System.out.printf("Jogador [%d], mao [%d]%n", idJogador,  idMao);
+        this.controller = controller;
         this.numJogador = numJogador;
         this.idMao = idMao;
         this.idJogador = idJogador;
@@ -197,14 +199,9 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     /**
      * Fecha a tela do jogador
      */
-    public void fechar() { setVisible(false);}
-    
-    /**
-     * Verifica se a mao que o jogador esta fazendo a acao eh um split ou nao. 
-     * @return true - caso seja a segunda mão de um split; false - caso contrario 
-     */
-    private boolean retornaMaoSplitada() {
-        return this.idMao >= 1;
+    public void fechar() {
+        setVisible(false);
+        dispose();
     }
     
     /**
@@ -237,18 +234,17 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();  // pega de onde veio o evento (qual botao)
-        boolean mao_splitada = this.retornaMaoSplitada();
         if (obj.equals(botaoStand)) {
-        	this.controller.fazerJogada("STAND", mao_splitada);
+        	this.controller.fazerJogada("STAND", idMao);
         	// mudarEstadoBotoes(false);   // temporario. deve ser implementado nas notificacoes?
         } else if (obj.equals(botaoHit)) {
-        	this.controller.fazerJogada("HIT", mao_splitada);
+        	this.controller.fazerJogada("HIT", idMao);
         } else if (obj.equals(botaoDouble)) {
-        	this.controller.fazerJogada("DOUBLE", mao_splitada);
+        	this.controller.fazerJogada("DOUBLE", idMao);
         } else if (obj.equals(botaoSplit)) {
-        	this.controller.fazerJogada("SPLIT", mao_splitada);
+        	this.controller.fazerJogada("SPLIT", idMao);
         } else if (obj.equals(botaoSurrender)) {
-        	this.controller.fazerJogada("SURRENDER", mao_splitada);
+        	this.controller.fazerJogada("SURRENDER", idMao);
         } else if (obj.equals(botaoFinalizarAposta)) {
             this.controller.finalizarAposta();
         	this.finalizarAposta();
@@ -348,9 +344,9 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     	//por ex: no switch case, se a acao era JogadorAposta, caia em JogadorCartas e JogadorAcao tambem
     	NotificacaoAPI not = o.getNotificacao();
         if (not == NotificacaoAPI.JogadorAposta) {
-            listaAposta = o.getApostaJogador(idJogador);
+            listaAposta = o.getApostaJogador(idJogador, idMao);
             valorDinheiro = o.getDinheiroJogador(idJogador);
-            valorAposta = o.getValorApostaJogador(idJogador);
+            valorAposta = o.getValorApostaJogador(idJogador, idMao);
             botaoFinalizarAposta.setEnabled(o.getPodeApostaJogador(idJogador));
             repaint();
     	}
@@ -360,19 +356,11 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
             repaint();
     	}
     	else if (not == NotificacaoAPI.JogadorAcao) {
-        	mao_splitada = this.retornaMaoSplitada();
-        	System.out.println("----- NOVO FRAME ----");
-        	System.out.println("Id do Jogador");
-        	System.out.println(idJogador);
-        	System.out.println("Mao Splitada");
-        	System.out.println(mao_splitada);
-        	System.out.println("Pode Double");
-        	System.out.println(o.getPodeDouble(idJogador, mao_splitada));
-        	this.alteraEstadoBotao("STAND", o.getPodeStand(idJogador, mao_splitada));
-        	this.alteraEstadoBotao("HIT", o.getPodeHit(idJogador, mao_splitada));
-        	this.alteraEstadoBotao("DOUBLE", o.getPodeDouble(idJogador, mao_splitada));
-        	this.alteraEstadoBotao("SURRENDER", o.getPodeSurrender(idJogador, mao_splitada));
-        	this.alteraEstadoBotao("SPLIT", o.getPodeSplit(idJogador, mao_splitada));
+        	this.alteraEstadoBotao("STAND", o.getPodeStand(idJogador, idMao));
+        	this.alteraEstadoBotao("HIT", o.getPodeHit(idJogador, idMao));
+        	this.alteraEstadoBotao("DOUBLE", o.getPodeDouble(idJogador, idMao));
+        	this.alteraEstadoBotao("SURRENDER", o.getPodeSurrender(idJogador, idMao));
+        	this.alteraEstadoBotao("SPLIT", o.getPodeSplit(idJogador, idMao));
         	repaint(); // eu nao tenho certeza se precisa chamar o repaint aqui nao
     	}
     	else if (not == NotificacaoAPI.JogadorResultado) {

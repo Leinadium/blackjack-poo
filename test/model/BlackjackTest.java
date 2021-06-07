@@ -62,13 +62,14 @@ public class BlackjackTest {
 		Blackjack actual = Blackjack.getAPI();
 		actual.iniciarBlackjack(1);
 		Jogador actual_jogador = actual.jogadores.get(0);
-		int expected_aposta = actual_jogador.aposta;
+		int expected_aposta = actual_jogador.mao.aposta;
 		Dealer actual_dealer = actual.dealer;
 		actual_jogador.fazAposta(50);
 		criaBlackjack(actual_jogador.mao);
 		criaMaoComumMenosPontos(actual_dealer.mao);
-		actual.verificaGanhador(actual_jogador, actual_dealer);
-		assertNotEquals("O pagamento nao foi feito como esperado", expected_aposta, actual_jogador.aposta);
+		// actual.verificaGanhador(actual_jogador, actual_dealer);
+		actual.distribuiDinheiroJogadores();
+		assertNotEquals("O pagamento nao foi feito como esperado", expected_aposta, actual_jogador.mao.aposta);
 	}
 	
 	@Test

@@ -31,8 +31,9 @@ class Jogador {
     public int numero;
     public Mao mao;
     public Mao maoSplit;
+    public Mao maoSplit2;
     public int dinheiro;
-    public int aposta;
+    // public int aposta;
     public List<Ficha> fichasAposta;
     public boolean finalizado;
 
@@ -46,9 +47,10 @@ class Jogador {
         this.numero = numJogador;
         this.mao = new Mao();
         this.maoSplit = null;
+        this.maoSplit2 = null;
         this.fichasAposta = new ArrayList<>();
         this.dinheiro = 500;
-        this.aposta = 0;
+        // this.aposta = 0;
         this.rendido = false;
         this.finalizado = false;
         this.quantidadeJogadas = 0;
@@ -64,8 +66,9 @@ class Jogador {
     	int i;
         this.mao = new Mao();
         this.maoSplit = null;
+        this.maoSplit2 = null;
         this.fichasAposta = new ArrayList<>();
-        this.aposta = 0;
+        // this.aposta = 0;
         this.rendido = false;
         this.finalizado = false;
         this.quantidadeJogadas = 0;
@@ -84,7 +87,7 @@ class Jogador {
      * @return true se for valida
      */
     public boolean apostaValida() {
-        return this.aposta >= 20 && this.aposta <= 100;
+        return this.mao.aposta >= 20 && this.mao.aposta <= 100;
     }
 
     /**
@@ -92,7 +95,7 @@ class Jogador {
      * @return true se tiver apostado
      */
     public boolean terApostado() {
-        return (this.aposta > 0);
+        return (this.mao.aposta > 0);
     }
     /**
      * Retorna se o jogador finalizou aquela jogada
@@ -131,7 +134,7 @@ class Jogador {
     public void fazAposta(int valor) throws IllegalStateException {
     	if (verificaAposta(valor)) {
     		this.dinheiro -= valor;
-    		this.aposta = valor;
+    		this.mao.aposta = valor;
     	}
     	else {
     		throw new IllegalStateException("O jogador nao pode fazer a aposta com o valor inserido");
@@ -155,7 +158,7 @@ class Jogador {
         if (this.dinheiro >= f.valor) {
             this.dinheiro -= f.valor;
             this.fichasAposta.add(f);
-            this.aposta += f.valor;
+            this.mao.aposta += f.valor;
         }
     }
 
@@ -166,7 +169,7 @@ class Jogador {
     public void diminuirAposta(Ficha f) {
         this.dinheiro += f.valor;
         this.fichasAposta.remove(f);
-        this.aposta -= f.valor;
+        this.mao.aposta -= f.valor;
 
     }
 
@@ -182,10 +185,23 @@ class Jogador {
     }
 
     /**
+     * Retorna o nivel de split atual.
+     * Se não tiver split ainda, retorna 0.
+     * Se tiver um split, retorna 1.
+     * Se tiver dois splits, retorna 2.
+     * @return o nivel do split;
+     */
+    public int nivelSplit() {
+        if (maoSplit2 != null) { return 2; }
+        else if (maoSplit != null) { return 1; }
+        else { return 0; }
+    }
+
+    /**
      * Recebe pagamento caso tenha feito Blackjack
      */
     public void recebePagamentoBlackjack() {
-    	this.dinheiro += (this.aposta * 3 / 2);
+    	this.dinheiro += (this.mao.aposta * 3 / 2);
     }
 
 
@@ -202,11 +218,16 @@ class Jogador {
     public boolean podeDouble(Mao m) {
         return  (!m.finalizado &&
                 (this.quantidadeJogadas == 0 || this.ultimaJogada == Jogada.SPLIT) &&
-                this.dinheiro > this.aposta);
+                this.dinheiro > m.aposta);
     }
     public boolean podeDouble() { return podeDouble(this.mao);}
 
-    public boolean podeSplit(Mao m) { return (this.maoSplit == null && m.podeSplit()); }
+    public boolean podeSplit(Mao m) {
+        return (
+                (this.maoSplit == null || this.maoSplit2 == null) &&
+                m.podeSplit()
+        );
+    }
     
     public boolean podeSplit() { return podeSplit(this.mao);}
     
@@ -236,8 +257,8 @@ class Jogador {
     public void fazerSurrender(Mao m) {
     	this.rendido = true;
     	this.finalizado = true;
-    	this.aposta = this.aposta/2;
-    	this.dinheiro += this.aposta/2;     // ganha metade do dinheiro de volta
+    	// this.aposta = this.aposta/2;
+    	this.dinheiro += this.mao.aposta/2;     // ganha metade do dinheiro de volta
     	this.ultimaJogada = Jogada.SURRENDER;
     }
     public void fazerSurrender() { fazerSurrender(this.mao); }
@@ -283,15 +304,27 @@ class Jogador {
         if (this.maoSplit != null) {
             ret = ret && this.maoSplit.finalizado;
         }
-
+        if (this.maoSplit2 != null) {
+            ret = ret && this.maoSplit2.finalizado;
+        }
         return ret;
     }
 
-    private void dobrarAposta() {
+    /**
+     * Retorna uma lista de fichas dobrada.
+     *
+     * Essa funcao pois teria que ter uma lista de fichas em cada mao.
+     * Em vez disso, o jogador possui uma lista de fichas, e caso ele splita e
+     * peça double, o valor sera alterado da mão, mas a lista de fichas não.
+     * Porém, se a parte gráfica pedir a lista de mãos, será retornada uma copia duplicada do jogador
+     * @return
+     */
+    public ArrayList<Ficha> getFichasApostaDouble() {
         // foi criada uma lista temporaria, pois addAll eh perigoso
-        // se a lista muda enquanto isso
+        // se a lista muda enquanto o addAll roda.
         ArrayList<Ficha> temp = new ArrayList<>(this.fichasAposta);
-        this.fichasAposta.addAll(temp);
+        temp.addAll(this.fichasAposta);
+        return temp;
     }
 
     /**
@@ -301,10 +334,10 @@ class Jogador {
      * @throws Exception Erro caso nao tenha dinheiro o suficiente
      */
     public void fazerDouble(Mao m, Baralho b) throws Exception {
-        aposta += aposta;
         try {
-        	this.retirarDinheiro(this.aposta);
-            dobrarAposta();
+            m.apostaDobrada = true;
+        	this.retirarDinheiro(m.aposta);
+            m.aposta += m.aposta;
 
             this.fazerHit(b, m);
             this.fazerStand(m);
@@ -326,33 +359,42 @@ class Jogador {
     }
 
     /**
-     * Faz a jogada de SPLIT para aquela mao
-     *
-     * OBS: a nova implementação força com que só possa um split, então teoricamente
-     * não precisaria receber a mão que seria splitada. Mas foi deixada para não alterar
-     * a implementação em outros lugares
+     * Faz a jogada de SPLIT para aquela mao:
+     * EH ESPERADO QUE O SPLIT SEJA VALIDO. NAO EH VERIFICADO NOVAMENTE
+     * Eh criada a nova mao, e guardada em maoSplit ou maoSplit2.
+     * O dinheiro eh retirado e a aposta copiada para a outra mao.
+     * Ambas as maos ganham as duas novas cartas. Se foi um split de As, ambas fazem STAND.
      *
      * @param m Mao a ser dividida
      * @param b Baralho para pegar as novas cartas
      * @throws Exception Error se todas as maos estiverem em uso
      */
-    public void fazerSplit(Mao m, Baralho b) throws Exception{
-        this.maoSplit = m.fazerSplit();  // criando a nova mao
-        // this.aposta += this.aposta;    // aumentando a aposta
+    public void fazerSplit(Mao m, Baralho b) throws Exception {
+        Mao novaMao = m.fazerSplit();  // criando a nova mao
+
         try {
-        	this.retirarDinheiro(this.aposta);  // retirando o dinheiro da aposta do jogador
+        	this.retirarDinheiro(m.aposta);  // retirando o dinheiro da aposta do jogador
         }
         catch (Exception e) {
         	throw new Exception("O jogador nao possui dinheiro");
         }
 
-        this.fazerHit(b, m);   // adicionando uma carta em cada mao
-        this.fazerHit(b, this.maoSplit);
+        // this.fazerHit(b, m);   // adicionando uma carta em cada mao
+        m.ganharCarta(new Carta(Cor.PRETO, Nome.REI, Naipe.PAUS));
+
+        this.fazerHit(b, novaMao);
 
         // caso especial, se ele splitou um par de ases
         if (m.cartas.get(0).equals(new Carta(Cor.VERMELHO, Nome.AS, Naipe.OUROS))) {
             this.fazerStand(m);
-            this.fazerStand(maoSplit);
+            this.fazerStand(novaMao);
+        }
+
+        // salva a nova mao no jogador
+        if (maoSplit == null) {
+            maoSplit = novaMao;
+        } else {
+            maoSplit2 = novaMao;
         }
 
         this.quantidadeJogadas -= 1; // os hits aumentaram +2 na quantidade. Retirando 1
@@ -360,15 +402,12 @@ class Jogador {
     }
     public void fazerSplit(Baralho b) throws Exception { this.fazerSplit(this.mao, b); }
 
-	/**
-	 * Calcula melhor valor da mao do jogador, contando o caso de ter mais de uma mao
-	 * @return soma de pontos da mão que indica a possibilidade para o jogador
-	 */
-	public int calculaMelhorValor() {
-        if (this.maoSplit == null) {
-            return this.mao.soma;
-        } else return Math.min(this.mao.soma, this.maoSplit.soma);
 
-	}
-
+    public Mao getMaoFromId(int id) {
+        switch (id) {
+            case 1: return this.maoSplit;
+            case 2: return this.maoSplit2;
+            default: return this.mao;
+        }
+    }
 }

@@ -53,7 +53,7 @@ public class JogadorTest {
 	@Test
 	public void testTerApostado() {
 		Jogador actual = new Jogador(1);
-		actual.aposta = 50;
+		actual.mao.aposta = 50;
 		assertTrue("O jogador nao fez sua aposta", actual.terApostado());
 	}
 	
@@ -109,9 +109,9 @@ public class JogadorTest {
 		Jogador actual = new Jogador(1);
 		int valor_ficha = 100;
 		Ficha f = new Ficha(valor_ficha);
-		int aposta_esperada = actual.aposta+100;
-		actual.aumentarAposta(f); //eu acho que voce nao aumentaria a aposta em fichas e sim aumentaria em dinheiro
-		assertEquals("A aposta nao foi aumentada", aposta_esperada, actual.aposta);
+		int aposta_esperada = actual.mao.aposta+100;
+		actual.aumentarAposta(f);
+		assertEquals("A aposta nao foi aumentada", aposta_esperada, actual.mao.aposta);
 		int saldo_antigo = actual.dinheiro;
 		actual.aumentarAposta(f);
 		assertEquals("A aposta foi aumentada", saldo_antigo, actual.dinheiro+valor_ficha);
@@ -239,10 +239,10 @@ public class JogadorTest {
 	@Test
 	public void testFazerSurrenderApostaReduzida() {
 		Jogador actual = new Jogador(1);
-		int aposta_esperada = actual.aposta/2;
+		int aposta_esperada = actual.mao.aposta/2;
 		criaMaoComumMenosPontos(actual.mao);
 		actual.fazerSurrender(actual.mao);
-		assertEquals("A aposta nao foi modificada", aposta_esperada, actual.aposta);
+		assertEquals("A aposta nao foi modificada", aposta_esperada, actual.mao.aposta);
 	}
 
 	@Test

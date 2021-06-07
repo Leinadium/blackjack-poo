@@ -27,14 +27,17 @@ class Mao {
 	public boolean quebrado = false;
 	public boolean finalizado = false;
 	public boolean podeBlackjack = true;
-
 	public boolean blackjack = false;
-	
+	public int aposta;
+	public boolean apostaDobrada;			// para saber quando mostrar as fichas dobradas
+											// em vez de ter uma lista de fichas na mao
+
 	Mao() {
 		this.cartas = new ArrayList<>();
 		this.soma = 0;
+		this.aposta = 0;
+		apostaDobrada = false;
 	}
-	
 	/**
 	 * Faz o calculo da soma dos valores das cartas, e salva no atributo .valor
 	 */
@@ -111,6 +114,7 @@ class Mao {
 		//} -- essa parte est� apenas comentada para testar a views
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
+		m.aposta = this.aposta;
 		m.podeBlackjack = false;   // inicia a mao split como nao tendo um blackjack (apenas 1 carta)
 		this.podeBlackjack = false;
 

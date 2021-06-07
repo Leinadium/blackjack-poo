@@ -117,7 +117,6 @@ public class Blackjack implements ObservadoAPI {
 	    this.jogadoresFinalizados = false;
     }
 
-	
     /**
      * Define a vez de um jogador
      * @param vez a ser definida
@@ -126,14 +125,6 @@ public class Blackjack implements ObservadoAPI {
 	    this.vez = vez;
     }
 
-	/**
-	 * Exibe o baralho inteiro no sdout (para testes da implementacao)
-	 */
-	public void exibirBaralho() {
-        this.baralho.exibirTodos();
-    }
-
-	
 	public void defineAposta(int valor) {
 		int i;
 		List<Ficha> lista_fichas = Ficha.calculaFicha(valor);
@@ -209,6 +200,8 @@ public class Blackjack implements ObservadoAPI {
 
 	/**
 	 * Distribui duas cartas para um jogador.
+	 * Caso "split" seja true, como as cartas ja foram distribuidas,
+	 * chama uma notificacao para a parte grafica atualizar as cartas
 	 */
 	public void distribuiCartasJogador(boolean split) {
 		int numJogador = vez;
@@ -304,35 +297,33 @@ public class Blackjack implements ObservadoAPI {
 	 * @param idMao Id da mao do jogador
 	 */
 	private void distribuiDinheiro(Jogador jog, Resultado res, int idMao) {
-    	Mao m;
-		if (idMao == 0) { m = jog.mao ;}
-		else {m = jog.maoSplit; }
-
+    	Mao m = jog.getMaoFromId(idMao);
 		switch (res) {
 			case JOGADOR: {
 				if (m.blackjack) {
 					// recebe o pagamento do blackjack
-					jog.recebePagamentoBlackjack();
+					jog.recebeDinheiro(m.aposta);		// ganha o dinheiro de volta
+					jog.recebePagamentoBlackjack();		// ganha o bonus
 				} else if (jog.retornaUltimaJogada() == Jogada.DOUBLE) {
 					// pega seu dinheiro de volta + a aposta com 200%
-					jog.recebeDinheiro(jog.aposta + jog.aposta * 2);
+					jog.recebeDinheiro(m.aposta + m.aposta * 2);
 				} else {
 					// pega seu dinheiro de volta + a aposta
-					jog.recebeDinheiro(jog.aposta + jog.aposta);
+					jog.recebeDinheiro(m.aposta + m.aposta);
 				}
 				break;
 			}
 			case DEALER: {
 				if (jog.retornaUltimaJogada() == Jogada.SURRENDER) {
 					// recebe metade da aposta de volta
-					jog.recebeDinheiro(jog.aposta / 2);
+					jog.recebeDinheiro(m.aposta / 2);
 				}
 				// qualquer outra coisa, ele nao ganha mais nada
 				break;
 			}
 			case PUSH: {
 				// ganha seu dinheiro de volta
-				jog.recebeDinheiro(jog.aposta);
+				jog.recebeDinheiro(m.aposta);
 				break;
 			}
 		}
@@ -348,6 +339,9 @@ public class Blackjack implements ObservadoAPI {
 			if (jog.maoSplit != null) {
 				distribuiDinheiro(jog, verificaGanhador(jog, 1, this.dealer), 1);
 			}
+			if (jog.maoSplit2 != null) {
+			    distribuiDinheiro(jog, verificaGanhador(jog, 2, this.dealer), 2);
+            }
 		}
 		notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
@@ -361,43 +355,32 @@ public class Blackjack implements ObservadoAPI {
     
     /**
      * Retorna um booleano que diz se o jogador pode fazer um stand
-     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @param mao id da mao
      * @return booleano que diz se aquela mao do jogador pode fazer um stand
      */
-    public boolean getPodeStand(int idJogador, boolean mao_splitada) {
-    	boolean resultado;
+    public boolean getPodeStand(int idJogador, int mao) {
     	Jogador jog = this.jogadores.get(idJogador);
-    	if (mao_splitada) {
-    		return jog.podeStand(jog.maoSplit);
-    	}
-    	else {
-    		return jog.podeStand();
-    	}
+		Mao m = jog.getMaoFromId(mao);
+		return jog.podeStand(m);
     }
     
     /**
      * Retorna um booleano que diz se o jogador pode fazer um hit
-     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @param mao id da mao
      * @return booleano que diz se aquela mao do jogador pode fazer um hit
      */
-    public boolean getPodeHit(int idJogador, boolean mao_splitada) {
-    	boolean resultado;
+    public boolean getPodeHit(int idJogador, int mao) {
     	Jogador jog = this.jogadores.get(idJogador);
-    	if (mao_splitada) {
-    		resultado = jog.podeHit(jog.maoSplit);
-    	}
-    	else {
-    		resultado = jog.podeHit();
-    	}
-    	return (resultado);
+		Mao m = jog.getMaoFromId(mao);
+		return jog.podeHit(m);
     }
     
     /**
      * Retorna um booleano que diz se o jogador pode fazer um double
-     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @param mao id da mao
      * @return booleano que diz se aquela mao do jogador pode fazer um double
      */
-    public boolean getPodeDouble(int idJogador, boolean mao_splitada) {
+    public boolean getPodeDouble(int idJogador, int mao) {
     	Jogador jog = this.jogadores.get(idJogador);
     	// nesse caso nao faz diferenca se a mao eh splitada ou nao, o jogador pode fazer double depois de um split)*/
     	return (jog.podeDouble());
@@ -405,62 +388,44 @@ public class Blackjack implements ObservadoAPI {
     
     /**
      * Retorna um booleano que diz se o jogador pode fazer um surrender
-     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @param mao id da mao
      * @return booleano que diz se aquela mao do jogador pode fazer um surrender
      */
-    public boolean getPodeSurrender(int idJogador, boolean mao_splitada) {
-    	boolean resultado;
+    public boolean getPodeSurrender(int idJogador, int mao) {
     	Jogador jog = this.jogadores.get(idJogador);
-    	if (mao_splitada) {
-    		resultado = jog.podeSurrender(jog.maoSplit);
-    	}
-    	else {
-    		resultado = jog.podeSurrender();
-    	}
-    	return (resultado);
+		Mao m = jog.getMaoFromId(mao);
+		return jog.podeSurrender(m);
     }
     
     /**
      * Retorna um booleano que diz se o jogador pode fazer um split
-     * @param mao_splitada (booleano que verifica se essa eh a mao splitada do jogador ou nao)
+     * @param mao id da mao
      * @return booleano que diz se aquela mao do jogador pode fazer um split
      */
     
-    public boolean getPodeSplit(int idJogador, boolean mao_splitada) {
-    	boolean resultado;
+    public boolean getPodeSplit(int idJogador, int mao) {
     	Jogador jog = this.jogadores.get(idJogador);
-    	if (mao_splitada) {
-    		resultado = false;
-    	}
-    	else {
-    		resultado = jog.podeSplit();
-    	}
-    	return (resultado);
+		Mao m = jog.getMaoFromId(mao);
+		return m.podeSplit();
     }
     
     /* ==== FUNCOES QUE IMPLEMENTAM FUNCIONALIDADE DO JOGADOR ==== */
     
     private void fazerStandJogador(Jogador jog, int mao) {
-    	if (mao == 0) {
-    		jog.fazerStand();
-    	}
-    	else {
-    		jog.fazerStand(jog.maoSplit);
-    	}
+    	Mao m = jog.getMaoFromId(mao);
+		jog.fazerStand(m);
     }
     
 	private void fazerHitJogador(Jogador jog, int mao) {
-		if (mao == 0) {
-			jog.fazerHit(baralho);
-		} else {
-			jog.fazerHit(baralho, jog.maoSplit);
-		}
+    	Mao m = jog.getMaoFromId(mao);
+		jog.fazerHit(baralho, m);
 		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
 	
-	private void fazerDoubleJogador(Jogador jog) {
-		try {
-			jog.fazerDouble(baralho);
+	private void fazerDoubleJogador(Jogador jog, int mao) {
+		Mao m = jog.getMaoFromId(mao);
+    	try {
+			jog.fazerDouble(m, baralho);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -473,35 +438,34 @@ public class Blackjack implements ObservadoAPI {
 		notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
 	
-	private void fazerSplitJogador(Jogador jog) {
+	private void fazerSplitJogador(Jogador jog, int mao) {
+		Mao m = jog.getMaoFromId(mao);
 		try {
-			jog.fazerSplit(baralho);
+			jog.fazerSplit(m, baralho);
 		} catch (Exception e) {
 			// se der excecao nao faz o split
 		}
 	}
 
-    public void fazerJogada(String acao, boolean mao_splitada) {
+    public void fazerJogada(String acao, int idMao) {
     	int numJogador = vez;
     	Jogador jog = this.jogadores.get(numJogador);
-    	int mao = 0;
-    	if (mao_splitada) {mao = 1;}
 
     	// notificarTodos(NotificacaoAPI.JogadorAcao);
     	if (acao.equals("STAND")) {
-			fazerStandJogador(jog, mao);
+			fazerStandJogador(jog, idMao);
     	}
     	else if (acao.equals("HIT")) {
-    		fazerHitJogador(jog, mao);
+    		fazerHitJogador(jog, idMao);
     	}
     	else if (acao.equals("DOUBLE")) {
-    		fazerDoubleJogador(jog);
+    		fazerDoubleJogador(jog, idMao);
     	}
     	else if (acao.equals("SURRENDER")) {
     		fazerSurrenderJogador(jog);
     	}
     	else if (acao.equals("SPLIT")) {
-    		fazerSplitJogador(jog);
+    		fazerSplitJogador(jog, idMao);
     	}
     	else {
     		System.out.println("Houve algum problema"); //vou mudar depois
@@ -512,14 +476,18 @@ public class Blackjack implements ObservadoAPI {
     public boolean jogadorEhFinalizado() {
     	return this.jogadores.get(this.vez).finalizado;
 	}
-    
+
+	public boolean maoEhFinalizado(int idMao) { return this.jogadores.get(this.vez).getMaoFromId(idMao).finalizado; }
+
+	public int nivelSplitJogador() { return this.jogadores.get(this.vez).nivelSplit(); }
+
     /* ==== FUNCOES DO OBSERVADOR ==== */
 
     public void registraObservador(ObservadorAPI o) {
     	if (listaObservadores == null) { listaObservadores = new ArrayList<>(); }
 		listaObservadores.add(o);
     	// assim que eh registrado, ele precisa enviar as fichas no inicio
-		notificarTodos(NotificacaoAPI.JogadorAposta);
+		// notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
     public void removeObservador(ObservadorAPI o) {
     	listaObservadores.remove(o);
@@ -541,26 +509,31 @@ public class Blackjack implements ObservadoAPI {
 	public boolean getFinalizadoDealer() { return this.dealer.verificaFinalizadoGeral(); }
 
 	public String[] getCartasJogador(int idJogador, int mao) {
-    	if (mao==0) {
-    		return this.jogadores.get(idJogador).mao.toArray();
-		} else {
-    		return this.jogadores.get(idJogador).maoSplit.toArray();
-		}
+    	return this.jogadores.get(idJogador).getMaoFromId(mao).toArray();
 	}
 	public int getValorJogador(int idJogador, int mao) {
-    	if (mao==0) {
-    		return this.jogadores.get(idJogador).mao.soma;
-		} else {
-    		return this.jogadores.get(idJogador).maoSplit.soma;
-		}
+		return this.jogadores.get(idJogador).getMaoFromId(mao).soma;
 	}
 
-	public ArrayList<Integer> getApostaJogador(int idJogador) {
-		ArrayList<Integer> ret = new ArrayList<>();
-		if (this.jogadores.get(idJogador).fichasAposta == null) {
+	public ArrayList<Integer> getApostaJogador(int idJogador, int mao) {
+		Jogador jog = this.jogadores.get(idJogador);
+		Mao m = jog.getMaoFromId(mao);
+
+		// inicia a lista de retorno
+    	ArrayList<Integer> ret = new ArrayList<>();
+		if (jog.fichasAposta == null) {
 			return ret;
 		}
-		for (Ficha f: this.jogadores.get(idJogador).fichasAposta) {
+
+		List<Ficha> listaFichas;
+		// pegando a lista de fichas do jogador
+		if (m.apostaDobrada) {		// se a lista deve ser dobrada
+			listaFichas = jog.getFichasApostaDouble();
+		} else {
+			listaFichas = jog.fichasAposta;
+		}
+		// adiciona os valores de cada ficha na lista de retorno
+		for (Ficha f: listaFichas) {
 			ret.add(f.valor);
 		}
 		return ret;
@@ -568,8 +541,8 @@ public class Blackjack implements ObservadoAPI {
 	public int getDinheiroJogador(int idJogador) {
     	return this.jogadores.get(idJogador).dinheiro;
 	}
-	public int getValorApostaJogador(int idJogador) {
-    	return this.jogadores.get(idJogador).aposta;
+	public int getValorApostaJogador(int idJogador, int mao) {
+    	return this.jogadores.get(idJogador).getMaoFromId(mao).aposta;
 	}
 	public boolean getPodeApostaJogador(int idJogador) { return this.jogadores.get(idJogador).apostaValida(); }
 

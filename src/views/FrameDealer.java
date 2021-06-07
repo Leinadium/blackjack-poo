@@ -156,7 +156,10 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
     /**
      * Fecha a tela do Dealer
      */
-    public void fechar() { setVisible(false);}
+    public void fechar() {
+        setVisible(false);
+        dispose();
+    }
 
     /**
      * Implementacao do Listener de acoes

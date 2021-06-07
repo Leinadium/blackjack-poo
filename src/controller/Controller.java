@@ -43,31 +43,39 @@ public class Controller {
     	String numJogadorString = String.format("%d", idJogador+1);
     	
     	// cria nova janela
-    	this.frameJogador.add(new FrameJogador(this, numJogadorString, idJogador, 1));
+        int idNovaMao = this.api.nivelSplitJogador();
+        FrameJogador novoFrame = new FrameJogador(this, numJogadorString, idJogador, idNovaMao);
+    	this.frameJogador.add(novoFrame);
+        this.api.registraObservador(novoFrame);
+        this.api.distribuiCartasJogador(true);      // chamada somente para atualizar as cartas
 
-        // inicializa ultima janela
-        int ultimo = this.frameJogador.size() - 1;
-        FrameJogador novoFrame = this.frameJogador.get(ultimo);
         // novoFrame.iniciarRodada();   // so inicia depois que a outra mao finalizar
-        this.api.registraObservador(this.frameJogador.get(ultimo));
-        this.api.distribuiCartasJogador(true);
+
+
     }
     
-    public void fazerJogada(String acao, boolean mao_splitada) {
-    	this.api.fazerJogada(acao, mao_splitada);
-    	if (acao.equals("SPLIT")) {
-    		acionaSplit();
-    	}
+    public void fazerJogada(String acao, int mao) {
+    	this.api.fazerJogada(acao, mao);
+
+    	// se tiver que criar uma nova janela
+        if (acao.equals("SPLIT")) {
+            acionaSplit();
+        }
+
+        // se o jogador finalizou sua jogada
     	if (api.jogadorEhFinalizado()) {
     	    passaVez();
         }
-    	// vendo se ele pode comecar a outra mao do split
-    	if (acao.equals("STAND") && !mao_splitada) {
+    	// se ele acabou uma mao e tem outra mao para jogar
+    	else if (!api.jogadorEhFinalizado() && api.maoEhFinalizado(mao)) {
     	    // procurando a outra mao
+            int vez = this.api.getVez();
+            int proximaMao = mao + 1;
             for (FrameJogador fj: this.frameJogador) {
                 // procura por um framejogador com mao diferente de 0
-                if (fj.idMao != 0 && fj.idJogador == api.getVez()) {
+                if (fj.idMao == proximaMao && fj.idJogador == vez) {
                     fj.iniciarRodada();     // libera os botoes para jogada
+                    return;
                 }
             }
         }
@@ -99,12 +107,12 @@ public class Controller {
     }
 
     public void fecharPartida() {
-    	int i;
-    	int quantidadeJogadores = this.frameJogador.size();
-    	for (i=0; i<quantidadeJogadores;i++) {
-    	    this.api.removeObservador(this.frameJogador.get(i));
-    		this.frameJogador.get(i).fechar();
-    	}
+    	for (FrameJogador fj: frameJogador) {
+    	    this.api.removeObservador(fj);
+    	    fj.fechar();
+        }
+    	this.frameJogador = null;
+
     	this.api.removeObservador(this.frameDealer);
         this.frameDealer.fechar();
         this.frameDealer = null;
