@@ -183,7 +183,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
      */
     JLabel criaLabel(int nome, int posicaoX, int posicaoY, int largura) {
         JLabel jl = new JLabel(Integer.toString(nome));
-        jl.setOpaque(false);
+        // jl.setOpaque(false);
         jl.setHorizontalTextPosition(JLabel.CENTER);
         jl.setFont(new Font("Serif", Font.BOLD, 18));
         jl.setBounds(posicaoX, posicaoY , largura, 20);
@@ -314,6 +314,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     public void iniciarAposta() {
         labelAposta.setVisible(true);
         botaoFinalizarAposta.setVisible(true);
+        repaint();
     }
     
     /**
@@ -322,7 +323,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     public void finalizarAposta() {
     	//this.controller.finalizarAposta();
     	botaoFinalizarAposta.setVisible(false);
-    	//repaint();
+    	repaint();
     }
 
     /**
@@ -357,7 +358,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         	this.alteraEstadoBotao("DOUBLE", o.getPodeDouble(idJogador, idMao));
         	this.alteraEstadoBotao("SURRENDER", o.getPodeSurrender(idJogador, idMao));
         	this.alteraEstadoBotao("SPLIT", o.getPodeSplit(idJogador, idMao));
-        	repaint(); // eu nao tenho certeza se precisa chamar o repaint aqui nao
+        	repaint();
     	}
     	else if (not == NotificacaoAPI.JogadorResultado) {
     	    String resultado = o.getResultado(idJogador, idMao);
