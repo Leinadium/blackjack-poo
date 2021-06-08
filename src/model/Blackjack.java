@@ -5,7 +5,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.HashMap;
 
 import controller.observer.*;
 import model.cartas.*;
@@ -22,9 +24,11 @@ public class Blackjack implements ObservadoAPI {
 	// Objetos essenciais
 	Baralho baralho;
 	Dealer dealer;
-	List<Jogador> jogadores;
+	// List<Jogador> jogadores;
+	HashMap<Integer, Jogador> jogadores;
 	int qtdJogadores;
 	protected int vez;
+	protected Iterator<Integer> iterVez;
 	protected boolean jogadoresFinalizados;
 
     /**
@@ -50,13 +54,44 @@ public class Blackjack implements ObservadoAPI {
 		int i;
 		this.baralho = new Baralho(4);
 		this.dealer = new Dealer();
-		this.jogadores = new ArrayList<>();
+		this.jogadores = new HashMap<>();
 		this.qtdJogadores = quantidadeJogadores;
+
+		// os jogadores sao adicionados no hashmap usando um id iniciado em 0
+		// pois anteriormente os jogadores estavam em um arraylist. Assim, adaptar
+		// de arraylist para hashmap foi mais facil e com menos problemas
+
 		for (i = 0; i < quantidadeJogadores; i++) {
-			jogadores.add(new Jogador(i));
+			jogadores.put(i, new Jogador(i));
 		}
-		vez = 0;
+		iterVez = this.jogadores.keySet().iterator();
+		vez = iterVez.next();
 		jogadoresFinalizados = false;
+	}
+
+	/**
+	 * Remove os jogadores que nao conseguem mais apostar,
+	 * ou seja, estao fora do jogo.
+	 * Notifica a parte grafica caso remove alguem
+	 */
+	public ArrayList<Integer> removerJogadoresFalidos() {
+		ArrayList<Integer> temp = new ArrayList<>();
+		for (int id: jogadores.keySet()) {
+			Jogador jog = jogadores.get(id);
+			if (jog.checaFalencia()) {
+				temp.add(id);
+				// o comando abaixo causa ConcurrentModificationException
+				// jogadores.remove(id);
+			}
+		}
+		// se alguem faliu, remove e notifica
+		if (temp.size() > 0) {
+			for (int id: temp) {
+				jogadores.remove(id);
+			}
+			return temp;
+		}
+		return null;
 	}
 
 	/**
@@ -65,7 +100,7 @@ public class Blackjack implements ObservadoAPI {
 	 * Também embaralha o baralho se precisar
 	 */
 	public void reiniciarJogadores() {
-    	for (Jogador jog: this.jogadores) {
+    	for (Jogador jog: this.jogadores.values()) {
     		jog.iniciaJogada();
 		}
     	notificarTodos(NotificacaoAPI.JogadorAposta);
@@ -101,9 +136,11 @@ public class Blackjack implements ObservadoAPI {
 	 * Se todos jogaram, define jogadoresFinalizados como true
 	 */
 	public void passaVez() {
-    	vez++;
-    	if (vez == jogadores.size()) {
-    		jogadoresFinalizados = true;
+		if (!iterVez.hasNext()) {
+			jogadoresFinalizados = true;
+		}
+		else {
+			vez = iterVez.next();
 		}
 	}
 
@@ -111,11 +148,19 @@ public class Blackjack implements ObservadoAPI {
      * Reseta a vez e os jogadoresFinalizados
      */
 	public void resetVez() {
-	    this.vez = 0;
+		iterVez = this.jogadores.keySet().iterator();
+	    this.vez = iterVez.next();
 	    this.jogadoresFinalizados = false;
     }
 
-    /**
+	/**
+	 * Retorna se ainda tem algum jogador vivo para jogar
+	 */
+	public boolean temJogadores() {
+		return this.jogadores.size() > 0;
+	}
+
+	/**
      * Define a vez de um jogador
      * @param vez a ser definida
      */
@@ -335,7 +380,7 @@ public class Blackjack implements ObservadoAPI {
 	private void distribuiDinheiro(Jogador jog, Resultado res) { distribuiDinheiro(jog, res, 0); }
 
 	public void distribuiDinheiroJogadores() {
-		for (Jogador jog: this.jogadores) {
+		for (Jogador jog: this.jogadores.values()) {
 			// distribui para o resultado dele
 			distribuiDinheiro(jog, verificaGanhador(jog, this.dealer));
 			// distribui para a segunda mao, caso tenha
@@ -502,7 +547,7 @@ public class Blackjack implements ObservadoAPI {
 		return notificacaoAPI;
 	}
 	public void notificarTodos(NotificacaoAPI n) {
-    	if (listaObservadores == null) { return; }
+    	if (listaObservadores == null || listaObservadores.size() == 0) { return; }
     	this.notificacaoAPI = n;
     	for (ObservadorAPI o: listaObservadores) { o.notificar(this); }
     }

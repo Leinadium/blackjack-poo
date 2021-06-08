@@ -193,7 +193,7 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     }
 
     /**
-     * Fecha a tela do jogador
+     * Fecha a tela do jogador, removendo ela da memoria tambem
      */
     public void fechar() {
         setVisible(false);
@@ -368,7 +368,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     	    System.out.println(idJogador + "[" + idMao + "]: " + resultado);
     	    repaint();
         }
-
     }
 
     /**

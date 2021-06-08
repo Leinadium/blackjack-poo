@@ -117,7 +117,7 @@ class Jogador {
      * @return true se o jogador tiver falido
      */
     public boolean checaFalencia() {
-        return (this.finalizado && this.dinheiro <= 0); //acho que aqui eh menor ou igual porque se ele finalizou entao ele nao pode apostar mais pq faliu
+        return this.dinheiro < 20;
     }
     /**
      * Verifica se uma aposta pode ser feita

@@ -7,4 +7,5 @@ public enum NotificacaoAPI {
     JogadorAposta,      // A aposta de algum jogador foi modificada
     JogadorAcao,        // A condicao de alguma acao do jogador foi modificada
     JogadorResultado,   // O resultado do jogador (se ganhou, perdeu, empatou)
+    JogadorFalido,      // Avisa que alguem faliu
 }

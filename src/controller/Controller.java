@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import views.*;
 import model.Blackjack;
@@ -10,7 +11,8 @@ public class Controller {
     FrameInicial frameInicial;
     FrameDealer frameDealer;
     FrameNomes frameNomes;
-    ArrayList<FrameJogador> frameJogador;
+    // ArrayList<FrameJogador> frameJogador;
+    HashMap<Integer, FrameJogador> frameJogador;
     Blackjack api;
     Modo modo;
 
@@ -45,13 +47,11 @@ public class Controller {
     	// cria nova janela
         int idNovaMao = this.api.nivelSplitJogador();
         FrameJogador novoFrame = new FrameJogador(this, numJogadorString, idJogador, idNovaMao);
-    	this.frameJogador.add(novoFrame);
+    	this.frameJogador.put((idJogador + 1) * 100 + idNovaMao, novoFrame);
         this.api.registraObservador(novoFrame);
         this.api.distribuiCartasJogador(true);      // chamada somente para atualizar as cartas
 
         // novoFrame.iniciarRodada();   // so inicia depois que a outra mao finalizar
-
-
     }
     
     public void fazerJogada(String acao, int mao) {
@@ -71,7 +71,7 @@ public class Controller {
     	    // procurando a outra mao
             int vez = this.api.getVez();
             int proximaMao = mao + 1;
-            for (FrameJogador fj: this.frameJogador) {
+            for (FrameJogador fj: this.frameJogador.values()) {
                 // procura por um framejogador com mao diferente de 0
                 if (fj.idMao == proximaMao && fj.idJogador == vez) {
                     fj.iniciarRodada();     // libera os botoes para jogada
@@ -107,7 +107,7 @@ public class Controller {
     }
 
     public void fecharPartida() {
-    	for (FrameJogador fj: frameJogador) {
+    	for (FrameJogador fj: frameJogador.values()) {
     	    this.api.removeObservador(fj);
     	    fj.fechar();
         }
@@ -196,7 +196,7 @@ public class Controller {
         this.api.iniciarBlackjack(quantidadeJogadores);
 
         // inicia os frames dos jogadores
-        this.frameJogador = new ArrayList<>();
+        this.frameJogador = new HashMap<>();
         for (int i = 0; i < quantidadeJogadores; i++) {
             String nomeJogador;
             if (nomes != null) {
@@ -204,7 +204,7 @@ public class Controller {
             } else {
                 nomeJogador = String.format("Jogador %d", i + 1);
             }
-            this.frameJogador.add(new FrameJogador(this, nomeJogador, i, 0));
+            this.frameJogador.put(i, new FrameJogador(this, nomeJogador, i, 0));
         }
         // inicia o frame do dealer
         this.frameDealer = new FrameDealer(this);
@@ -233,8 +233,20 @@ public class Controller {
         }
 
         this.api.reiniciarJogadores();
-        this.frameJogador.get(this.api.getVez()).iniciarAposta();
+        if (this.frameJogador != null) {    // caso tudo tenha sido fechado, pois os jogadores faliram
+            this.frameJogador.get(this.api.getVez()).iniciarAposta();
+        }
         this.modo = Modo.APOSTA;
+    }
+
+    /**
+     * Remove o frame daquele jogador
+     */
+    private void removerJogador(int idJogador) {
+        FrameJogador f = this.frameJogador.get(idJogador);
+        this.api.removeObservador(f);
+        f.fechar();
+        this.frameJogador.remove(idJogador);
     }
 
     public void iniciarRodada() {
@@ -255,21 +267,32 @@ public class Controller {
     }
 
     public void reiniciarRodada() {
-        ArrayList<FrameJogador> copia = new ArrayList<>(frameJogador);
+        HashMap<Integer, FrameJogador> copia = new HashMap<>(frameJogador);
 
         // desliga as maos de split, e nao copia as maos de split para a copia
-        for (FrameJogador fj: this.frameJogador) {
+        for (int id: this.frameJogador.keySet()) {
+            FrameJogador fj = this.frameJogador.get(id);
             if (fj.idMao != 0) {
                 fj.fechar();    // fecha a janela
                 this.api.removeObservador(fj);
             } else {
                 fj.reiniciarJogador();  // reinicia as propriedades
-                copia.add(fj);
+                copia.put(id, fj);
             }
         }
-
         // reescrevendo a lista de frameJogadores, agora as maos split sumiram
         this.frameJogador = copia;
+
+        // removendo jogadores que faliram
+        ArrayList<Integer> temp = this.api.removerJogadoresFalidos();
+        if (temp != null) {
+            for (int id: temp) { removerJogador(id); }
+        }
+        // verificando se sobrou alguem
+        if (!this.api.temJogadores()) {
+            this.fecharPartida();
+            return;
+        }
 
         this.api.reiniciarDealer();
         this.frameDealer.reiniciarDealer();
