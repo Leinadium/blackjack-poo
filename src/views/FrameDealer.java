@@ -160,6 +160,16 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         setVisible(false);
         dispose();
     }
+    /**
+     * Altera o estado do botao salvar, para disponivel ou nao disponivel.
+     * Ele eh inicializado como indisponivel. Quando uma rodada eh iniciada, ele passa a ser disponivel.
+     * Quando o jogador faz uma jogada, o botao fica indisponivel.
+     * Ele so volta a ficar disponivel quando a vez eh passada.
+     */
+    public void alteraEstadoBotaoSalvar(boolean estado) {
+    	this.botaoSalvar.setEnabled(estado);
+    }
+    
 
     /**
      * Implementacao do Listener de acoes
@@ -252,6 +262,9 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         getContentPane().add(botaoEncerrar);
         getContentPane().add(botaoNovaRodada);
         getContentPane().add(botaoSalvar);
+        
+        // botao de salvar inicia desativado
+        botaoSalvar.setEnabled(false);
     }
 
     /**

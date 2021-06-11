@@ -25,7 +25,7 @@ public class Controller {
     
     public void passaVez() {
         api.passaVez();
-
+        this.frameDealer.alteraEstadoBotaoSalvar(true);
         if (api.getJogadoresFinalizados()) {
             finalizarRodada();
 
@@ -56,7 +56,7 @@ public class Controller {
     
     public void fazerJogada(String acao, int mao) {
     	this.api.fazerJogada(acao, mao);
-
+    	this.frameDealer.alteraEstadoBotaoSalvar(false);
     	// se tiver que criar uma nova janela
         if (acao.equals("SPLIT")) {
             acionaSplit();
@@ -282,6 +282,8 @@ public class Controller {
         this.api.iniciarRodada();
         this.api.distribuiCartasDealer();
         this.api.distribuiCartasJogador(false);
+        
+        this.frameDealer.alteraEstadoBotaoSalvar(true);
 
         if (this.api.jogadorEhFinalizado()) {   // caso ele tenha um blackjack
             passaVez();
@@ -324,6 +326,7 @@ public class Controller {
     public void finalizarRodada() {
         System.out.println("TODOS OS JOGADORES JOGARAM");
         this.modo = Modo.FINAL;
+        this.frameDealer.alteraEstadoBotaoSalvar(false);
         this.api.fazerJogadaDealer();   // faz a jogada e notifica o(s) resultado(s)
 
         // distribui o dinheiro
