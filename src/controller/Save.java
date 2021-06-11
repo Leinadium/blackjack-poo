@@ -1,10 +1,17 @@
+/*
+  Daniel Guimaraes - 1910462
+  Mariana Barreto - 1820673
+ */
+
 package controller;
 
 import java.io.*;
 import java.util.*;
 
 
-
+/**
+ * Classe para o salvamento de uma partida
+ */
 public class Save {
 	public static void main (String[] args) throws IOException{
 		PrintWriter out = null;

@@ -1,3 +1,8 @@
+/*
+  Daniel Guimaraes - 1910462
+  Mariana Barreto - 1820673
+ */
+
 package controller;
 
 import java.io.IOException;
@@ -7,6 +12,10 @@ import java.util.HashMap;
 import views.*;
 import model.Blackjack;
 
+/**
+ * Classe que controla o jogo. Manipula os frames e faz as chamadas para API do model.
+ * Ao instanciar a classe, a tela inicial é aberta automaticamente.
+ */
 public class Controller {
     FrameInicial frameInicial;
     FrameDealer frameDealer;
@@ -340,6 +349,9 @@ public class Controller {
     }
 }
 
+/**
+ * Enumerador para os diferentes modo/estágios de uma rodada.
+ */
 enum Modo {
     INICIO,     // esperando ele clicar em inicar rodada
     APOSTA,     // os jogadores apostando

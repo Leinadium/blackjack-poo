@@ -1,7 +1,15 @@
+/*
+  Daniel Guimaraes - 1910462
+  Mariana Barreto - 1820673
+ */
+
 package controller.observer;
 
 import java.util.ArrayList;
 
+/**
+ * Interface para a classe sendo observada do padrão Observer.
+ */
 public interface ObservadoAPI {
     void registraObservador(ObservadorAPI o);   // registra um observador
     void removeObservador(ObservadorAPI o);     // remove um observador

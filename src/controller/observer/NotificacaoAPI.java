@@ -1,5 +1,13 @@
+/*
+  Daniel Guimaraes - 1910462
+  Mariana Barreto - 1820673
+ */
+
 package controller.observer;
 
+/**
+ * Enumerador para as notificacoes dos observadores
+ */
 public enum NotificacaoAPI {
     DealerCartas,       // O dealer recebeu alguma carta
     JogadorCartas,      // Algum jogador recebeu alguma carta
