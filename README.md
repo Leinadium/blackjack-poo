@@ -1,38 +1,46 @@
 # Blackjack - INF1636 - 2021.1
 
+O projeto do Blackjack foi o projeto desenvolvido para a matéria de *INF1636 - Programação Orientada a Objetos* da PUC-Rio
+
+Esse projeto consiste em um jogo funcional de Blackjack, desenvolvido em Java, seguindo o modelo de desenvolvimento MVC.
+
 **Autores:** 
 
 * Daniel Guimarães - 1910462
 
 * Mariana Barreto - 1820673
 
-## Primeira Iteração
+## Execução
 
-### Código
+Para executar o programa, execute o método *main* da classe *Main* , dentro do pacote *src.main*.
 
-Os arquivos de código estão na pasta ```/src```. 
+Para executar os testes, utilize o Suite de testes, em ```test.model.SuiteTest```.
 
-Dentro da pasta contém o componente **model**, que possui as regras e funcionalidades das principais classes do Blackjack,
-como *Dealer*, *Jogador*, *Cartas*, *Ficha*, *Mão*, etc.
+## Código
 
-Além disso, há uma classe *API*, que a princípio seria a classe wrapper para que o componente futuro *Controller* usaria
-para acessar as classes protegidas. Porém, ele é só um protótipo, não foi terminado nem muito implementado.
+O código foi desenvolvido na arquitetura **MVC**, ou *Model-View-Controller*:
 
-Além do **model**, há um pacote **main** que possui uma classe *Main*, que foi usada para rápidos testes de componentes.
-Neste momento, o último teste foi para verificar se o baralho foi iniciado corretamente.
+* **Model**: Pacote contendo as "regras" do jogo, ou seja toda a funcionalidade do jogo, dos jogadores, do dealer,
+das fichas, das cartas, etc. O pacote em si não executa nada.
+  
+* **View**: Pacote contendo a parte gráfica do jogo.
 
-### Testes
+* **Controller**: Pacote contendo a parte controladora do jogo. Este pacote chama as regras para saber como jogar, o que
+acontece durante a partida, e controla a parte gráfica.
+  
 
-Os arquivos para teste estão na pasta ```/test```.
+Além disso, também foram utilizadas as seguintes arquiteturas:
 
-Eles seguem a mesma estrutura da pasta de códigos, porém com os testes.
+* *Facade*: Para evitar o acesso direto às classes do Model, foi desenvolvido uma "api" para poder controlar essas classes,
+sem causar problemas. O controller chama essa "api", e a "api" chama essas classes privadas.
+  
+* *Singleton*: Essa "api" é uma classe que pode ser instanciada uma única vez.
 
-Para a entrega, há dois testes que ainda não foram completados com sucesso, mas há o planejamento de resolver os erros.
+* *Observer*: As classes da parte gráfica se registram na "api" para serem notificadas cada vez que há alguma atualização
+nas regras do jogo (por exemplo, um jogador recebeu uma carta na sua mão).
 
-### Documentação
 
-Grande parte da documentação está nas próprias classes. Há dois documentos ```docs/funcionalidades.md```
-e ```docs/regras.md``` que servem de documentação para o projeto, porém ambos estão desatualizados.
+A relação entre as classes foi representada de uma maneira simples no arquivo ```docs/diagrama.png```
 
 ## Ferramentas utilizadas
 
@@ -43,3 +51,7 @@ e ```docs/regras.md``` que servem de documentação para o projeto, porém ambos
 * [Git Bash](https://git-scm.com/downloads) e [Github Desktop]() para compartilhamento e versionamento do projeto
 
 * [Junit 4](https://junit.org/junit4/) para framework de testes
+
+* [Java Swing](https://docs.oracle.com/javase/7/docs/api/javax/swing/package-summary.html) para framework gráfico.
+
+* [Inkscape](https://inkscape.org/pt-br/) para a criação das imagens.

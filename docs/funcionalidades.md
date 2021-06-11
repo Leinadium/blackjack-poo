@@ -1,3 +1,5 @@
+(depreciated)
+
 # Funcionalidades previstas
 
 *Ultima atualizacao:* 26/04
