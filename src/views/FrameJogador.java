@@ -244,7 +244,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         } else if (obj.equals(botaoFinalizarAposta)) {
             this.controller.finalizarAposta();
         	this.finalizarAposta();
-        	this.controller.finalizarAposta();
         } else {
             System.out.println("AINDA NAO IMPLEMENTADO");
         }
