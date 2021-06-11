@@ -131,32 +131,53 @@ public class Controller {
     	int idJogador, dinheiro;
     	int aposta;
     	String naipe, nome;
+    	String[] nomes;
     	try {
 			ArrayList<String> partida_salva = controller.Load.main(null);
 			quantidadeJogadores = Integer.parseInt(partida_salva.get(0));
 			vez = Integer.parseInt(partida_salva.get(1));
-			aposta = Integer.parseInt(partida_salva.get(2));
-			this.iniciarPartida(quantidadeJogadores);
+			this.frameNomes = new FrameNomes(this, quantidadeJogadores);
+			nomes = new String[quantidadeJogadores];
+			for (j = 2; j < partida_salva.size(); j++) {
+				String[] lista_elementos = partida_salva.get(j).split(";");
+				if ((lista_elementos[0]).equals("Nome")) {
+					idJogador = Integer.parseInt(lista_elementos[1]);
+					nomes[idJogador] = lista_elementos[2];
+				}
+			}
+			this.iniciarPartida(quantidadeJogadores, nomes);
 			this.api.defineVez(vez); // pode mexer direto mas achei melhor nao
 			this.frameJogador.get(this.api.getVez()).iniciarAposta();
 			this.modo = Modo.APOSTA;
-			this.api.defineAposta(aposta);
-			this.frameJogador.get(this.api.getVez()).finalizarAposta();
+	        for (j = 2; j < partida_salva.size(); j++) {
+	        	// nao consegui pensar em um nome melhor do que lista_elementos
+	        	String[] lista_elementos = partida_salva.get(j).split(";");
+	        	if ((lista_elementos[0]).equals("Aposta")) {
+	        		idJogador = Integer.parseInt(lista_elementos[1]);
+	        		aposta = Integer.parseInt(lista_elementos[2]);
+	        		this.api.defineAposta(idJogador, aposta);
+	        	}
+	        }
+	        
 			// ainda tem que passar a aposta para o lado
 	        this.frameJogador.get(api.getVez()).iniciarRodada();  // inicia o primeiro
+	        
 	        this.modo = Modo.JOGANDO;
 	        // o botao ainda ta aparecendo como disabled pros outros jogadores
 	        for (i = 0; i < quantidadeJogadores; i++) {
 	        	this.frameJogador.get(i).finalizarAposta();
 	        }
-	        for (j = 3; j < partida_salva.size(); j++) {
+	        
+	        for (j = 2; j < partida_salva.size(); j++) {
 	        	// nao consegui pensar em um nome melhor do que lista_elementos
 	        	String[] lista_elementos = partida_salva.get(j).split(";");
+	        	  	
 	        	if ((lista_elementos[0]).equals("Dinheiro")) {
 	        		idJogador = Integer.parseInt(lista_elementos[1]);
 	        		dinheiro = Integer.parseInt(lista_elementos[2]);
 	        		this.api.defineDinheiro(idJogador, dinheiro);
 	        	}
+	        	
 	        	if ((lista_elementos[0]).equals("Carta")) {
 	        		idJogador = Integer.parseInt(lista_elementos[2]);
 	        		nome = (lista_elementos[3].split("-"))[0];
@@ -168,6 +189,7 @@ public class Controller {
 	        			this.api.distribuiCartaJogador(idJogador, nome, naipe);
 	        		}
 	        	}
+	        	
 	        }
 			
 		} catch (IOException e) {

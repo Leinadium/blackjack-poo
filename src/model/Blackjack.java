@@ -168,11 +168,15 @@ public class Blackjack implements ObservadoAPI {
 	    this.vez = vez;
     }
 
-	public void defineAposta(int valor) {
-		int i;
-		List<Ficha> lista_fichas = Ficha.calculaFicha(valor);
+	public void defineAposta(int idJogador, int aposta) {
+		int i, valor;
+		Jogador jog = this.jogadores.get(idJogador);
+		List<Ficha> lista_fichas = Ficha.calculaFicha(aposta);
 		for (i = 0; i < lista_fichas.size(); i++) {
-			this.aumentaAposta(lista_fichas.get(i).valor);
+			valor = lista_fichas.get(i).valor;
+			Ficha f = new Ficha(valor);
+			jog.aumentarAposta(f);
+			notificarTodos(NotificacaoAPI.JogadorAposta);
 		}
 	}
 	

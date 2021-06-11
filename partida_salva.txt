@@ -1,6 +1,9 @@
 2
 0
-30
+Nome;0;Daniel
+Nome;1;Mariana
+Aposta;0;30
+Aposta;1;20
 Carta;0;4;AS-PAUS 
 Carta;1;4;CINCO-COPAS
 Carta;2;4;DOIS-OUROS
