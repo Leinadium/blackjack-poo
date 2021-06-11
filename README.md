@@ -54,4 +54,4 @@ A relação entre as classes foi representada de uma maneira simples no arquivo 
 
 * [Java Swing](https://docs.oracle.com/javase/7/docs/api/javax/swing/package-summary.html) para framework gráfico.
 
-* [Inkscape](https://inkscape.org/pt-br/) para a criação das imagens.
+* [Inkscape](https://inkscape.org/pt-br/) para a criação das imagens das fichas.
