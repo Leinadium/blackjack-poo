@@ -249,6 +249,7 @@ public class Controller {
 	        
 			//Inicia a rodada
 	        this.frameDealer.alteraEstadoBotaoSalvar(true);
+	        this.frameDealer.desativaBotaoNovaRodada();
 	        this.frameJogador.get(api.getVez()).iniciarRodada();  // inicia o primeiro
 	        this.modo = Modo.JOGANDO;
 	        
@@ -266,6 +267,7 @@ public class Controller {
 								novoFrameTitulo += " " + String.valueOf(idMao);
 							}
 							FrameJogador novoFrame = new FrameJogador(this, novoFrameTitulo, idJogador, idMao);
+							this.frameJogador.put((idJogador + 1) * 100 + idMao, novoFrame);
 							this.api.registraObservador(novoFrame);
 							novoFrame.insereBotoes();
 							// adiciona nova mao no models

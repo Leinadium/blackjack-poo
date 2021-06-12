@@ -189,6 +189,10 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         }
         else { this.controller.salvarPartida(); }
     }
+    
+    public void desativaBotaoNovaRodada() {
+    	botaoNovaRodada.setEnabled(false);
+    }
 
     /**
      * Implemlentacao de pressionamento de mouse para poder aumentar a aposta.
