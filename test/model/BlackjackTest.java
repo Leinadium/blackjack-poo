@@ -98,14 +98,14 @@ public class BlackjackTest {
 	public final void testDefineVez() {
 		Blackjack api = apiGenerica(2);
 		api.passaVez();
-		api.defineAposta(0);
+		api.defineAposta(api.getVez(), 0);
 		assertEquals("A vez nao foi definida corretamente", 0, api.getVez());
 	}
 
 	@Test
 	public final void testDefineAposta() {
 		Blackjack api = apiGenerica(1);
-		api.defineAposta(30);
+		api.defineAposta(0, 30);
 		assertEquals("A aposta nao foi definida corretamente", 30, api.getValorApostaJogador(api.getVez(), 0));
 	}
 

@@ -366,6 +366,15 @@ class Jogador {
     		throw new Exception("O jogador nao possui dinheiro para fazer double");
     	}
     }
+    
+    public void criaNovaMao() {
+    	Mao novaMao = mao.criaNovaMao();
+    	if (this.nivelSplit() == 0) {
+    		this.maoSplit = novaMao;
+    	} else {
+    		this.maoSplit2 = novaMao;
+    	}
+    }
 
     /**
      * Faz a jogada de SPLIT para aquela mao:
@@ -388,8 +397,8 @@ class Jogador {
         	throw new Exception("O jogador nao possui dinheiro");
         }
 
-        // this.fazerHit(b, m);   // adicionando uma carta em cada mao
-        m.ganharCarta(new Carta(Cor.PRETO, Nome.REI, Naipe.ESPADAS));
+        this.fazerHit(b, m);   // adicionando uma carta em cada mao
+        //m.ganharCarta(new Carta(Cor.PRETO, Nome.REI, Naipe.ESPADAS)); -- para testes do segundo split
         this.fazerHit(b, novaMao);
 
         // caso especial, se ele splitou um par de ases

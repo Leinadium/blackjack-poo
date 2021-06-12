@@ -26,7 +26,7 @@ public class Blackjack implements ObservadoAPI {
 	Dealer dealer;
 	// List<Jogador> jogadores;
 	HashMap<Integer, Jogador> jogadores;
-	int qtdJogadores;
+	public int qtdJogadores;
 	protected int vez;
 	protected Iterator<Integer> iterVez;
 	protected boolean jogadoresFinalizados;
@@ -167,7 +167,37 @@ public class Blackjack implements ObservadoAPI {
 	public void defineVez(int vez) {
 	    this.vez = vez;
     }
+	
+	/**
+	 * Retorna quantas maos um jogador tem, similar a nivelSplit, porem vai de 0 a 3.
+	 * @param id do jogador
+	 */
+	public int getQuantidadeMaos(int idJogador) {
+		Jogador jog = this.jogadores.get(idJogador);
+		if (jog.mao == null) {
+			return 0;
+		}
+		else if (jog.maoSplit == null) {
+			return 1;
+		}
+		else if (jog.maoSplit2 == null) {
+			return 2;
+		}
+		return 3;
+	}
+	
+	
+	public void adicionaMaoJogador(int idJogador) {
+		Jogador jog = this.jogadores.get(idJogador);
+		jog.criaNovaMao();
+	}
+	
 
+	/**
+     * Define a aposta de um jogador
+     * @param idJogador
+     * @param valor atualizado de aposta
+     */
 	public void defineAposta(int idJogador, int aposta) {
 		int i, valor;
 		Jogador jog = this.jogadores.get(idJogador);
@@ -241,7 +271,9 @@ public class Blackjack implements ObservadoAPI {
 	public void distribuiCartaDealer(String nome_string, String naipe_string) {
 		Naipe naipe_carta = Carta.toNaipe(naipe_string);
 		Nome nome_carta = Carta.toNome(nome_string);
-		this.dealer.mao.ganharCarta(new Carta(Carta.retornaCor(naipe_carta), nome_carta, naipe_carta));
+		Carta carta = new Carta(Carta.retornaCor(naipe_carta), nome_carta, naipe_carta);
+		this.dealer.mao.ganharCarta(carta);
+		this.baralho.removerCarta(carta);
 		notificarTodos(NotificacaoAPI.DealerCartas);
 	}
 
@@ -254,12 +286,12 @@ public class Blackjack implements ObservadoAPI {
 		int numJogador = vez;
 		if (!split) {
 			Jogador jog = this.jogadores.get(numJogador);
-	    	// jog.mao.ganharCarta(baralho.pop());
-			// jog.mao.ganharCarta(baralho.pop());
+	    	jog.mao.ganharCarta(baralho.pop());
+			jog.mao.ganharCarta(baralho.pop());
 
 			// para forcar alguma carta, de teste
-			jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.COPAS));
-			jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.OUROS));
+			//jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.COPAS));
+			//jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.OUROS));
 
 			// vejo se fez um blackjack
 			jog.finalizado = jog.mao.finalizado;
@@ -276,16 +308,24 @@ public class Blackjack implements ObservadoAPI {
 	/**
 	 * Distribui uma cartas específica para um jogador.
 	 */
-	public void distribuiCartaJogador(int idJogador, String nome_string, String naipe_string) {
+	public void distribuiCartaJogador(int idJogador, int idMao, String nome_string, String naipe_string) {
 		Jogador jog = this.jogadores.get(idJogador);
 		Naipe naipe_carta = Carta.toNaipe(naipe_string);
 		Nome nome_carta = Carta.toNome(nome_string);
 		Carta carta = new Carta(Carta.retornaCor(naipe_carta), nome_carta, naipe_carta);
-		jog.mao.ganharCarta(carta);
-		
-		// ve se fez um blackjack
-		jog.finalizado = jog.mao.finalizado;
-		
+		if (idMao == 0) {
+			jog.mao.ganharCarta(carta);
+			jog.finalizado = jog.mao.finalizado;
+		}
+		else if (idMao == 1) {
+			jog.maoSplit.ganharCarta(carta);
+			jog.finalizado = jog.maoSplit.finalizado;
+		}
+		else {
+			jog.maoSplit2.ganharCarta(carta);
+			jog.finalizado = jog.maoSplit2.finalizado;
+		}
+		this.baralho.removerCarta(carta);
 		notificarTodos(NotificacaoAPI.JogadorAcao); // as cartas acabam influenciando em quais acoes estao disponiveis
 		notificarTodos(NotificacaoAPI.JogadorCartas);
 	}
@@ -570,11 +610,14 @@ public class Blackjack implements ObservadoAPI {
 	public int getValorJogador(int idJogador, int mao) {
 		return this.jogadores.get(idJogador).getMaoFromId(mao).soma;
 	}
+	
+	public int getApostaMao (int idJogador, int idMao) {
+		return this.jogadores.get(idJogador).getMaoFromId(idMao).aposta;
+	}	
 
 	public ArrayList<Integer> getApostaJogador(int idJogador, int mao) {
 		Jogador jog = this.jogadores.get(idJogador);
 		Mao m = jog.getMaoFromId(mao);
-
 		// inicia a lista de retorno
     	ArrayList<Integer> ret = new ArrayList<>();
 		if (jog.fichasAposta == null) {
@@ -594,6 +637,7 @@ public class Blackjack implements ObservadoAPI {
 		}
 		return ret;
 	}
+
 	public int getDinheiroJogador(int idJogador) {
     	return this.jogadores.get(idJogador).dinheiro;
 	}

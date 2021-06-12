@@ -102,6 +102,15 @@ class Mao {
 		atualizaQuebrado(); //tem que ver isso tambem porque se quebrar mas pegar as cartas pelo baralho.pop vai dar problema
 		atualizaBlackjack();
 	}
+	
+	public Mao criaNovaMao(){
+		Mao novaMao = new Mao();
+		novaMao.aposta = this.aposta;
+		novaMao.podeBlackjack = false;
+		this.podeBlackjack = false;
+		return novaMao;
+	}
+
 	/**
 	 * Faz o split da mao.
 	 * @return Mao a nova mao
@@ -109,9 +118,9 @@ class Mao {
 	 */
 	public Mao fazerSplit() throws IllegalStateException{
 		if (this.cartas.size() != 2) {throw new IllegalStateException("Nao possui duas cartas."); }
-		//if (!this.cartas.get(0).equals(this.cartas.get(1))) {
-			//throw new IllegalStateException("As duas cartas sao diferentes"); 
-		//} -- essa parte est� apenas comentada para testar a views
+		if (!this.cartas.get(0).equals(this.cartas.get(1))) {
+			throw new IllegalStateException("As duas cartas sao diferentes"); 
+		}
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
 		m.aposta = this.aposta;

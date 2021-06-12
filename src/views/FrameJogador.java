@@ -290,7 +290,8 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         getContentPane().add(botaoSplit);
         getContentPane().add(botaoFinalizarAposta);
     }
-
+    
+    
     /**
      * Muda os estados de todos os botoes de acao de jogaoda
      * @param estado true para deixar visivel, falso para esconder
@@ -303,6 +304,13 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         botaoSurrender.setVisible(estado);
         botaoSplit.setVisible(estado);
         repaint();
+    }
+    
+    /**
+     * Insere os botoes, utilizado apenas para o Split.
+     */
+    public void insereBotoes() {
+        this.mudarEstadoBotoes(true);
     }
 
     /**
