@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
@@ -37,7 +38,6 @@ class Ficha {
     }
 
     /**
-     * (depreciated)
      * Calcula uma combina��o de fichas que mais aproxima ao dinheiro desejado
      * @param dinheiro Dinheiro a ser tranformado em fichas
      * @param listaPossiveis Lista de fichas disponiveis
@@ -139,9 +139,37 @@ class Ficha {
         Ficha f = (Ficha) o;
         return (this.valor == f.valor);
     }
-    
-}
 
+    /**
+     * Converte uma lista de fichas em um array, para salvar
+     * @param lista Lista de Fichas
+     * @return Uma string contendo as informacoes das fichas
+     */
+    public static String toString(ArrayList<Ficha> lista) {
+        // cria uma lista temporaria de strings, para cada valor das fichas
+        String[] s = new String[lista.size()];
+        for (int i = 0; i < lista.size(); i ++) {
+            s[i] = String.valueOf(lista.get(i).valor);      // salva o valor da ficha
+        }
+
+        // juntando cada valor em uma so string
+        return String.join("-", s);
+    }
+
+    /**
+     * Converte uma string contendo as informacoes de uma lista de fichas em uma lista de fichas
+     * @param stringListaFichas String na forma "valor-valor-valor...valor"
+     * @return ArrayList contendo os objetos das fichas
+     */
+    public static ArrayList<Ficha> fromString(String stringListaFichas) {
+        String[] listaString = stringListaFichas.split("-");
+        ArrayList<Ficha> ret = new ArrayList<>();
+        for (String ficha: listaString) {
+            ret.add(new Ficha(Integer.parseInt(ficha)));
+        }
+        return ret;
+    }
+}
 
 // para a ordenacao da lista
 class SortByValorReverse implements Comparator<Ficha> {
