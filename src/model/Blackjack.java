@@ -185,29 +185,38 @@ public class Blackjack implements ObservadoAPI {
 		}
 		return 3;
 	}
-
-
-	public void adicionaMaoJogador(int idJogador) {
+	
+	public void adicionaMaoJogador(int idJogador, int idMao) {
 		Jogador jog = this.jogadores.get(idJogador);
-		jog.criaNovaMao();
+		jog.adicionaMao(idMao);
 	}
 
 
 	/**
-     * Define a aposta de um jogador
-     * @param idJogador
-     * @param valor atualizado de aposta
+     * Define a aposta de um jogador.
+     * A lista de fichas eh um atributo do jogador e representa em fichas a aposta da sua mao original.
+     * Caso a mao seja derivada de um split, o valor de sua aposta so pode ser diferente da mao original caso tenha sido feito um double.
+     * No caso em que o double eh feito, o atributo da mao chamado de apostaDobrada eh alterado para informar se a lista de fichas deve ser dobrada tambem ou nao.
+     * @param idJogador - id do jogador cuja aposta sera atualizada
+     * @param idMao - id da mao cuja aposta ser atualizada
+     * @param aposta - valor da aposta a ser atualizado
      */
-	public void defineAposta(int idJogador, int aposta) {
-		int i, valor;
+	public void defineAposta(int idJogador, int idMao, int aposta) {
+		int aposta_original;
 		Jogador jog = this.jogadores.get(idJogador);
-		List<Ficha> lista_fichas = Ficha.calculaFicha(aposta);
-		for (i = 0; i < lista_fichas.size(); i++) {
-			valor = lista_fichas.get(i).valor;
-			Ficha f = new Ficha(valor);
-			jog.aumentarAposta(f);
-			notificarTodos(NotificacaoAPI.JogadorAposta);
+		
+		this.jogadores.get(idJogador).adicionaApostaMao(idMao, aposta);
+		aposta_original = this.jogadores.get(idJogador).getMaoFromId(0).aposta;
+		
+		if (idMao == 0) {
+			List<Ficha> lista_fichas = Ficha.calculaFicha(aposta_original);
+			jog.fichasAposta = lista_fichas;
 		}
+		else if (aposta > aposta_original){
+			this.jogadores.get(idJogador).getMaoFromId(idMao).apostaDobrada = true;
+		}
+		
+		notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
 	
 	public void defineDinheiro(int numJogador, int dinheiro) {
@@ -499,6 +508,11 @@ public class Blackjack implements ObservadoAPI {
 		Mao m = jog.getMaoFromId(mao);
 		return jog.podeSplit(m);
     }
+    
+	public boolean getRendidoJogador(int idJogador) {
+		Jogador jog = this.jogadores.get(idJogador);
+		return jog.rendido;
+	}
     
     /* ==== FUNCOES QUE IMPLEMENTAM FUNCIONALIDADE DO JOGADOR ==== */
     

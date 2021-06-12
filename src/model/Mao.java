@@ -103,13 +103,6 @@ class Mao {
 		atualizaBlackjack();
 	}
 	
-	public Mao criaNovaMao(){
-		Mao novaMao = new Mao();
-		novaMao.aposta = this.aposta;
-		novaMao.podeBlackjack = false;
-		this.podeBlackjack = false;
-		return novaMao;
-	}
 
 	/**
 	 * Faz o split da mao.
@@ -146,4 +139,5 @@ class Mao {
 		}
 		return ret;
 	}
+	
 }

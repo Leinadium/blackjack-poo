@@ -152,7 +152,7 @@ public class Controller {
         		// salva a aposta de uma mao
         		linha = "Aposta";
         		linha += ";" + String.valueOf(idJogador);
-        		//linha += ";" + String.valueOf(idMao);
+        		linha += ";" + String.valueOf(idMao);
         		linha += ";" + String.valueOf(this.api.getApostaMao(idJogador, idMao));
         		linhas.add(linha);
         		listaCartas = this.api.getCartasJogador(idJogador, idMao);
@@ -166,10 +166,10 @@ public class Controller {
         		}
         	}
         	
-        	// salva quantas maos aquele jogador tem
+        	// salva quantos splits aquele jogador ja fez
         	linha = "Split";
         	linha += ";" + String.valueOf(idJogador);
-        	linha += ";" + String.valueOf(qtdMaos);
+        	linha += ";" + String.valueOf(qtdMaos-1);
         	linhas.add(linha);
         	
         	// salva qual o saldo de dinheiro daquele jogador
@@ -183,6 +183,12 @@ public class Controller {
         	linha += ";" + String.valueOf(idJogador);
         	linha += ";" + this.frameJogador.get(idJogador).nomeJogador;
         	linhas.add(linha);
+        	
+        	// salva se o jogador se rendeu ou nao
+        	linha = "Rendido";
+        	linha += ";" + String.valueOf(idJogador);
+        	linha += ";" + String.valueOf(this.api.getRendidoJogador(idJogador));
+        	linhas.add(linha);
         }
         
         
@@ -195,12 +201,12 @@ public class Controller {
 
     public void carregarPartida() {
     	int i, j, k, vez;
-    	int qtdJogadores, qtdMaos;
+    	int qtdJogadores, qtdSplits;
     	int idJogador, idMao;
     	int dinheiro, aposta;
     	String naipeCarta, nomeCarta;
     	String novoFrameTitulo;
-    	String[] listaNomes, elementosCarta;
+    	String[] listaNomes, elementosCarta, listaElementos;
     	try {
 			ArrayList<String> partida_salva = controller.Load.main(null);
 			qtdJogadores = Integer.parseInt(partida_salva.get(0));
@@ -208,7 +214,7 @@ public class Controller {
 			this.frameNomes = new FrameNomes(this, qtdJogadores);
 			listaNomes = new String[qtdJogadores];
 			for (j = 2; j < partida_salva.size(); j++) {
-				String[] listaElementos = partida_salva.get(j).split(";");
+				listaElementos = partida_salva.get(j).split(";");
 				if ((listaElementos[0]).equals("Nome")) {
 					idJogador = Integer.parseInt(listaElementos[1]);
 					listaNomes[idJogador] = listaElementos[2];
@@ -220,11 +226,14 @@ public class Controller {
 			this.modo = Modo.APOSTA;
 			
 	        for (j = 2; j < partida_salva.size(); j++) {
-	        	String[] listaElementos = partida_salva.get(j).split(";");
+	        	listaElementos = partida_salva.get(j).split(";");
 	        	if ((listaElementos[0]).equals("Aposta")) {
 	        		idJogador = Integer.parseInt(listaElementos[1]);
-	        		aposta = Integer.parseInt(listaElementos[2]);
-	        		this.api.defineAposta(idJogador, aposta);
+	        		idMao = Integer.parseInt(listaElementos[2]);
+	        		if (idMao == 0) {
+		        		aposta = Integer.parseInt(listaElementos[3]);
+		        		this.api.defineAposta(idJogador, idMao, aposta);
+	        		}
 	        	}
 	        }
 	        
@@ -233,35 +242,48 @@ public class Controller {
 	        this.frameJogador.get(api.getVez()).iniciarRodada();  // inicia o primeiro
 	        this.modo = Modo.JOGANDO;
 	        
-	        
 			for (j = 2; j < partida_salva.size(); j++) {
-				String[] listaElementos = partida_salva.get(j).split(";");
+				listaElementos = partida_salva.get(j).split(";");
 				if ((listaElementos[0]).equals("Split")) {
 					idJogador = Integer.parseInt(listaElementos[1]);
-					qtdMaos = Integer.parseInt(listaElementos[2]);
-					for (k = 0; k < qtdMaos-1; k++) {
-						// adiciona nova mao na views
-						novoFrameTitulo = listaNomes[idJogador] + " - " + "SPLIT"; 
-						if (k > 0) {
-							novoFrameTitulo += " " + String.valueOf(k+1);
+					qtdSplits = Integer.parseInt(listaElementos[2]);
+					System.out.println(qtdSplits);
+					if (qtdSplits >= 1) {
+						for (idMao = 1; idMao <= qtdSplits; idMao++) {
+							// adiciona nova mao na views
+							novoFrameTitulo = listaNomes[idJogador] + " - " + "SPLIT"; 
+							if (idMao > 1) {
+								novoFrameTitulo += " " + String.valueOf(idMao);
+							}
+							FrameJogador novoFrame = new FrameJogador(this, novoFrameTitulo, idJogador, idMao);
+							this.api.registraObservador(novoFrame);
+							novoFrame.insereBotoes();
+							// adiciona nova mao no models
+							this.api.adicionaMaoJogador(idJogador, idMao);
 						}
-						FrameJogador novoFrame = new FrameJogador(this, novoFrameTitulo, idJogador, k+1);
-						this.api.registraObservador(novoFrame);
-						novoFrame.insereBotoes();
-						// adiciona nova mao no models
-						this.api.adicionaMaoJogador(idJogador);
 					}
 				}
 			}
-	        
-	        
+			
+			
+	        for (j = 2; j < partida_salva.size(); j++) {
+	        	listaElementos = partida_salva.get(j).split(";");
+	        	if ((listaElementos[0]).equals("Aposta")) {
+	        		idJogador = Integer.parseInt(listaElementos[1]);
+	        		idMao = Integer.parseInt(listaElementos[2]);
+	        		if (idMao != 0) {
+		        		aposta = Integer.parseInt(listaElementos[3]);
+		        		this.api.defineAposta(idJogador, idMao, aposta);
+	        		}
+	        	}
+	        }
 	        
 	        for (i = 0; i < qtdJogadores; i++) {
 	        	this.frameJogador.get(i).finalizarAposta();
 	        }
 	        
 	        for (j = 2; j < partida_salva.size(); j++) {
-	        	String[] listaElementos = partida_salva.get(j).split(";");
+	        	listaElementos = partida_salva.get(j).split(";");
 	        	  	
 	        	if ((listaElementos[0]).equals("Dinheiro")) {
 	        		idJogador = Integer.parseInt(listaElementos[1]);

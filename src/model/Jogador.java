@@ -37,7 +37,7 @@ class Jogador {
     public List<Ficha> fichasAposta;
     public boolean finalizado;
 
-    private boolean rendido;
+    public boolean rendido;
     private Jogada ultimaJogada;
     private int quantidadeJogadas;
     private int quantidadeSplits;
@@ -367,14 +367,30 @@ class Jogador {
     	}
     }
     
-    public void criaNovaMao() {
-    	Mao novaMao = mao.criaNovaMao();
-    	if (this.nivelSplit() == 0) {
+    public void adicionaMao(int idMao) throws IllegalStateException{
+    	Mao novaMao = new Mao();
+    	if (idMao == 1) {
     		this.maoSplit = novaMao;
-    	} else {
+    	}
+    	else if (idMao == 2) {
     		this.maoSplit2 = novaMao;
     	}
+    	else {
+    		throw new IllegalStateException("Identificador da Mão Inválido.");
+    	}
     }
+    
+    public void adicionaApostaMao(int idMao, int aposta) {
+    	if (idMao == 0) {
+    		this.mao.aposta = aposta;
+    	} else if (idMao == 1) {
+    		this.maoSplit.aposta = aposta;
+    	}else {
+    		this.maoSplit2.aposta = aposta;
+    	}
+    }
+    
+    
 
     /**
      * Faz a jogada de SPLIT para aquela mao:
