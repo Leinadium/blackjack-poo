@@ -75,6 +75,7 @@ public class Controller {
 
         // se o jogador finalizou sua jogada
     	if (api.jogadorEhFinalizado()) {
+    		System.out.println("finalizou sua jogada " + String.valueOf(api.jogadorEhFinalizado()));
     	    passaVez();
         }
     	// se ele acabou uma mao e tem outra mao para jogar
@@ -175,6 +176,12 @@ public class Controller {
         	linha = "Dinheiro";
         	linha += ";" + String.valueOf(idJogador);
         	linha += ";" + String.valueOf(this.api.getDinheiroJogador(idJogador));
+        	linhas.add(linha);
+        	
+        	// salva o nome do jogador
+        	linha = "Nome";
+        	linha += ";" + String.valueOf(idJogador);
+        	linha += ";" + this.frameJogador.get(idJogador).nomeJogador;
         	linhas.add(linha);
         }
         
