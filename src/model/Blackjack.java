@@ -167,7 +167,7 @@ public class Blackjack implements ObservadoAPI {
 	public void defineVez(int vez) {
 	    this.vez = vez;
     }
-	
+
 	/**
 	 * Retorna quantas maos um jogador tem, similar a nivelSplit, porem vai de 0 a 3.
 	 * @param id do jogador
@@ -185,13 +185,13 @@ public class Blackjack implements ObservadoAPI {
 		}
 		return 3;
 	}
-	
-	
+
+
 	public void adicionaMaoJogador(int idJogador) {
 		Jogador jog = this.jogadores.get(idJogador);
 		jog.criaNovaMao();
 	}
-	
+
 
 	/**
      * Define a aposta de um jogador
@@ -396,11 +396,9 @@ public class Blackjack implements ObservadoAPI {
 					// recebe o pagamento do blackjack
 					jog.recebeDinheiro(m.aposta);		// ganha o dinheiro de volta
 					jog.recebePagamentoBlackjack();		// ganha o bonus
-				} else if (jog.retornaUltimaJogada() == Jogada.DOUBLE) {
-					// pega seu dinheiro de volta + a aposta com 200%
-					jog.recebeDinheiro(m.aposta + m.aposta * 2);
 				} else {
 					// pega seu dinheiro de volta + a aposta
+					// a conta nao muda para uma jogada dobrada, pois a aposta aqui ja está com seu valor dobrado.
 					jog.recebeDinheiro(m.aposta + m.aposta);
 				}
 				break;
@@ -610,10 +608,10 @@ public class Blackjack implements ObservadoAPI {
 	public int getValorJogador(int idJogador, int mao) {
 		return this.jogadores.get(idJogador).getMaoFromId(mao).soma;
 	}
-	
+
 	public int getApostaMao (int idJogador, int idMao) {
 		return this.jogadores.get(idJogador).getMaoFromId(idMao).aposta;
-	}	
+	}
 
 	public ArrayList<Integer> getApostaJogador(int idJogador, int mao) {
 		Jogador jog = this.jogadores.get(idJogador);
