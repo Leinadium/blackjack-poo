@@ -136,6 +136,7 @@ public class Controller {
     public void salvarPartida() {
     	int idJogador, idMao, idCarta, qtdCartas, qtdJogadores, qtdMaos;
     	String[] listaCartas;
+    	String linha;
         ArrayList<String> linhas = new ArrayList<String>();
         qtdJogadores = this.api.qtdJogadores;
         
@@ -146,7 +147,6 @@ public class Controller {
         linhas.add(String.valueOf(this.api.getVez()));
 
         for (idJogador = 0; idJogador < qtdJogadores; idJogador++) {
-        	String linha;
         	qtdMaos = this.api.getQuantidadeMaos(idJogador);
         	for (idMao = 0; idMao < qtdMaos; idMao++) {
         		// salva a aposta de uma mao
@@ -189,6 +189,16 @@ public class Controller {
         	linha += ";" + String.valueOf(idJogador);
         	linha += ";" + String.valueOf(this.api.getRendidoJogador(idJogador));
         	linhas.add(linha);
+        }
+        
+        listaCartas = this.api.getCartasDealer();
+		// salva cada carta que o dealer tem
+        for (idCarta = 0; idCarta < listaCartas.length; idCarta++) {
+    		linha = "Carta";
+    		linha += ";" + String.valueOf(4);
+    		linha += ";" + "0";
+    		linha += ";" + String.valueOf(listaCartas[idCarta]);
+    		linhas.add(linha);
         }
         
         
