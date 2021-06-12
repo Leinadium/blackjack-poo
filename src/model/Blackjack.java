@@ -164,8 +164,9 @@ public class Blackjack implements ObservadoAPI {
      * Define a vez de um jogador
      * @param vez a ser definida
      */
-	public void defineVez(int vez) {
-	    this.vez = vez;
+	public void defineVez(int novaVez) {
+	    resetVez();
+	    while(this.vez!=novaVez) {passaVez();};
     }
 
 	/**
