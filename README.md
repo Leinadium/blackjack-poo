@@ -16,6 +16,30 @@ Para executar o programa, execute o método *main* da classe *Main* , dentro do 
 
 Para executar os testes, utilize o Suite de testes, em ```test.model.SuiteTest```.
 
+## Jogando
+
+Ao executar o código, irá aparecer uma tela de menu. Escolha a quantidade de jogadores e inicie uma nova partida,
+ou carrega uma partida anterior.
+
+Uma partida constitui de uma tela para o Dealer e uma tela para cada jogador.
+
+Para iniciar uma rodada, clique no botão de Iniciar Rodada na tela do Dealer.
+
+Para cada jogador, clique nas fichas na tela do dealer para incrementar a aposta. Para diminuir, clique na pilha de fichas
+na tela do jogador. Para finalizar a aposta de um jogador, clique no botão na tela do jogador. Repita esses procedimentos para cada jogador.
+
+Após todos os jogadores apostarem, a rodada iniciará com a distribuição de cartas. Cada jogador joga somente na sua vez.
+
+Na sua vez, o jogador pode fazer as cinco ações disponíveis para aquela mão. Se não for possível fazer aquela ação, o botão estará escuro.
+
+Caso o jogador decida fazer uma jogada *Split*, uma nova tela se abrirá para a sua nova mão.
+
+Depois de cada jogador fazer a sua jogada, em cada tela irá aparecer os resultados, e o dinheiro atualizado.
+
+Antes de uma jogada, é possível salvar a partida para continuar posteriormente, clicando no botão na tela do Dealer.
+
+Em qualquer momento do jogo, é possível sair da partida, clicando no botão na tela do Dealer, ou fechando qualquer janela.
+
 ## Código
 
 O código foi desenvolvido na arquitetura **MVC**, ou *Model-View-Controller*:
