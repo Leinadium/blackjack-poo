@@ -168,6 +168,15 @@ public class Blackjack implements ObservadoAPI {
 	    resetVez();
 	    while(this.vez!=novaVez) {passaVez();};
     }
+	
+	/**
+	 * Define se um jogador fez um surrender antes ou nao (utilizado para o modulo de carregar uma partida)
+	 * @param idJogador - id do jogador
+	 * @param estado - true - se fez algum surrender anteriormente; false - caso contrario
+	 */
+	public void defineRendido(int idJogador, boolean estado) {
+		this.jogadores.get(idJogador).rendido = estado;
+	}
 
 	/**
 	 * Retorna quantas maos um jogador tem, similar a nivelSplit, porem vai de 0 a 3.
@@ -187,6 +196,12 @@ public class Blackjack implements ObservadoAPI {
 		return 3;
 	}
 	
+	
+	/**
+	 * Adiciona uma mao a um jogador (pode ser primeira mao do split ou segunda)
+	 * @param idJogador - id do jogador
+	 * @param idMao - id da mao
+	 */
 	public void adicionaMaoJogador(int idJogador, int idMao) {
 		Jogador jog = this.jogadores.get(idJogador);
 		jog.adicionaMao(idMao);
@@ -415,7 +430,7 @@ public class Blackjack implements ObservadoAPI {
 			}
 			case DEALER: {
 				// verifica quando for surrender (tem que ser valido)
-				if (jog.retornaUltimaJogada() == Jogada.SURRENDER && jog.validaSurrender(dealer)) {
+				if ((jog.retornaUltimaJogada() == Jogada.SURRENDER || jog.rendido) && jog.validaSurrender(dealer)) {
 					jog.recebeDinheiro(m.aposta / 2);
 				}
 				// qualquer outra coisa, ele nao ganha mais nada

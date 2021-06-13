@@ -41,7 +41,7 @@ public class Controller {
         } else {
             this.frameJogador.get(api.getVez()).iniciarRodada();
             this.api.distribuiCartasJogador(false);
-            // caso o jogador faça um blackjack,
+            // caso o jogador faça um blackjack
             if (api.jogadorEhFinalizado()) {
                 passaVez();
             }
@@ -134,7 +134,7 @@ public class Controller {
     }
 
     public void salvarPartida() {
-    	int idJogador, idMao, idCarta, qtdCartas, qtdJogadores, qtdMaos;
+    	int idJogador, idMao, idCarta, qtdJogadores, qtdMaos;
     	String[] listaCartas;
     	String linha;
         ArrayList<String> linhas = new ArrayList<String>();
@@ -315,6 +315,20 @@ public class Controller {
 						this.api.distribuiCartaJogador(idJogador, idMao, nomeCarta, naipeCarta);
 					}
 				}
+				if ((listaElementos[0]).equals("Rendido")){
+					idJogador = Integer.parseInt(listaElementos[1]);
+					if ((listaElementos[2]).equals("true")) {
+						this.api.defineRendido(idJogador, true);
+					}
+					else {
+						this.api.defineRendido(idJogador, false);
+					}
+				}
+				
+				
+				
+				
+				
 	        }
 			
 		} catch (IOException e) {
