@@ -249,8 +249,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
         } else if (obj.equals(botaoFinalizarAposta)) {
             this.controller.finalizarAposta();
         	this.finalizarAposta();
-        } else {
-            System.out.println("AINDA NAO IMPLEMENTADO");
         }
     }
 
@@ -378,7 +376,6 @@ public class FrameJogador extends JFrame implements ActionListener, ObservadorAP
     	    valorDinheiro = o.getDinheiroJogador(idJogador);
     	    labelResultado.setText("Vencedor: " + resultado);
     	    labelResultado.setVisible(true);
-    	    System.out.println(idJogador + "[" + idMao + "]: " + resultado);
     	    repaint();
         }
     }

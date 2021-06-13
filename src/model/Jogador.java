@@ -414,7 +414,6 @@ class Jogador {
         }
 
         this.fazerHit(b, m);   // adicionando uma carta em cada mao
-        //m.ganharCarta(new Carta(Cor.PRETO, Nome.REI, Naipe.ESPADAS)); -- para testes do segundo split
         this.fazerHit(b, novaMao);
 
         // caso especial, se ele splitou um par de ases

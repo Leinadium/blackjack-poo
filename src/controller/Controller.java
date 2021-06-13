@@ -34,6 +34,7 @@ public class Controller {
     
     public void passaVez() {
         api.passaVez();
+        System.out.println("Passando a vez...");
         this.frameDealer.alteraEstadoBotaoSalvar(true);
         if (api.getJogadoresFinalizados()) {
             finalizarRodada();
@@ -66,6 +67,7 @@ public class Controller {
     }
     
     public void fazerJogada(String acao, int mao) {
+        System.out.printf("Fazendo jogada: [%s]\n", acao);
     	this.api.fazerJogada(acao, mao);
     	this.frameDealer.alteraEstadoBotaoSalvar(false);
     	// se tiver que criar uma nova janela
@@ -75,7 +77,6 @@ public class Controller {
 
         // se o jogador finalizou sua jogada
     	if (api.jogadorEhFinalizado()) {
-    		System.out.println("finalizou sua jogada " + String.valueOf(api.jogadorEhFinalizado()));
     	    passaVez();
         }
     	// se ele acabou uma mao e tem outra mao para jogar
@@ -95,18 +96,19 @@ public class Controller {
 
     public void aumentaAposta(int valor) {
         if (modo == Modo.APOSTA) {
-            System.out.println("aumentando a aposta em " + valor);
+            System.out.println("Aumentando a aposta em " + valor);
             this.api.aumentaAposta(valor); }
     }
 
     public void diminuiAposta(int valor) {
         if (modo == Modo.APOSTA) {
-            System.out.println("diminuindo a aposta em " + valor);
+            System.out.println("Diminuindo a aposta em " + valor);
             this.api.diminuiAposta(valor);
         }
     }
 
     public void finalizarAposta() {
+        System.out.println("Finalizando a aposta");
         this.api.finalizarAposta();
         this.api.passaVez();
 
@@ -119,6 +121,7 @@ public class Controller {
     }
 
     public void fecharPartida() {
+        System.out.println("Fechando a partida. Obrigado por jogar!");
     	for (FrameJogador fj: frameJogador.values()) {
     	    this.api.removeObservador(fj);
     	    fj.fechar();
@@ -134,6 +137,7 @@ public class Controller {
     }
 
     public void salvarPartida() {
+        System.out.println("Salvando a partida");
     	int idJogador, idMao, idCarta, qtdJogadores, qtdMaos;
     	String[] listaCartas;
     	String linha;
@@ -205,11 +209,16 @@ public class Controller {
         try {
 			controller.Save.main(linhas);
 		} catch (IOException e) {
-			System.out.println("Deu erro em carregar partida! (ainda nao implementado)");
+			System.out.println("Deu erro em carregar partida!");
+			System.exit(-1);
 		}
     }
 
     public void carregarPartida() {
+        System.out.println("Carregando a partida");
+        // fecha o menu
+        this.frameInicial.fechar();
+
     	int i, j, k, vez;
     	int qtdJogadores, qtdSplits;
     	int idJogador, idMao;
@@ -268,7 +277,7 @@ public class Controller {
 				if ((listaElementos[0]).equals("Split")) {
 					idJogador = Integer.parseInt(listaElementos[1]);
 					qtdSplits = Integer.parseInt(listaElementos[2]);
-					System.out.println(qtdSplits);
+					// System.out.println(qtdSplits);
 					if (qtdSplits >= 1) {
 						for (idMao = 1; idMao <= qtdSplits; idMao++) {
 							// adiciona nova mao na views
@@ -336,18 +345,12 @@ public class Controller {
 						this.api.defineRendido(idJogador, false);
 					}
 				}
-				
-				
-				
-				
-				
 	        }
 			
 		} catch (IOException e) {
-			System.out.println("Deu erro em carregar partida! (ainda nao implementado)");
-			
+			System.out.println("Deu erro em carregar partida!");
+			System.exit(-1);
 		}
-        // TODO
     }
 
     /**
@@ -361,6 +364,7 @@ public class Controller {
      * @param nomes Array contendo o nome dos jogadores. null para nomes genericos.
      */
     public void iniciarPartida(int quantidadeJogadores, String[] nomes) {
+        System.out.println("Iniciando a partida");
         // fecha o menu
         this.frameNomes.fechar();
 
@@ -401,6 +405,7 @@ public class Controller {
     }
 
     public void iniciarAposta() {
+        System.out.println("Iniciando a aposta");
         if (this.modo == Modo.FINAL) {
             this.reiniciarRodada();
         }
@@ -416,6 +421,7 @@ public class Controller {
      * Remove o frame daquele jogador
      */
     private void removerJogador(int idJogador) {
+        System.out.println("Jogador falido sendo removido.");
         FrameJogador f = this.frameJogador.get(idJogador);
         this.api.removeObservador(f);
         f.fechar();
@@ -423,6 +429,7 @@ public class Controller {
     }
 
     public void iniciarRodada() {
+        System.out.println("Iniciando uma nova rodada");
     	int i;
     	// int quantidadeJogadores = this.frameJogador.size();
 
@@ -442,7 +449,7 @@ public class Controller {
     }
 
     public void reiniciarRodada() {
-        HashMap<Integer, FrameJogador> copia = new HashMap<>(frameJogador);
+        HashMap<Integer, FrameJogador> copia = new HashMap<>();
 
         // desliga as maos de split, e nao copia as maos de split para a copia
         for (int id: this.frameJogador.keySet()) {
@@ -475,7 +482,7 @@ public class Controller {
     }
     
     public void finalizarRodada() {
-        System.out.println("TODOS OS JOGADORES JOGARAM");
+        System.out.println("Rodada finalizada, distribuindo dinheiro");
         this.modo = Modo.FINAL;
         this.frameDealer.alteraEstadoBotaoSalvar(false);
         this.api.fazerJogadaDealer();   // faz a jogada e notifica o(s) resultado(s)
@@ -485,6 +492,7 @@ public class Controller {
     }
 
     public void iniciarEscolhaNomes(int quantidadeJogadores) {
+        System.out.println("Escolha seus nomes na tela");
         this.frameInicial.fechar();
         this.frameNomes = new FrameNomes(this, quantidadeJogadores);
         this.frameNomes.abrir();
@@ -492,7 +500,7 @@ public class Controller {
 }
 
 /**
- * Enumerador para os diferentes modo/estágios de uma rodada.
+ * Enumerador para os diferentes modos/estágios de uma rodada.
  */
 enum Modo {
     INICIO,     // esperando ele clicar em inicar rodada

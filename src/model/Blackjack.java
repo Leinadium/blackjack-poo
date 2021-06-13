@@ -162,7 +162,7 @@ public class Blackjack implements ObservadoAPI {
 
 	/**
      * Define a vez de um jogador
-     * @param vez a ser definida
+     * @param novaVez a ser definida
      */
 	public void defineVez(int novaVez) {
 	    resetVez();
@@ -180,7 +180,7 @@ public class Blackjack implements ObservadoAPI {
 
 	/**
 	 * Retorna quantas maos um jogador tem, similar a nivelSplit, porem vai de 0 a 3.
-	 * @param id do jogador
+	 * @param idJogador do jogador
 	 */
 	public int getQuantidadeMaos(int idJogador) {
 		Jogador jog = this.jogadores.get(idJogador);
@@ -327,8 +327,8 @@ public class Blackjack implements ObservadoAPI {
 			jog.mao.ganharCarta(baralho.pop());
 
 			// para forcar alguma carta, de teste
-			//jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.COPAS));
-			//jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.OUROS));
+			// jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.COPAS));
+			// jog.mao.ganharCarta(new Carta(Cor.VERMELHO, Nome.REI, Naipe.OUROS));
 
 			// vejo se fez um blackjack
 			jog.finalizado = jog.mao.finalizado;
@@ -601,7 +601,7 @@ public class Blackjack implements ObservadoAPI {
     		fazerSplitJogador(jog, idMao);
     	}
     	else {
-    		System.out.println("Houve algum problema");
+    		// System.out.println("Houve algum problema");
     		System.exit(-1);
     	}
     	notificarTodos(NotificacaoAPI.JogadorAcao);
