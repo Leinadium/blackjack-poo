@@ -251,6 +251,16 @@ public class Controller {
 	        this.frameDealer.alteraEstadoBotaoSalvar(true);
 	        this.frameDealer.desativaBotaoNovaRodada();
 	        this.frameJogador.get(api.getVez()).iniciarRodada();  // inicia o primeiro
+	        
+	        
+	        for (idJogador = 0; idJogador < qtdJogadores; idJogador++) {
+	        	if (this.frameJogador.get(idJogador) != null && idJogador != this.api.getVez()) { // um jogador pode ter falido
+	        		this.frameJogador.get(idJogador).iniciarRodada();
+	        		this.api.defineJogadorFinalizado(idJogador, 0); // sempre para a mao principal, ja que as de splits nao foram criadas
+	        	}
+	        }
+	        
+
 	        this.modo = Modo.JOGANDO;
 	        
 			for (j = 2; j < partida_salva.size(); j++) {
@@ -268,10 +278,12 @@ public class Controller {
 							}
 							FrameJogador novoFrame = new FrameJogador(this, novoFrameTitulo, idJogador, idMao);
 							this.frameJogador.put((idJogador + 1) * 100 + idMao, novoFrame);
-							this.api.registraObservador(novoFrame);
 							novoFrame.insereBotoes();
+							this.api.registraObservador(novoFrame);
 							// adiciona nova mao no models
 							this.api.adicionaMaoJogador(idJogador, idMao);
+							// finaliza as maos dos jogadores com split ja que elas ja foram finalizadas
+							this.api.defineJogadorFinalizado(idJogador, idMao);
 						}
 					}
 				}

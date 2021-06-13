@@ -206,6 +206,18 @@ public class Blackjack implements ObservadoAPI {
 		Jogador jog = this.jogadores.get(idJogador);
 		jog.adicionaMao(idMao);
 	}
+	
+	/**
+	 * Define a mao de um jogador como finalizada, assim como o proprio jogador.
+	 * Isso eh feito para o LOAD ja que as maos precisam ser carregadas antes de finalizar a aposta, onde isso seria feito normalmente.
+	 * @param idJogador - id do jogador
+	 * @param idMao - id da mao
+	 */
+	public void defineJogadorFinalizado(int idJogador, int idMao) {
+		Jogador jog = this.jogadores.get(idJogador);
+		jog.getMaoFromId(idMao).finalizado = true;
+		jog.finalizado = true;
+	}
 
 
 	/**
