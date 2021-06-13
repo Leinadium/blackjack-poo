@@ -111,8 +111,8 @@ class Mao {
 	 */
 	public Mao fazerSplit() throws IllegalStateException{
 		if (this.cartas.size() != 2) {throw new IllegalStateException("Nao possui duas cartas."); }
-		if (!this.cartas.get(0).equals(this.cartas.get(1))) {
-			throw new IllegalStateException("As duas cartas sao diferentes"); 
+		if (this.cartas.get(0).valor() != this.cartas.get(1).valor()) {
+			throw new IllegalStateException("As duas cartas possuem valores diferentes");
 		}
 		Mao m = new Mao();
 		m.ganharCarta(this.cartas.get(1));
