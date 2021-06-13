@@ -204,8 +204,8 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         int x = e.getX();
         int y = e.getY();
 
-        int inicioX = (COMPRIMENTO - 60 * 9) / 2 - 20; // -20 ??
-        int fichaY = ALTURA * 4 / 5 - 30; // -30 ??
+        int inicioX = (COMPRIMENTO - 60 * 9) / 2 - 20;
+        int fichaY = ALTURA * 4 / 5 - 30;
         int fichaFinal = -1;
 
         if ((y >= fichaY && y <= fichaY + 60) && (x >= inicioX && x <= inicioX + 60)) {
@@ -221,9 +221,6 @@ public class FrameDealer extends JFrame implements ActionListener, MouseListener
         } else if (y >= fichaY && y <= fichaY + 60 && x >= inicioX+450 && x <= inicioX+510) {
             fichaFinal = 100;
         }
-
-        System.out.println("pos: " + x + ", " + y + " --> ficha: " + fichaFinal);
-
         if (fichaFinal != -1) {
             this.controller.aumentaAposta(fichaFinal);
         }

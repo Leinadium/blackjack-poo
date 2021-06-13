@@ -40,7 +40,7 @@ public class FrameNomes extends JFrame implements ActionListener {
         // coloca no meio da tela
         setBounds(x, y, COMPRIMENTO + 30, ALTURA + 50);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("BLACKJACK");
+        setTitle("Escolha os nomes dos jogadores");
 
         // adicinando os campos
         campoTexto = new ArrayList<>();
@@ -58,13 +58,8 @@ public class FrameNomes extends JFrame implements ActionListener {
                 COMPRIMENTO - 100, LARGURA);
         botaoIniciarPartida.addActionListener(this);
         getContentPane().add(botaoIniciarPartida);
-
-        // criando o layout
-        // BoxLayout layout = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
-        // getContentPane().setLayout(layout);
         getContentPane().setLayout(null);
 
-        //pack();
     }
 
     public void abrir() {
