@@ -565,7 +565,7 @@ public class Blackjack implements ObservadoAPI {
 		notificarTodos(NotificacaoAPI.JogadorCartas); // recebe mais uma carta por causa do hit
 		notificarTodos(NotificacaoAPI.JogadorAposta);
 	}
-	
+
 	private void fazerSurrenderJogador(Jogador jog) {
     	jog.fazerSurrender(jog.mao);
     	notificarTodos(NotificacaoAPI.JogadorAposta);
@@ -576,6 +576,8 @@ public class Blackjack implements ObservadoAPI {
 		try {
 			jog.fazerSplit(m, baralho);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.exit(-1);
 			// se der excecao nao faz o split
 		}
 	}

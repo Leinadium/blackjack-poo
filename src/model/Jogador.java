@@ -275,7 +275,9 @@ class Jogador {
     public boolean podeDouble() { return podeDouble(this.mao);}
 
     public boolean podeSplit(Mao m) {
-        return ((this.maoSplit == null || this.maoSplit2 == null) && m.podeSplit());
+        return ((this.maoSplit == null || this.maoSplit2 == null)
+                && m.aposta <= this.dinheiro
+                && m.podeSplit());
     }
     
     public boolean podeSplit() { return podeSplit(this.mao);}

@@ -52,7 +52,7 @@ public class Carta {
     
 
     /**
-     * Diz se o objeto eh um carta e possui o mesmo valor (nome) da carta
+     * Diz se o objeto eh um carta e possui o mesmo nome da carta
      */
     @Override
     public boolean equals(Object o) {
