@@ -71,7 +71,7 @@ public class MaoTest {
 	public void testNaoPodeSplit() {
 		Mao actual = new Mao();
 		Carta c1 = new Carta(Cor.PRETO, Nome.DEZ, Naipe.PAUS);
-		Carta c2 = new Carta(Cor.PRETO, Nome.VALETE, Naipe.ESPADAS);
+		Carta c2 = new Carta(Cor.PRETO, Nome.DOIS, Naipe.ESPADAS);
 		actual.ganharCarta(c1);
 		actual.ganharCarta(c2);
 		assertFalse("O split pode ser realizado", actual.podeSplit());

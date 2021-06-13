@@ -27,13 +27,6 @@ public class BaralhoTest {
         b.pop();
         assertEquals("Retirando uma carta", b.cartas.size(), 52*2-1);
     }
-
-    @Test
-    public void retirandoEmbaralhando() {
-        Baralho b = new Baralho(1);
-        for (int i = 0; i < 6; i ++) { b.pop(); }
-        assertEquals("Embaralhando depois de 10% de cartas retirada", 52, b.cartas.size());
-    }
     
 	@Test
 	public void testPop() {

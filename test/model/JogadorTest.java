@@ -176,10 +176,10 @@ public class JogadorTest {
 	}
 	
 	@Test
-	public void testPodeDouble() {
+	public void testNaoPodeDouble() {
 		Jogador actual = new Jogador(1);
 		adicionaCartaMao(actual.mao, Cor.VERMELHO, Nome.AS, Naipe.COPAS);
-		assertTrue("O jogador pode fazer Double", actual.podeDouble(actual.mao));
+		assertFalse("O jogador pode fazer Double", actual.podeDouble(actual.mao));
 	}
 
 	@Test
